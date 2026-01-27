@@ -376,7 +376,7 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
-        .hidden { display: none; }
+        .hidden { display: none !important; }
 
         .tab-buttons {
             display: flex;
@@ -487,21 +487,6 @@
             outline: none;
             border-color: var(--border-color);
             box-shadow: var(--glow);
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-top: 8px;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background: var(--button-bg);
-            transition: width 0.5s ease;
         }
 
         .modal {
@@ -1498,6 +1483,13 @@
             selectedBiz = null;
             document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
         }
+
+        // Initialize - make sure setup screen is shown and game screen hidden on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('setupScreen').classList.remove('hidden');
+            selectBusiness('tech');
+        });
 
         selectBusiness('tech');
     </script>
