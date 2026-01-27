@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Manager Simulator</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .game-container {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            background-color: #0d0d0d;
+        }
+        .company-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            overflow-x: auto;
+            padding: 10px;
+            border: 1px solid #00ff00;
+            background-color: #001a00;
+        }
+        .company-tab {
+            background-color: #003300;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 10px 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            min-width: 150px;
+            text-align: center;
+        }
+        .company-tab:hover {
+            background-color: #005500;
+        }
+        .company-tab.active {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .company-tab.new {
+            border-style: dashed;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #00ff00;
+        }
+        .stat-item {
+            padding: 5px;
+        }
+        .event-container {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #000;
+        }
+        .event-title {
+            font-size: 18px;
+            color: #00ffff;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ff00;
+        }
+        .event-description {
+            margin-bottom: 20px;
+            line-height: 1.6;
+            min-height: 80px;
+        }
+        .choices {
+            display: grid;
+            gap: 10px;
+        }
+        .choice-button {
+            background-color: #003300;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            text-align: left;
+            transition: all 0.2s;
+        }
+        .choice-button:hover {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .choice-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        .result-screen {
+            border: 2px solid #00ff00;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #000;
+            min-height: 100px;
+        }
+        .actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .action-button {
+            background-color: #003300;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .action-button:hover:not(:disabled) {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .action-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+        button {
+            background-color: #003300;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 12px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        button:hover {
+            background-color: #00ff00;
+            color: #000;
+        }
+        .title {
+            text-align: center;
+            font-size: 24px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        .warning {
+            color: #ff0000;
+        }
+        .success {
+            color: #00ffff;
+        }
+        .neutral {
+            color: #ffff00;
+        }
+        .setup-screen {
+            padding: 20px;
+        }
+        .setup-screen input, .setup-screen select {
+            background-color: #000;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 8px;
+            font-family: 'Courier New', monospace;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .business-type {
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin: 10px 0;
+            cursor: pointer;
+        }
+        .business-type:hover {
+            background-color: #003300;
+        }
+        .business-type.selected {
+            background-color: #005500;
+        }
+        .hidden {
+            display: none;
+        }
+        .monthly-report {
+            background-color: #001a00;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #00ff00;
+        }
+        .tab-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            flex: 1;
+            padding: 10px;
+            font-size: 12px;
+        }
+        .tab-button.active {
+            background-color: #005500;
+        }
+        .action-log {
+            background-color: #000;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin-bottom: 15px;
+            max-height: 150px;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+        .milestone-banner {
+            background-color: #005500;
+            border: 2px solid #00ff00;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 16px;
+            color: #00ffff;
+        }
+        .quick-loan-section {
+            background-color: #001100;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        .quick-loan-button {
+            width: 100%;
+            margin: 5px 0;
+            padding: 8px;
+            font-size: 12px;
+        }
+        .portfolio-summary {
+            background-color: #001a00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="title">BUSINESS MANAGER SIMULATOR</div>
+        
+        <div id="setupScreen" class="setup-screen">
+            <h2>Create Your Business</h2>
+            
+            <label>Your Name:</label>
+            <input type="text" id="playerName" placeholder="Enter your name" value="Alex Smith">
+            
+            <label>Company Name:</label>
+            <input type="text" id="companyName" placeholder="Enter company name" value="TechCorp">
+            
+            <h3>Choose Business Type:</h3>
+            
+            <div class="business-type" onclick="selectBusiness('tech')">
+                <strong>Tech Startup</strong><br>
+                Build software products, high growth potential<br>
+                Starting: $8,000 | 2 employees | Quality: 40
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('retail')">
+                <strong>Retail Store</strong><br>
+                Sell physical products, steady customer flow<br>
+                Starting: $10,000 | 3 employees | Quality: 50
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('restaurant')">
+                <strong>Restaurant</strong><br>
+                Food service, high volume, quality-focused<br>
+                Starting: $7,000 | 4 employees | Quality: 45
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('consulting')">
+                <strong>Consulting Firm</strong><br>
+                Professional services, reputation-critical<br>
+                Starting: $12,000 | 2 employees | Quality: 60
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('manufacturing')">
+                <strong>Manufacturing</strong><br>
+                Produce goods, equipment-dependent<br>
+                Starting: $6,000 | 5 employees | Quality: 35
+            </div>
+            
+            <br>
+            <button onclick="startGame()" style="width: 100%; padding: 15px; font-size: 16px;">Start Your Journey</button>
+        </div>
+
+        <div id="gameScreen" class="hidden">
+            <div id="portfolioSummary" class="portfolio-summary hidden">
+                <strong>📊 Portfolio Overview</strong><br>
+                <span id="portfolioContent"></span>
+            </div>
+
+            <div id="companySelector" class="company-selector"></div>
+
+            <div id="milestoneBanner" class="milestone-banner hidden"></div>
+
+            <div class="stats">
+                <div class="stat-item">💰 Cash: $<span id="cash">0</span></div>
+                <div class="stat-item">📅 Month: <span id="month">1</span></div>
+                <div class="stat-item">👥 Employees: <span id="employees">0</span></div>
+                <div class="stat-item">⭐ Reputation: <span id="reputation">0</span>/100</div>
+                <div class="stat-item">👤 Customers: <span id="customers">0</span></div>
+                <div class="stat-item">✨ Quality: <span id="quality">0</span>/100</div>
+                <div class="stat-item">📊 Revenue/mo: $<span id="revenue">0</span></div>
+                <div class="stat-item">💸 Expenses/mo: $<span id="expenses">0</span></div>
+                <div class="stat-item">😊 Morale: <span id="morale">0</span>/100</div>
+            </div>
+
+            <div id="monthlyReportScreen" class="hidden">
+                <div class="monthly-report">
+                    <h3>📊 Monthly Financial Report - Month <span id="reportMonth"></span></h3>
+                    <div id="reportContent"></div>
+                </div>
+                <button onclick="showEvent()" style="width: 100%; padding: 15px;">Continue to Event</button>
+            </div>
+
+            <div id="eventScreen" class="hidden">
+                <div class="event-container">
+                    <div class="event-title" id="eventTitle"></div>
+                    <div class="event-description" id="eventDescription"></div>
+                    <div class="choices" id="eventChoices"></div>
+                </div>
+            </div>
+
+            <div id="freeActionScreen" class="hidden">
+                <div class="result-screen" id="eventResult"></div>
+                
+                <div class="quick-loan-section">
+                    <strong>💵 Quick Financing Options:</strong>
+                    <button class="action-button quick-loan-button" onclick="quickLoan(5000, 250, 24)">
+                        Micro Loan: +$5,000 (-$250/mo for 24 months)
+                    </button>
+                    <button class="action-button quick-loan-button" onclick="quickLoan(10000, 500, 24)">
+                        Small Loan: +$10,000 (-$500/mo for 24 months)
+                    </button>
+                    <button class="action-button quick-loan-button" onclick="quickLoan(30000, 1500, 24)">
+                        Large Loan: +$30,000 (-$1,500/mo for 24 months) [Req: 50 Rep]
+                    </button>
+                    <button class="action-button quick-loan-button" onclick="quickLoan(75000, 4000, 24)">
+                        Business Line: +$75,000 (-$4,000/mo for 24 months) [Req: 70 Rep]
+                    </button>
+                </div>
+
+                <div class="action-log" id="actionLog">
+                    <strong>Action Log:</strong><br>
+                    <span id="logContent">No actions taken yet this month.</span>
+                </div>
+
+                <div class="tab-buttons">
+                    <button class="tab-button active" onclick="showTab('operations')">Operations</button>
+                    <button class="tab-button" onclick="showTab('growth')">Growth</button>
+                    <button class="tab-button" onclick="showTab('finance')">Finance</button>
+                    <button class="tab-button" onclick="showTab('empire')">Empire</button>
+                </div>
+
+                <div id="operationsTab" class="actions">
+                    <button class="action-button" onclick="hireEmployee()">Hire Employee<br>-$2500</button>
+                    <button class="action-button" onclick="fireEmployee()">Fire Employee<br>+$800</button>
+                    <button class="action-button" onclick="trainStaff()">Train Staff<br>-$1500</button>
+                    <button class="action-button" onclick="raiseWages()">Raise Wages<br>Cost varies</button>
+                    <button class="action-button" onclick="improveWorkplace()">Improve Workplace<br>-$3000</button>
+                    <button class="action-button" onclick="automateProcess()">Automate Process<br>-$5000</button>
+                    <button class="action-button" onclick="qualityControl()">Quality Control<br>-$2000</button>
+                    <button class="action-button" onclick="customerService()">Customer Service<br>-$1800</button>
+                    <button class="action-button" onclick="maintenance()">Maintenance<br>-$1000</button>
+                </div>
+
+                <div id="growthTab" class="actions hidden">
+                    <button class="action-button" onclick="marketingCampaign()">Marketing Campaign<br>-$3500</button>
+                    <button class="action-button" onclick="socialMedia()">Social Media<br>-$1200</button>
+                    <button class="action-button" onclick="prCampaign()">PR Campaign<br>-$2500</button>
+                    <button class="action-button" onclick="expandLocation()">Open New Location<br>-$15000</button>
+                    <button class="action-button" onclick="productDevelopment()">New Product Line<br>-$8000</button>
+                    <button class="action-button" onclick="partnershipDeal()">Partnership Deal<br>-$4000</button>
+                    <button class="action-button" onclick="rebrand()">Rebrand<br>-$5000</button>
+                    <button class="action-button" onclick="consultantHire()">Hire Consultant<br>-$4000</button>
+                    <button class="action-button" onclick="techUpgrade()">Tech Upgrade<br>-$8000</button>
+                </div>
+
+                <div id="financeTab" class="actions hidden">
+                    <button class="action-button" onclick="takeLoan()">Take Small Loan<br>+$10000</button>
+                    <button class="action-button" onclick="takeLargeLoan()">Take Large Loan<br>+$30000</button>
+                    <button class="action-button" onclick="seekInvestor()">Seek Investor<br>Varies</button>
+                    <button class="action-button" onclick="cutCosts()">Emergency Cut Costs<br>Reduces expenses</button>
+                    <button class="action-button" onclick="stockMarket()">Invest in Stocks<br>-$5000</button>
+                    <button class="action-button" onclick="realEstate()">Buy Real Estate<br>-$18000</button>
+                    <button class="action-button" onclick="savingsAccount()">High-Yield Savings<br>-$10000</button>
+                    <button class="action-button" onclick="refinanceDebt()">Refinance Debt<br>-$3000</button>
+                    <button class="action-button" onclick="payOffLoan()">Pay Off Loan Early<br>Varies</button>
+                </div>
+
+                <div id="empireTab" class="actions hidden">
+                    <button class="action-button" onclick="startNewCompany()">Start New Company<br>-$15000</button>
+                    <button class="action-button" onclick="transferFunds()">Transfer Funds<br>Between companies</button>
+                    <button class="action-button" onclick="crossPromotion()">Cross-Promotion<br>-$2000</button>
+                    <button class="action-button" onclick="sharedResources()">Shared Resources<br>-$5000</button>
+                    <button class="action-button" onclick="mergeBusiness()">Merge Businesses<br>Combine two</button>
+                    <button class="action-button" onclick="sellCompany()">Sell Company<br>Exit strategy</button>
+                </div>
+
+                <button onclick="nextMonth()" style="width: 100%; padding: 15px; margin-top: 15px; font-size: 16px;">► ADVANCE TO NEXT MONTH</button>
+            </div>
+
+            <div id="victoryScreen" class="hidden">
+                <div class="result-screen">
+                    <h2 style="color: #00ffff;">🎉 MILESTONE ACHIEVED! 🎉</h2>
+                    <div id="victoryContent"></div>
+                </div>
+                <button onclick="continueAfterVictory()" style="width: 100%; padding: 15px; margin-bottom: 10px;">Continue Building Your Empire</button>
+                <button onclick="startNewCompany()" style="width: 100%; padding: 15px; margin-bottom: 10px;">Start Another Company</button>
+                <button onclick="resetGame()" style="width: 100%; padding: 15px;">Start Fresh</button>
+            </div>
+
+            <div id="gameOverScreen" class="hidden">
+                <div class="result-screen">
+                    <h2 id="gameOverTitle"></h2>
+                    <div id="gameOverContent"></div>
+                </div>
+                <button onclick="closeCompany()" style="width: 100%; padding: 15px; margin-bottom: 10px;">Close This Company</button>
+                <button onclick="resetGame()" style="width: 100%; padding: 15px;">Start New Game</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedBusinessType = null;
+        let currentTab = 'operations';
+        let monthlyActions = [];
+        let companies = [];
+        let activeCompanyIndex = 0;
+        let playerName = '';
+        let nextCompanyId = 1;
+
+        const businessTypes = {
+            tech: { 
+                name: 'Tech Startup', 
+                startCash: 8000, 
+                startEmployees: 2, 
+                startQuality: 40,
+                startCustomers: 30,
+                startReputation: 35,
+                baseRevenue: 3500,
+                baseExpenses: 2800
+            },
+            retail: { 
+                name: 'Retail Store', 
+                startCash: 10000, 
+                startEmployees: 3, 
+                startQuality: 50,
+                startCustomers: 80,
+                startReputation: 45,
+                baseRevenue: 5000,
+                baseExpenses: 3200
+            },
+            restaurant: { 
+                name: 'Restaurant', 
+                startCash: 7000, 
+                startEmployees: 4, 
+                startQuality: 45,
+                startCustomers: 60,
+                startReputation: 40,
+                baseRevenue: 6000,
+                baseExpenses: 4500
+            },
+            consulting: { 
+                name: 'Consulting Firm', 
+                startCash: 12000, 
+                startEmployees: 2, 
+                startQuality: 60,
+                startCustomers: 20,
+                startReputation: 55,
+                baseRevenue: 7000,
+                baseExpenses: 2500
+            },
+            manufacturing: { 
+                name: 'Manufacturing', 
+                startCash: 6000, 
+                startEmployees: 5, 
+                startQuality: 35,
+                startCustomers: 40,
+                startReputation: 30,
+                baseRevenue: 4500,
+                baseExpenses: 3800
+            }
+        };
+
+        // EVENT LIBRARY - same as before but condensed for space
+        const eventLibrary = {
+            quality: [
+                {
+                    title: "Quality Complaint",
+                    description: "A customer posted a negative review complaining about poor quality. The review is getting attention on social media.",
+                    choices: [
+                        { text: "Issue full refund and public apology (-$500, Reputation +5, Customers -5)", cost: 500, effects: { reputation: 5, customers: -5 } },
+                        { text: "Hire quality control specialist (-$3000, Quality +15)", cost: 3000, effects: { quality: 15, employees: 1 } },
+                        { text: "Ignore it and hope it blows over (Reputation -15, lose customers)", cost: 0, effects: { reputation: -15, customers: -20 } },
+                        { text: "Offer store credit/discount (Reputation +3)", cost: 0, effects: { reputation: 3, baseRevenue: -300 } }
+                    ]
+                },
+                {
+                    title: "Equipment Failure",
+                    description: "Critical equipment has broken down, affecting your ability to deliver quality products/services.",
+                    choices: [
+                        { text: "Emergency repair (-$4000, Quality +5)", cost: 4000, effects: { quality: 5 } },
+                        { text: "Cheap repair (-$1500, Quality -5)", cost: 1500, effects: { quality: -5 } },
+                        { text: "Upgrade equipment (-$8000, Quality +20, Expenses +$200/mo)", cost: 8000, effects: { quality: 20, baseExpenses: 200 } },
+                        { text: "Outsource temporarily (-$2000, Quality -10)", cost: 2000, effects: { quality: -10 } }
+                    ]
+                }
+            ],
+            employee: [
+                {
+                    title: "Star Employee Poached",
+                    description: "A competitor has made an offer to your best employee - 50% more salary. They're considering leaving.",
+                    choices: [
+                        { text: "Match the offer (Expenses +$1200/mo, keep employee)", cost: 0, effects: { baseExpenses: 1200, morale: 10 } },
+                        { text: "Let them go and hire replacement (-$2500, Quality -10)", cost: 2500, effects: { quality: -10, morale: -5 } },
+                        { text: "Counteroffer with equity (Expenses +$600/mo, Morale +15)", cost: 0, effects: { baseExpenses: 600, morale: 15 } },
+                        { text: "Promote from within (-$1000, Morale +5)", cost: 1000, effects: { morale: 5 } }
+                    ]
+                },
+                {
+                    title: "Low Morale Alert",
+                    description: "Employee surveys reveal morale is at an all-time low. People are talking about unionizing or quitting.",
+                    choices: [
+                        { text: "Company retreat (-$3500, Morale +25)", cost: 3500, effects: { morale: 25 } },
+                        { text: "Raise salaries (Expenses +$1500/mo, Morale +20)", cost: 0, effects: { baseExpenses: 1500, morale: 20 } },
+                        { text: "Improve benefits (-$2000, Morale +15, Rep +5)", cost: 2000, effects: { morale: 15, reputation: 5 } },
+                        { text: "Do nothing (Morale -10, lose employee)", cost: 0, effects: { morale: -10, employees: -1 } }
+                    ]
+                }
+            ],
+            customer: [
+                {
+                    title: "Major Client Opportunity",
+                    description: "A large client wants to sign a contract, but demands immediate capacity expansion and quality guarantees.",
+                    choices: [
+                        { text: "Accept and expand (-$8000, Revenue +$2500/mo, Employees +2)", cost: 8000, effects: { baseRevenue: 2500, employees: 2 } },
+                        { text: "Accept but outsource (-$3000, Revenue +$2000/mo, Quality -5)", cost: 3000, effects: { baseRevenue: 2000, quality: -5 } },
+                        { text: "Negotiate smaller (-$2000, Revenue +$1200/mo)", cost: 2000, effects: { baseRevenue: 1200 } },
+                        { text: "Decline - too risky", cost: 0, effects: {} }
+                    ]
+                },
+                {
+                    title: "Viral Positive Review",
+                    description: "A popular influencer gave you a glowing review! You're getting massive attention and new customer inquiries.",
+                    choices: [
+                        { text: "Scale up immediately (-$6000, Customers +80, Employees +3)", cost: 6000, effects: { customers: 80, employees: 3 } },
+                        { text: "Moderate expansion (-$3000, Customers +50)", cost: 3000, effects: { customers: 50 } },
+                        { text: "Cautious approach (-$1500, Customers +30, Quality +5)", cost: 1500, effects: { customers: 30, quality: 5 } },
+                        { text: "Maintain capacity (Customers +20, Quality +10)", cost: 0, effects: { customers: 20, quality: 10 } }
+                    ]
+                }
+            ],
+            financial: [
+                {
+                    title: "Unexpected Tax Audit",
+                    description: "The tax authority is auditing your business. You need to pay for accounting help.",
+                    choices: [
+                        { text: "Hire top firm (-$5000, clean audit)", cost: 5000, effects: { reputation: 5 } },
+                        { text: "Current accountant (-$2000)", cost: 2000, effects: {} },
+                        { text: "Do it yourself (-$500, risky)", cost: 500, effects: { reputation: -5 } }
+                    ]
+                },
+                {
+                    title: "Rent Increase Notice",
+                    description: "Your landlord is increasing rent by 40%. Decide whether to relocate or pay more.",
+                    choices: [
+                        { text: "Accept increase (Expenses +$1600/mo)", cost: 0, effects: { baseExpenses: 1600 } },
+                        { text: "Negotiate (-$1000 fee, Expenses +$800/mo)", cost: 1000, effects: { baseExpenses: 800 } },
+                        { text: "Relocate cheaper (-$7000, Expenses -$200/mo, Customers -15)", cost: 7000, effects: { baseExpenses: -200, customers: -15 } },
+                        { text: "Buy property (-$25000, no more rent, Quality +10)", cost: 25000, effects: { baseExpenses: -1000, quality: 10 } }
+                    ]
+                }
+            ],
+            market: [
+                {
+                    title: "Competitor Undercuts Prices",
+                    description: "Your main competitor just slashed prices by 30%. Customers are switching to them.",
+                    choices: [
+                        { text: "Match prices (Revenue -$1500/mo, Customers +20)", cost: 0, effects: { baseRevenue: -1500, customers: 20 } },
+                        { text: "Improve quality (-$4000, Quality +25, Rep +15)", cost: 4000, effects: { quality: 25, reputation: 15 } },
+                        { text: "Launch marketing (-$3500, Customers +40, Rep +10)", cost: 3500, effects: { customers: 40, reputation: 10 } },
+                        { text: "Do nothing (Customers -30, Reputation -5)", cost: 0, effects: { customers: -30, reputation: -5 } }
+                    ]
+                },
+                {
+                    title: "New Market Opportunity",
+                    description: "You've identified an underserved market segment. Entering requires investment but could be lucrative.",
+                    choices: [
+                        { text: "Full expansion (-$12000, Revenue +$2500/mo, Customers +60)", cost: 12000, effects: { baseRevenue: 2500, customers: 60 } },
+                        { text: "Pilot program (-$5000, Revenue +$1000/mo, Customers +25)", cost: 5000, effects: { baseRevenue: 1000, customers: 25 } },
+                        { text: "Partnership (-$3000, Revenue +$800/mo, Rep +10)", cost: 3000, effects: { baseRevenue: 800, reputation: 10 } },
+                        { text: "Skip opportunity", cost: 0, effects: {} }
+                    ]
+                }
+            ],
+            growth: [
+                {
+                    title: "Expansion Decision",
+                    description: "Your business is at capacity. You're turning away customers. Time to decide on expansion.",
+                    choices: [
+                        { text: "Open second location (-$18000, Revenue +$3000/mo, Employees +4)", cost: 18000, effects: { baseRevenue: 3000, employees: 4, customers: 100 } },
+                        { text: "Expand current (-$10000, Revenue +$1500/mo, Quality +10)", cost: 10000, effects: { baseRevenue: 1500, quality: 10 } },
+                        { text: "Franchise model (-$8000, Revenue +$2000/mo, Quality -5)", cost: 8000, effects: { baseRevenue: 2000, quality: -5 } },
+                        { text: "Stay focused (Quality +15, Rep +10)", cost: 0, effects: { quality: 15, reputation: 10 } }
+                    ]
+                },
+                {
+                    title: "Technology Investment",
+                    description: "New technology could revolutionize your operations but requires significant investment.",
+                    choices: [
+                        { text: "Full upgrade (-$15000, Quality +30, Employees -1, Expenses -$500/mo)", cost: 15000, effects: { quality: 30, employees: -1, baseExpenses: -500 } },
+                        { text: "Gradual implementation (-$7000, Quality +15)", cost: 7000, effects: { quality: 15 } },
+                        { text: "Wait for prices to drop (Rep -5)", cost: 0, effects: { reputation: -5 } }
+                    ]
+                }
+            ],
+            crisis: [
+                {
+                    title: "Public Relations Disaster",
+                    description: "A misleading social media post about your business went viral. Your reputation is tanking.",
+                    choices: [
+                        { text: "Hire PR crisis firm (-$6000, Reputation +25)", cost: 6000, effects: { reputation: 25 } },
+                        { text: "Public statement (-$2000, Reputation +15)", cost: 2000, effects: { reputation: 15 } },
+                        { text: "Legal action (-$5000, Reputation +10)", cost: 5000, effects: { reputation: 10 } },
+                        { text: "Wait it out (Reputation -20, Customers -40)", cost: 0, effects: { reputation: -20, customers: -40 } }
+                    ]
+                }
+            ],
+            opportunity: [
+                {
+                    title: "Media Interview Opportunity",
+                    description: "A business magazine wants to feature your company. Could be great exposure.",
+                    choices: [
+                        { text: "Hire PR coach (-$2500, Rep +20, Customers +30)", cost: 2500, effects: { reputation: 20, customers: 30 } },
+                        { text: "Do it yourself (-$500, Rep +10, Customers +15)", cost: 500, effects: { reputation: 10, customers: 15 } },
+                        { text: "Decline interview", cost: 0, effects: {} }
+                    ]
+                },
+                {
+                    title: "Award Nomination",
+                    description: "Your business has been nominated for an industry award. Winning would boost reputation significantly.",
+                    choices: [
+                        { text: "Campaign for award (-$4000, 60% chance, +40 Rep if win)", cost: 4000, effects: { awardChance: 0.6, awardBonus: { reputation: 40, customers: 50 } } },
+                        { text: "Modest effort (-$1500, 30% chance)", cost: 1500, effects: { awardChance: 0.3, awardBonus: { reputation: 40, customers: 50 } } },
+                        { text: "Just accept nomination (Rep +5)", cost: 0, effects: { reputation: 5 } }
+                    ]
+                }
+            ]
+        };
+
+        function selectBusiness(type) {
+            document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.business-type').classList.add('selected');
+            selectedBusinessType = type;
+        }
+
+        function createCompany(bizType, name, isFirstCompany = false) {
+            return {
+                id: nextCompanyId++,
+                companyName: name,
+                businessType: bizType,
+                cash: isFirstCompany ? businessTypes[bizType].startCash : 0,
+                month: 1,
+                employees: businessTypes[bizType].startEmployees,
+                reputation: businessTypes[bizType].startReputation,
+                customers: businessTypes[bizType].startCustomers,
+                quality: businessTypes[bizType].startQuality,
+                morale: 60,
+                baseRevenue: businessTypes[bizType].baseRevenue,
+                baseExpenses: businessTypes[bizType].baseExpenses,
+                revenueBoost: 0,
+                expenseBoost: 0,
+                activeLoans: [],
+                pendingEvents: [],
+                totalRevenue: 0,
+                totalExpenses: 0,
+                eventsCompleted: 0,
+                usedEventTypes: [],
+                hasReachedVictory: false
+            };
+        }
+
+        function startGame() {
+            playerName = document.getElementById('playerName').value || 'Alex Smith';
+            const companyName = document.getElementById('companyName').value || 'TechCorp';
+            
+            if (!selectedBusinessType) {
+                alert('Please select a business type');
+                return;
+            }
+
+            companies = [createCompany(selectedBusinessType, companyName, true)];
+            activeCompanyIndex = 0;
+
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+            
+            updateCompanySelector();
+            updateDisplay();
+            showMonthlyReport();
+        }
+
+        function updateCompanySelector() {
+            const selector = document.getElementById('companySelector');
+            selector.innerHTML = '';
+            
+            companies.forEach((company, index) => {
+                const tab = document.createElement('div');
+                tab.className = 'company-tab' + (index === activeCompanyIndex ? ' active' : '');
+                tab.innerHTML = `<strong>${company.companyName}</strong><br>$${company.cash.toLocaleString()}`;
+                tab.onclick = () => switchCompany(index);
+                selector.appendChild(tab);
+            });
+
+            // Add "new company" button
+            const newTab = document.createElement('div');
+            newTab.className = 'company-tab new';
+            newTab.innerHTML = '<strong>+ New Company</strong><br>Start another';
+            newTab.onclick = () => startNewCompany();
+            selector.appendChild(newTab);
+
+            updatePortfolioSummary();
+        }
+
+        function updatePortfolioSummary() {
+            if (companies.length > 1) {
+                const totalCash = companies.reduce((sum, c) => sum + c.cash, 0);
+                const totalRevenue = companies.reduce((sum, c) => sum + calculateRevenue(c), 0);
+                const totalEmployees = companies.reduce((sum, c) => sum + c.employees, 0);
+                
+                document.getElementById('portfolioContent').innerHTML = 
+                    `Companies: ${companies.length} | Total Cash: $${totalCash.toLocaleString()} | ` +
+                    `Total Revenue: $${totalRevenue.toLocaleString()}/mo | Total Employees: ${totalEmployees}`;
+                document.getElementById('portfolioSummary').classList.remove('hidden');
+            } else {
+                document.getElementById('portfolioSummary').classList.add('hidden');
+            }
+        }
+
+        function switchCompany(index) {
+            activeCompanyIndex = index;
+            updateCompanySelector();
+            updateDisplay();
+        }
+
+        function getCurrentCompany() {
+            return companies[activeCompanyIndex];
+        }
+
+        function updateDisplay() {
+            const company = getCurrentCompany();
+            document.getElementById('cash').textContent = company.cash.toLocaleString();
+            document.getElementById('month').textContent = company.month;
+            document.getElementById('employees').textContent = company.employees;
+            document.getElementById('reputation').textContent = Math.max(0, Math.min(100, company.reputation));
+            document.getElementById('customers').textContent = Math.max(0, company.customers);
+            document.getElementById('quality').textContent = Math.max(0, Math.min(100, company.quality));
+            document.getElementById('morale').textContent = Math.max(0, Math.min(100, company.morale));
+            
+            const revenue = calculateRevenue(company);
+            const expenses = calculateExpenses(company);
+            
+            document.getElementById('revenue').textContent = revenue.toLocaleString();
+            document.getElementById('expenses').textContent = expenses.toLocaleString();
+        }
+
+        function calculateRevenue(company) {
+            let revenue = company.baseRevenue;
+            revenue += company.customers * 20;
+            revenue += company.revenueBoost;
+            revenue *= (company.quality / 100 + 0.6);
+            revenue *= (company.reputation / 100 + 0.6);
+            return Math.max(0, Math.floor(revenue));
+        }
+
+        function calculateExpenses(company) {
+            let expenses = company.baseExpenses;
+            expenses += company.employees * 600;
+            expenses += company.expenseBoost;
+            
+            company.activeLoans.forEach(loan => {
+                expenses += loan.monthly;
+            });
+            
+            return Math.max(0, Math.floor(expenses));
+        }
+
+        function showMonthlyReport() {
+            hideAllScreens();
+            
+            const company = getCurrentCompany();
+            const revenue = calculateRevenue(company);
+            const expenses = calculateExpenses(company);
+            const netIncome = revenue - expenses;
+            
+            company.cash += netIncome;
+            company.totalRevenue += revenue;
+            company.totalExpenses += expenses;
+            
+            // Process loans
+            company.activeLoans = company.activeLoans.filter(loan => {
+                loan.months -= 1;
+                return loan.months > 0;
+            });
+            
+            // Natural decay
+            company.quality = Math.max(0, company.quality - 3);
+            company.morale = Math.max(0, company.morale - 2);
+            company.customers = Math.max(0, Math.floor(company.customers * 0.97));
+            
+            document.getElementById('reportMonth').textContent = company.month;
+            
+            let report = `<strong>${company.companyName}</strong>\n\n`;
+            report += `Revenue: <span class="success">+$${revenue.toLocaleString()}</span>\n`;
+            report += `Expenses: <span class="warning">-$${expenses.toLocaleString()}</span>\n`;
+            report += `Net Income: <span class="${netIncome >= 0 ? 'success' : 'warning'}">${netIncome >= 0 ? '+' : ''}$${netIncome.toLocaleString()}</span>\n\n`;
+            report += `Cash Balance: <strong>$${company.cash.toLocaleString()}</strong>\n\n`;
+            
+            if (company.activeLoans.length > 0) {
+                report += `Active Loans: ${company.activeLoans.length}\n`;
+            }
+            
+            report += `\nQuality decreased by 3\nMorale decreased by 2`;
+            
+            document.getElementById('reportContent').innerHTML = `<pre>${report}</pre>`;
+            document.getElementById('monthlyReportScreen').classList.remove('hidden');
+            
+            updateDisplay();
+            updateCompanySelector();
+            
+            // Check victory or game over
+            if (company.cash >= 100000 && company.reputation >= 70 && !company.hasReachedVictory) {
+                company.hasReachedVictory = true;
+                showVictory();
+            } else if (company.cash < -10000) {
+                showGameOver();
+            }
+        }
+
+        function hideAllScreens() {
+            document.getElementById('monthlyReportScreen').classList.add('hidden');
+            document.getElementById('eventScreen').classList.add('hidden');
+            document.getElementById('freeActionScreen').classList.add('hidden');
+            document.getElementById('victoryScreen').classList.add('hidden');
+            document.getElementById('gameOverScreen').classList.add('hidden');
+            document.getElementById('milestoneBanner').classList.add('hidden');
+        }
+
+        function showEvent() {
+            hideAllScreens();
+            
+            const company = getCurrentCompany();
+            const categories = Object.keys(eventLibrary);
+            let selectedEvent = null;
+            let attempts = 0;
+            
+            while (!selectedEvent && attempts < 50) {
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                const events = eventLibrary[category];
+                const event = events[Math.floor(Math.random() * events.length)];
+                
+                const eventKey = category + '-' + event.title;
+                if (!company.usedEventTypes.includes(eventKey) || company.usedEventTypes.length > 30) {
+                    selectedEvent = event;
+                    company.usedEventTypes.push(eventKey);
+                    if (company.usedEventTypes.length > 15) {
+                        company.usedEventTypes.shift();
+                    }
+                }
+                attempts++;
+            }
+            
+            if (!selectedEvent) {
+                selectedEvent = eventLibrary.quality[0];
+            }
+            
+            displayEvent(selectedEvent);
+        }
+
+        function displayEvent(event) {
+            const company = getCurrentCompany();
+            document.getElementById('eventTitle').textContent = '📋 ' + event.title;
+            document.getElementById('eventDescription').textContent = event.description;
+            
+            const choicesContainer = document.getElementById('eventChoices');
+            choicesContainer.innerHTML = '';
+            
+            event.choices.forEach((choice) => {
+                const button = document.createElement('button');
+                button.className = 'choice-button';
+                button.onclick = () => handleChoice(choice);
+                
+                const canAfford = company.cash >= choice.cost;
+                button.disabled = !canAfford;
+                
+                let buttonText = choice.text;
+                if (!canAfford && choice.cost > 0) {
+                    buttonText += ' [CANNOT AFFORD - Take a loan!]';
+                }
+                
+                button.innerHTML = buttonText;
+                choicesContainer.appendChild(button);
+            });
+            
+            document.getElementById('eventScreen').classList.remove('hidden');
+        }
+
+        function handleChoice(choice) {
+            hideAllScreens();
+            
+            const company = getCurrentCompany();
+            company.cash -= choice.cost;
+            
+            let resultText = '📋 Event Response:\n\n';
+            resultText += 'You chose: ' + choice.text + '\n\n';
+            resultText += 'IMMEDIATE EFFECTS:\n';
+            
+            if (choice.cost !== 0) {
+                resultText += `Cash: ${choice.cost > 0 ? '-' : '+'}$${Math.abs(choice.cost).toLocaleString()}\n`;
+            }
+            
+            applyEffects(company, choice.effects, resultText);
+            
+            // Bounds check
+            company.reputation = Math.max(0, Math.min(100, company.reputation));
+            company.quality = Math.max(0, Math.min(100, company.quality));
+            company.morale = Math.max(0, Math.min(100, company.morale));
+            company.customers = Math.max(0, company.customers);
+            company.employees = Math.max(1, company.employees);
+            
+            company.eventsCompleted += 1;
+            
+            resultText += '\n\nYou can now take additional actions before advancing to the next month.';
+            
+            document.getElementById('eventResult').innerHTML = '<pre>' + resultText + '</pre>';
+            
+            monthlyActions = [];
+            document.getElementById('logContent').textContent = 'No actions taken yet this month.';
+            
+            document.getElementById('freeActionScreen').classList.remove('hidden');
+            
+            updateDisplay();
+            updateCompanySelector();
+        }
+
+        function applyEffects(company, effects, resultText) {
+            if (effects.reputation) {
+                company.reputation += effects.reputation;
+                resultText += `Reputation: ${effects.reputation > 0 ? '+' : ''}${effects.reputation}\n`;
+            }
+            if (effects.customers) {
+                company.customers += effects.customers;
+                resultText += `Customers: ${effects.customers > 0 ? '+' : ''}${effects.customers}\n`;
+            }
+            if (effects.quality) {
+                company.quality += effects.quality;
+                resultText += `Quality: ${effects.quality > 0 ? '+' : ''}${effects.quality}\n`;
+            }
+            if (effects.morale) {
+                company.morale += effects.morale;
+                resultText += `Morale: ${effects.morale > 0 ? '+' : ''}${effects.morale}\n`;
+            }
+            if (effects.employees) {
+                company.employees += effects.employees;
+                resultText += `Employees: ${effects.employees > 0 ? '+' : ''}${effects.employees}\n`;
+            }
+            if (effects.baseRevenue) {
+                company.baseRevenue += effects.baseRevenue;
+                resultText += `Base Revenue: ${effects.baseRevenue > 0 ? '+' : ''}$${effects.baseRevenue}/mo\n`;
+            }
+            if (effects.baseExpenses) {
+                company.baseExpenses += effects.baseExpenses;
+                resultText += `Base Expenses: ${effects.baseExpenses > 0 ? '+' : ''}$${effects.baseExpenses}/mo\n`;
+            }
+            if (effects.awardChance) {
+                const won = Math.random() < effects.awardChance;
+                if (won) {
+                    resultText += '\n🏆 YOU WON THE AWARD! 🏆\n';
+                    if (effects.awardBonus.reputation) {
+                        company.reputation += effects.awardBonus.reputation;
+                        resultText += `Reputation: +${effects.awardBonus.reputation}\n`;
+                    }
+                    if (effects.awardBonus.customers) {
+                        company.customers += effects.awardBonus.customers;
+                        resultText += `Customers: +${effects.awardBonus.customers}\n`;
+                    }
+                } else {
+                    resultText += '\nDid not win but nomination boosted visibility.\n';
+                    company.reputation += 5;
+                    resultText += 'Reputation: +5\n';
+                }
+            }
+            
+            return resultText;
+        }
+
+        function logAction(action) {
+            monthlyActions.push(action);
+            document.getElementById('logContent').textContent = monthlyActions.join('\n');
+        }
+
+        function showTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('operationsTab').classList.add('hidden');
+            document.getElementById('growthTab').classList.add('hidden');
+            document.getElementById('financeTab').classList.add('hidden');
+            document.getElementById('empireTab').classList.add('hidden');
+            
+            document.getElementById(tab + 'Tab').classList.remove('hidden');
+        }
+
+        // QUICK LOAN FUNCTION
+        function quickLoan(amount, monthly, months) {
+            const company = getCurrentCompany();
+            
+            // Reputation requirements for larger loans
+            if (amount >= 30000 && company.reputation < 50) {
+                logAction('✗ Reputation too low for this loan (need 50+)');
+                return;
+            }
+            if (amount >= 75000 && company.reputation < 70) {
+                logAction('✗ Reputation too low for this loan (need 70+)');
+                return;
+            }
+            
+            company.cash += amount;
+            company.activeLoans.push({ monthly, months });
+            company.baseExpenses += monthly;
+            logAction(`✓ Loan approved: +$${amount.toLocaleString()} (-$${monthly}/mo for ${months} months)`);
+            updateDisplay();
+            updateCompanySelector();
+        }
+
+        // FREE ACTION FUNCTIONS (abbreviated for space)
+        function hireEmployee() {
+            const company = getCurrentCompany();
+            if (company.cash >= 2500) {
+                company.cash -= 2500;
+                company.employees += 1;
+                company.quality += 2;
+                logAction('✓ Hired employee (+1 employee, Quality +2)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Cannot afford - take a quick loan above!');
+            }
+        }
+
+        function fireEmployee() {
+            const company = getCurrentCompany();
+            if (company.employees > 1) {
+                company.employees -= 1;
+                company.cash += 800;
+                company.reputation -= 8;
+                company.morale -= 15;
+                company.quality -= 5;
+                logAction('✓ Fired employee (+$800, Rep -8, Morale -15, Quality -5)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Cannot fire yourself!');
+            }
+        }
+
+        function trainStaff() {
+            const company = getCurrentCompany();
+            if (company.cash >= 1500) {
+                company.cash -= 1500;
+                company.quality += 8;
+                company.morale += 10;
+                logAction('✓ Staff trained (Quality +8, Morale +10)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function raiseWages() {
+            const company = getCurrentCompany();
+            const cost = Math.floor(company.employees * 300);
+            if (company.cash >= cost) {
+                company.cash -= cost;
+                company.baseExpenses += company.employees * 30;
+                company.morale += 20;
+                company.reputation += 5;
+                logAction(`✓ Wages raised (Morale +20, Rep +5, +$${company.employees * 30}/mo expenses)`);
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function improveWorkplace() {
+            const company = getCurrentCompany();
+            if (company.cash >= 3000) {
+                company.cash -= 3000;
+                company.morale += 15;
+                company.reputation += 6;
+                logAction('✓ Workplace improved (Morale +15, Rep +6)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function automateProcess() {
+            const company = getCurrentCompany();
+            if (company.cash >= 5000) {
+                company.cash -= 5000;
+                company.quality += 10;
+                company.baseExpenses += 200;
+                logAction('✓ Process automated (Quality +10, +$200/mo expenses)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function qualityControl() {
+            const company = getCurrentCompany();
+            if (company.cash >= 2000) {
+                company.cash -= 2000;
+                company.quality += 12;
+                company.revenueBoost += 500;
+                logAction('✓ Quality control (Quality +12, +$500/mo revenue)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function customerService() {
+            const company = getCurrentCompany();
+            if (company.cash >= 1800) {
+                company.cash -= 1800;
+                company.customers += 30;
+                company.reputation += 8;
+                logAction('✓ Customer service improved (+30 customers, Rep +8)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function maintenance() {
+            const company = getCurrentCompany();
+            if (company.cash >= 1000) {
+                company.cash -= 1000;
+                company.quality += 5;
+                logAction('✓ Maintenance (Quality +5)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function marketingCampaign() {
+            const company = getCurrentCompany();
+            if (company.cash >= 3500) {
+                company.cash -= 3500;
+                company.revenueBoost += 2500;
+                company.customers += 50;
+                company.reputation += 7;
+                logAction('✓ Marketing (+50 customers, +$2500/mo, Rep +7)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function socialMedia() {
+            const company = getCurrentCompany();
+            if (company.cash >= 1200) {
+                company.cash -= 1200;
+                company.customers += 25;
+                logAction('✓ Social media (+25 customers)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function prCampaign() {
+            const company = getCurrentCompany();
+            if (company.cash >= 2500) {
+                company.cash -= 2500;
+                company.reputation += 15;
+                company.customers += 20;
+                logAction('✓ PR campaign (Rep +15, +20 customers)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function expandLocation() {
+            const company = getCurrentCompany();
+            if (company.cash >= 15000) {
+                company.cash -= 15000;
+                company.baseRevenue += 1000;
+                company.customers += 100;
+                company.employees += 2;
+                logAction('✓ New location (+100 customers, +$1000/mo, +2 employees)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function productDevelopment() {
+            const company = getCurrentCompany();
+            if (company.cash >= 8000) {
+                company.cash -= 8000;
+                company.baseRevenue += 400;
+                company.customers += 40;
+                company.quality += 10;
+                logAction('✓ New product (+40 customers, Quality +10, +$400/mo)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function partnershipDeal() {
+            const company = getCurrentCompany();
+            if (company.cash >= 4000) {
+                company.cash -= 4000;
+                company.customers += 60;
+                company.reputation += 10;
+                company.revenueBoost += 1000;
+                logAction('✓ Partnership (+60 customers, Rep +10, +$1000/mo)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function rebrand() {
+            const company = getCurrentCompany();
+            if (company.cash >= 5000) {
+                company.cash -= 5000;
+                company.reputation += 10;
+                company.customers += 35;
+                logAction('✓ Rebranded (Rep +10, +35 customers)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function consultantHire() {
+            const company = getCurrentCompany();
+            if (company.cash >= 4000) {
+                company.cash -= 4000;
+                company.quality += 10;
+                company.reputation += 8;
+                company.baseRevenue += 800;
+                logAction('✓ Consultant hired (Quality +10, Rep +8, +$800/mo)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function techUpgrade() {
+            const company = getCurrentCompany();
+            if (company.cash >= 8000) {
+                company.cash -= 8000;
+                company.quality += 18;
+                company.baseRevenue += 1500;
+                logAction('✓ Tech upgraded (Quality +18, +$1500/mo)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function takeLoan() {
+            const company = getCurrentCompany();
+            if (company.cash < 50000) {
+                company.cash += 10000;
+                company.activeLoans.push({ monthly: 500, months: 24 });
+                company.baseExpenses += 500;
+                logAction('✓ Loan taken (+$10000, +$500/mo for 24 months)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Too much cash for loan');
+            }
+        }
+
+        function takeLargeLoan() {
+            const company = getCurrentCompany();
+            if (company.cash < 50000 && company.reputation >= 50) {
+                company.cash += 30000;
+                company.activeLoans.push({ monthly: 1500, months: 24 });
+                company.baseExpenses += 1500;
+                logAction('✓ Large loan (+$30000, +$1500/mo for 24 months)');
+                updateDisplay();
+                updateCompanySelector();
+            } else if (company.reputation < 50) {
+                logAction('✗ Reputation too low');
+            } else {
+                logAction('✗ Too much cash');
+            }
+        }
+
+        function seekInvestor() {
+            const company = getCurrentCompany();
+            if (company.reputation >= 40) {
+                company.cash += 20000;
+                company.baseExpenses += Math.floor(company.baseRevenue * 0.1);
+                logAction('✓ Investor found (+$20000, 10% revenue share)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Reputation too low');
+            }
+        }
+
+        function cutCosts() {
+            const company = getCurrentCompany();
+            if (company.employees > 2) {
+                company.employees -= 2;
+                company.cash += 1500;
+                company.reputation -= 15;
+                company.morale -= 25;
+                company.quality -= 10;
+                logAction('✓ Emergency cuts (-2 employees, +$1500, severe impacts)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Not enough employees');
+            }
+        }
+
+        function stockMarket() {
+            const company = getCurrentCompany();
+            if (company.cash >= 5000) {
+                company.cash -= 5000;
+                const gain = Math.random() > 0.5 ? Math.floor(Math.random() * 3000 + 1000) : -Math.floor(Math.random() * 2000);
+                company.cash += gain;
+                logAction(`✓ Stock investment ${gain > 0 ? 'gained' : 'lost'} $${Math.abs(gain)}`);
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function realEstate() {
+            const company = getCurrentCompany();
+            if (company.cash >= 18000) {
+                company.cash -= 18000;
+                company.baseRevenue += 1200;
+                logAction('✓ Real estate (+$1200/mo passive income)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function savingsAccount() {
+            const company = getCurrentCompany();
+            if (company.cash >= 10000) {
+                company.cash -= 10000;
+                company.baseRevenue += 200;
+                logAction('✓ Savings account (+$200/mo interest)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function refinanceDebt() {
+            const company = getCurrentCompany();
+            if (company.activeLoans.length > 0 && company.cash >= 3000) {
+                company.cash -= 3000;
+                company.activeLoans.forEach(loan => {
+                    const reduction = Math.floor(loan.monthly * 0.25);
+                    company.baseExpenses -= reduction;
+                    loan.monthly -= reduction;
+                });
+                logAction('✓ Debt refinanced (25% reduction in payments)');
+                updateDisplay();
+                updateCompanySelector();
+            } else if (company.activeLoans.length === 0) {
+                logAction('✗ No loans to refinance');
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function payOffLoan() {
+            const company = getCurrentCompany();
+            if (company.activeLoans.length > 0) {
+                const loan = company.activeLoans[0];
+                const totalOwed = loan.monthly * loan.months;
+                if (company.cash >= totalOwed) {
+                    company.cash -= totalOwed;
+                    company.baseExpenses -= loan.monthly;
+                    company.activeLoans.shift();
+                    logAction(`✓ Loan paid off (-$${totalOwed.toLocaleString()})`);
+                    updateDisplay();
+                    updateCompanySelector();
+                } else {
+                    logAction(`✗ Need $${totalOwed.toLocaleString()} to pay off`);
+                }
+            } else {
+                logAction('✗ No loans to pay off');
+            }
+        }
+
+        // EMPIRE FUNCTIONS
+        function startNewCompany() {
+            const totalCash = companies.reduce((sum, c) => sum + c.cash, 0);
+            if (totalCash < 15000) {
+                logAction('✗ Need $15,000 across all companies to start new one');
+                alert('You need at least $15,000 total cash across all companies to start a new one. Build up your existing companies first!');
+                return;
+            }
+
+            const name = prompt('Enter name for your new company:');
+            if (!name) return;
+
+            const types = Object.keys(businessTypes);
+            const typePrompt = 'Choose business type:\n' + types.map((t, i) => `${i + 1}. ${businessTypes[t].name}`).join('\n');
+            const choice = prompt(typePrompt);
+            const selectedType = types[parseInt(choice) - 1];
+            
+            if (!selectedType) {
+                alert('Invalid choice');
+                return;
+            }
+
+            // Deduct from current company
+            getCurrentCompany().cash -= 15000;
+            
+            const newCompany = createCompany(selectedType, name, false);
+            companies.push(newCompany);
+            activeCompanyIndex = companies.length - 1;
+            
+            updateCompanySelector();
+            updateDisplay();
+            logAction(`✓ New company "${name}" started!`);
+        }
+
+        function transferFunds() {
+            if (companies.length < 2) {
+                logAction('✗ Need multiple companies to transfer funds');
+                return;
+            }
+
+            const amount = parseInt(prompt('Enter amount to transfer:'));
+            if (!amount || amount <= 0) return;
+
+            const company = getCurrentCompany();
+            if (company.cash < amount) {
+                logAction('✗ Insufficient funds to transfer');
+                return;
+            }
+
+            const targetIndex = parseInt(prompt(`Transfer to which company?\n` + 
+                companies.map((c, i) => i !== activeCompanyIndex ? `${i + 1}. ${c.companyName}` : '').filter(Boolean).join('\n'))) - 1;
+            
+            if (targetIndex < 0 || targetIndex >= companies.length || targetIndex === activeCompanyIndex) {
+                alert('Invalid target company');
+                return;
+            }
+
+            company.cash -= amount;
+            companies[targetIndex].cash += amount;
+            logAction(`✓ Transferred $${amount.toLocaleString()} to ${companies[targetIndex].companyName}`);
+            updateDisplay();
+            updateCompanySelector();
+        }
+
+        function crossPromotion() {
+            if (companies.length < 2) {
+                logAction('✗ Need multiple companies for cross-promotion');
+                return;
+            }
+
+            const company = getCurrentCompany();
+            if (company.cash >= 2000) {
+                company.cash -= 2000;
+                companies.forEach(c => {
+                    c.customers += 15;
+                    c.reputation += 3;
+                });
+                logAction('✓ Cross-promotion (+15 customers, +3 rep to all companies)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function sharedResources() {
+            if (companies.length < 2) {
+                logAction('✗ Need multiple companies for shared resources');
+                return;
+            }
+
+            const company = getCurrentCompany();
+            if (company.cash >= 5000) {
+                company.cash -= 5000;
+                companies.forEach(c => {
+                    c.quality += 8;
+                    c.baseExpenses -= 100;
+                });
+                logAction('✓ Shared resources (+8 quality, -$100/mo expenses to all)');
+                updateDisplay();
+                updateCompanySelector();
+            } else {
+                logAction('✗ Insufficient funds');
+            }
+        }
+
+        function mergeBusiness() {
+            if (companies.length < 2) {
+                logAction('✗ Need at least 2 companies to merge');
+                return;
+            }
+
+            const targetIndex = parseInt(prompt(`Merge with which company?\n` + 
+                companies.map((c, i) => i !== activeCompanyIndex ? `${i + 1}. ${c.companyName}` : '').filter(Boolean).join('\n'))) - 1;
+            
+            if (targetIndex < 0 || targetIndex >= companies.length || targetIndex === activeCompanyIndex) {
+                alert('Invalid company');
+                return;
+            }
+
+            const company = getCurrentCompany();
+            const target = companies[targetIndex];
+
+            company.cash += target.cash;
+            company.employees += target.employees;
+            company.customers += target.customers;
+            company.baseRevenue += target.baseRevenue;
+            company.baseExpenses += target.baseExpenses;
+            company.quality = Math.floor((company.quality + target.quality) / 2);
+            company.reputation = Math.floor((company.reputation + target.reputation) / 2);
+
+            companies.splice(targetIndex, 1);
+            if (targetIndex < activeCompanyIndex) activeCompanyIndex--;
+
+            logAction(`✓ Merged ${target.companyName} into ${company.companyName}`);
+            updateCompanySelector();
+            updateDisplay();
+        }
+
+        function sellCompany() {
+            if (companies.length <= 1) {
+                logAction('✗ Cannot sell your only company');
+                return;
+            }
+
+            const company = getCurrentCompany();
+            const valuation = company.cash + (calculateRevenue(company) * 12);
+            
+            if (confirm(`Sell ${company.companyName} for $${valuation.toLocaleString()}?`)) {
+                companies.splice(activeCompanyIndex, 1);
+                activeCompanyIndex = Math.max(0, activeCompanyIndex - 1);
+                companies[activeCompanyIndex].cash += valuation;
+                
+                updateCompanySelector();
+                updateDisplay();
+                alert(`Company sold for $${valuation.toLocaleString()}!`);
+            }
+        }
+
+        function nextMonth() {
+            hideAllScreens();
+            const company = getCurrentCompany();
+            company.month += 1;
+            
+            // Decay temporary boosts
+            company.revenueBoost = Math.floor(company.revenueBoost * 0.7);
+            
+            showMonthlyReport();
+        }
+
+        function showVictory() {
+            hideAllScreens();
+            const company = getCurrentCompany();
+            
+            let content = `🎉 ${company.companyName} has reached $100,000+ with 70+ reputation!\n\n`;
+            content += `Months to Success: ${company.month}\n`;
+            content += `Final Cash: $${company.cash.toLocaleString()}\n`;
+            content += `Employees: ${company.employees}\n`;
+            content += `Customers: ${company.customers}\n`;
+            content += `Reputation: ${company.reputation}/100\n\n`;
+            content += `You can:\n`;
+            content += `• Continue growing this company\n`;
+            content += `• Start additional companies\n`;
+            content += `• Build a business empire!`;
+            
+            document.getElementById('victoryContent').innerHTML = '<pre>' + content + '</pre>';
+            document.getElementById('victoryScreen').classList.remove('hidden');
+        }
+
+        function continueAfterVictory() {
+            hideAllScreens();
+            showMonthlyReport();
+        }
+
+        function showGameOver() {
+            hideAllScreens();
+            const company = getCurrentCompany();
+            
+            document.getElementById('gameOverTitle').textContent = '💀 BANKRUPTCY 💀';
+            let content = `${company.companyName} has gone bankrupt.\n\n`;
+            content += `Survived ${company.month} months\n`;
+            content += `Final Cash: $${company.cash.toLocaleString()}\n`;
+            
+            if (companies.length > 1) {
+                content += `\nYou have ${companies.length - 1} other company/companies.`;
+            }
+            
+            document.getElementById('gameOverContent').innerHTML = '<pre>' + content + '</pre>';
+            document.getElementById('gameOverScreen').classList.remove('hidden');
+        }
+
+        function closeCompany() {
+            if (companies.length > 1) {
+                companies.splice(activeCompanyIndex, 1);
+                activeCompanyIndex = Math.max(0, activeCompanyIndex - 1);
+                updateCompanySelector();
+                hideAllScreens();
+                showMonthlyReport();
+            } else {
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('setupScreen').classList.remove('hidden');
+            companies = [];
+            activeCompanyIndex = 0;
+            nextCompanyId = 1;
+            selectedBusinessType = null;
+            document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
+        }
+
+        // Initialize
+        selectBusiness('tech');
+    </script>
+</body>
+</html>
