@@ -386,6 +386,18 @@
             display: block;
             margin-bottom: 5px;
         }
+
+        .loan-options-inline {
+            border: 2px solid #0ff;
+            padding: 15px;
+            margin: 15px 0;
+            background: #001100;
+        }
+
+        .loan-options-inline h4 {
+            color: #0ff;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -482,6 +494,19 @@
                 <span id="productEstimate" style="font-size: 12px;"></span>
             </div>
 
+            <div id="productLoanOptions" class="loan-options-inline hidden">
+                <h4>NEED FUNDS? TAKE A LOAN:</h4>
+                <button class="action-button" onclick="quickLoanFromModal(5000, 250, 36)" style="width: 100%; margin: 5px 0;">
+                    Micro: +$5K (-$250/mo x36)
+                </button>
+                <button class="action-button" onclick="quickLoanFromModal(10000, 500, 36)" style="width: 100%; margin: 5px 0;">
+                    Small: +$10K (-$500/mo x36)
+                </button>
+                <button class="action-button" onclick="quickLoanFromModal(30000, 1500, 36)" style="width: 100%; margin: 5px 0;">
+                    Business: +$30K (-$1500/mo x36)
+                </button>
+            </div>
+
             <div class="modal-buttons">
                 <button onclick="confirmProduct()">LAUNCH PRODUCT</button>
                 <button onclick="closeProductModal()">CANCEL</button>
@@ -505,7 +530,8 @@
             
             <div class="difficulty-option" onclick="selectDifficulty('hard')">
                 <strong>HARD MODE (REALISTIC)</strong><br>
-                Start with ZERO revenue - must build from scratch<br>
+                Start with $20,000 but ZERO revenue<br>
+                Must build customer base from scratch<br>
                 Realistic business challenges<br>
                 Faster stat decay and tougher events<br>
                 True to real business difficulty
@@ -586,6 +612,20 @@
                 <div class="event-container">
                     <div class="event-title" id="eventTitle"></div>
                     <div class="event-description" id="eventDescription"></div>
+                    <div id="eventLoanOptions" class="loan-options-inline hidden">
+                        <h4>NEED FUNDS FOR THESE OPTIONS? TAKE A LOAN:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
+                            <button class="action-button" onclick="quickLoanFromEvent(5000, 250, 36)">
+                                Micro: +$5K<br>-$250/mo x36
+                            </button>
+                            <button class="action-button" onclick="quickLoanFromEvent(10000, 500, 36)">
+                                Small: +$10K<br>-$500/mo x36
+                            </button>
+                            <button class="action-button" onclick="quickLoanFromEvent(30000, 1500, 36)">
+                                Business: +$30K<br>-$1500/mo x36
+                            </button>
+                        </div>
+                    </div>
                     <div class="choices" id="eventChoices"></div>
                 </div>
             </div>
@@ -657,6 +697,7 @@
         let selectedBiz = null, selectedDifficulty = null, currentTab = 'ops', actions = [], companies = [], activeIdx = 0, nextId = 1;
         let gameSpeed = { slow: 1.5, normal: 1, fast: 0.7 };
         let isHardMode = false;
+        let currentEventChoices = [];
 
         const bizTypes = {
             easy: {
@@ -667,11 +708,11 @@
                 ecommerce: { name: 'E-Commerce', cash: 9000, emp: 2, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 2100 }
             },
             hard: {
-                tech: { name: 'Tech Startup', cash: 5000, emp: 1, qual: 20, cust: 0, rep: 10, rev: 0, exp: 1200 },
-                retail: { name: 'Retail Store', cash: 8000, emp: 2, qual: 30, cust: 0, rep: 15, rev: 0, exp: 1800 },
-                restaurant: { name: 'Restaurant', cash: 4000, emp: 2, qual: 25, cust: 0, rep: 10, rev: 0, exp: 2200 },
-                consulting: { name: 'Consulting', cash: 7000, emp: 1, qual: 35, cust: 0, rep: 20, rev: 0, exp: 1000 },
-                ecommerce: { name: 'E-Commerce', cash: 6000, emp: 1, qual: 25, cust: 0, rep: 12, rev: 0, exp: 1400 }
+                tech: { name: 'Tech Startup', cash: 20000, emp: 1, qual: 20, cust: 0, rep: 10, rev: 0, exp: 1200 },
+                retail: { name: 'Retail Store', cash: 20000, emp: 2, qual: 30, cust: 0, rep: 15, rev: 0, exp: 1800 },
+                restaurant: { name: 'Restaurant', cash: 20000, emp: 2, qual: 25, cust: 0, rep: 10, rev: 0, exp: 2200 },
+                consulting: { name: 'Consulting', cash: 20000, emp: 1, qual: 35, cust: 0, rep: 20, rev: 0, exp: 1000 },
+                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 1, qual: 25, cust: 0, rep: 12, rev: 0, exp: 1400 }
             }
         };
 
@@ -805,10 +846,8 @@
             selectedDifficulty = diff;
             isHardMode = (diff === 'hard');
             
-            // Update business type stats display
             updateBusinessStats();
             
-            // Show setup screen
             document.getElementById('difficultyScreen').classList.add('hidden');
             document.getElementById('setupScreen').classList.remove('hidden');
         }
@@ -1012,7 +1051,6 @@
         function showEvent() {
             hideAll();
             
-            // In hard mode, mix in hard events
             let allEvents = {...events};
             if (isHardMode && Math.random() < 0.4) {
                 allEvents = {...allEvents, ...hardEvents};
@@ -1023,8 +1061,20 @@
             const evts = allEvents[cat];
             const evt = evts[Math.floor(Math.random() * evts.length)];
             
+            currentEventChoices = evt.choices;
+            
             document.getElementById('eventTitle').textContent = evt.title;
             document.getElementById('eventDescription').textContent = evt.desc;
+            
+            // Check if any choices cost more than current cash
+            const co = getCo();
+            const hasUnaffordableOptions = evt.choices.some(choice => choice.cost > co.cash);
+            
+            if (hasUnaffordableOptions) {
+                document.getElementById('eventLoanOptions').classList.remove('hidden');
+            } else {
+                document.getElementById('eventLoanOptions').classList.add('hidden');
+            }
             
             const container = document.getElementById('eventChoices');
             container.innerHTML = '';
@@ -1038,6 +1088,22 @@
                 container.appendChild(btn);
             });
             document.getElementById('eventScreen').classList.remove('hidden');
+        }
+
+        function quickLoanFromEvent(amt, mo, mos) {
+            quickLoan(amt, mo, mos);
+            // Refresh event screen to update button states
+            const container = document.getElementById('eventChoices');
+            container.innerHTML = '';
+            currentEventChoices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-button';
+                btn.onclick = () => handleChoice(choice);
+                btn.disabled = getCo().cash < choice.cost;
+                btn.textContent = choice.text + (getCo().cash < choice.cost && choice.cost > 0 ? 
+                    ` [Need $${choice.cost.toLocaleString()}]` : '');
+                container.appendChild(btn);
+            });
         }
 
         function handleChoice(choice) {
@@ -1174,6 +1240,14 @@
             
             document.getElementById('productTotalCost').textContent = cost.toLocaleString();
             
+            // Show loan options if cost exceeds current cash
+            const co = getCo();
+            if (cost > 0 && cost > co.cash) {
+                document.getElementById('productLoanOptions').classList.remove('hidden');
+            } else {
+                document.getElementById('productLoanOptions').classList.add('hidden');
+            }
+            
             if (cost > 0) {
                 const type = document.getElementById('productType').value;
                 let estimate = '';
@@ -1182,6 +1256,11 @@
                 if (type === 'budget') estimate = 'Est: Low margins, high volume';
                 document.getElementById('productEstimate').textContent = estimate;
             }
+        }
+
+        function quickLoanFromModal(amt, mo, mos) {
+            quickLoan(amt, mo, mos);
+            updateProductCost(); // Refresh to hide loan options if now affordable
         }
 
         ['productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
@@ -1215,7 +1294,6 @@
             
             co.cash -= cost;
             
-            // Calculate effects based on choices
             let revGain = 0, custGain = 0, qualGain = 0;
             
             if (budget === 'high') { qualGain += 15; revGain += 800; }
