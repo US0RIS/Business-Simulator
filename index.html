@@ -208,18 +208,18 @@
         .warning { color: #f00; }
         .success { color: #0ff; }
 
-        .business-type {
+        .business-type, .difficulty-option {
             border: 2px solid #0f0;
             padding: 15px;
             margin: 10px 0;
             cursor: pointer;
         }
 
-        .business-type:hover {
+        .business-type:hover, .difficulty-option:hover {
             background: #003300;
         }
 
-        .business-type.selected {
+        .business-type.selected, .difficulty-option.selected {
             background: #0f0;
             color: #000;
         }
@@ -292,7 +292,7 @@
             padding-bottom: 5px;
         }
 
-        input, select {
+        input, select, textarea {
             background: #000;
             color: #0f0;
             border: 2px solid #0f0;
@@ -303,7 +303,12 @@
             font-size: 14px;
         }
 
-        input:focus, select:focus {
+        textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: #0ff;
         }
@@ -325,8 +330,10 @@
             background: #000;
             padding: 30px;
             border: 3px solid #0f0;
-            max-width: 500px;
+            max-width: 600px;
             width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .modal-title {
@@ -370,6 +377,15 @@
             white-space: pre-wrap;
             line-height: 1.6;
         }
+
+        .form-group {
+            margin: 15px 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 <body>
@@ -411,10 +427,92 @@
         </div>
     </div>
 
+    <div id="productModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-title">NEW PRODUCT DEVELOPMENT</div>
+            
+            <div class="form-group">
+                <label>Product Name:</label>
+                <input type="text" id="productName" placeholder="Enter product name">
+            </div>
+
+            <div class="form-group">
+                <label>Product Type:</label>
+                <select id="productType">
+                    <option value="">-- Select Type --</option>
+                    <option value="premium">Premium (High price, high quality)</option>
+                    <option value="standard">Standard (Balanced price/quality)</option>
+                    <option value="budget">Budget (Low price, volume sales)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Marketing Strategy:</label>
+                <select id="marketingStrategy">
+                    <option value="">-- Select Strategy --</option>
+                    <option value="aggressive">Aggressive (+$5000 cost, max reach)</option>
+                    <option value="moderate">Moderate (+$2500 cost, good reach)</option>
+                    <option value="minimal">Minimal (+$500 cost, organic growth)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Target Market:</label>
+                <select id="targetMarket">
+                    <option value="">-- Select Market --</option>
+                    <option value="youth">Youth (18-25)</option>
+                    <option value="professional">Professionals (25-45)</option>
+                    <option value="senior">Seniors (45+)</option>
+                    <option value="all">Mass Market (All ages)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Development Budget:</label>
+                <select id="devBudget">
+                    <option value="">-- Select Budget --</option>
+                    <option value="low">Low ($5,000)</option>
+                    <option value="medium">Medium ($10,000)</option>
+                    <option value="high">High ($20,000)</option>
+                </select>
+            </div>
+
+            <div style="border: 1px solid #0f0; padding: 10px; margin: 15px 0;">
+                <strong>TOTAL COST: $<span id="productTotalCost">0</span></strong><br>
+                <span id="productEstimate" style="font-size: 12px;"></span>
+            </div>
+
+            <div class="modal-buttons">
+                <button onclick="confirmProduct()">LAUNCH PRODUCT</button>
+                <button onclick="closeProductModal()">CANCEL</button>
+            </div>
+        </div>
+    </div>
+
     <div class="game-container">
         <div class="title">BUSINESS EMPIRE SIMULATOR</div>
         
-        <div id="setupScreen">
+        <div id="difficultyScreen">
+            <h2 style="margin-bottom: 20px;">SELECT DIFFICULTY</h2>
+            
+            <div class="difficulty-option" onclick="selectDifficulty('easy')">
+                <strong>EASY MODE</strong><br>
+                Start with some revenue and customers<br>
+                Forgiving market conditions<br>
+                Slower stat decay<br>
+                Good for learning the game
+            </div>
+            
+            <div class="difficulty-option" onclick="selectDifficulty('hard')">
+                <strong>HARD MODE (REALISTIC)</strong><br>
+                Start with ZERO revenue - must build from scratch<br>
+                Realistic business challenges<br>
+                Faster stat decay and tougher events<br>
+                True to real business difficulty
+            </div>
+        </div>
+
+        <div id="setupScreen" class="hidden">
             <h2 style="margin-bottom: 20px;">CREATE YOUR BUSINESS</h2>
             <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
             <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
@@ -424,31 +522,31 @@
             <div class="business-type" onclick="selectBusiness('tech')">
                 <strong>TECH STARTUP</strong><br>
                 High growth, volatile market<br>
-                Start: $8K | 2 employees | Quality: 40
+                <span id="tech-stats"></span>
             </div>
             
             <div class="business-type" onclick="selectBusiness('retail')">
                 <strong>RETAIL STORE</strong><br>
                 Steady income, inventory focus<br>
-                Start: $10K | 3 employees | Quality: 50
+                <span id="retail-stats"></span>
             </div>
             
             <div class="business-type" onclick="selectBusiness('restaurant')">
                 <strong>RESTAURANT</strong><br>
                 High volume, quality critical<br>
-                Start: $7K | 4 employees | Quality: 45
+                <span id="restaurant-stats"></span>
             </div>
             
             <div class="business-type" onclick="selectBusiness('consulting')">
                 <strong>CONSULTING FIRM</strong><br>
                 Reputation dependent, high margins<br>
-                Start: $12K | 2 employees | Quality: 60
+                <span id="consulting-stats"></span>
             </div>
             
             <div class="business-type" onclick="selectBusiness('ecommerce')">
                 <strong>E-COMMERCE</strong><br>
                 Online sales, scalable<br>
-                Start: $9K | 2 employees | Quality: 45
+                <span id="ecommerce-stats"></span>
             </div>
             
             <button onclick="startGame()" style="width: 100%; padding: 15px; margin-top: 20px;">START GAME</button>
@@ -556,15 +654,25 @@
     </div>
 
     <script>
-        let selectedBiz = null, currentTab = 'ops', actions = [], companies = [], activeIdx = 0, nextId = 1;
+        let selectedBiz = null, selectedDifficulty = null, currentTab = 'ops', actions = [], companies = [], activeIdx = 0, nextId = 1;
         let gameSpeed = { slow: 1.5, normal: 1, fast: 0.7 };
+        let isHardMode = false;
 
         const bizTypes = {
-            tech: { name: 'Tech Startup', cash: 8000, emp: 2, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 2200 },
-            retail: { name: 'Retail Store', cash: 10000, emp: 3, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 2800 },
-            restaurant: { name: 'Restaurant', cash: 7000, emp: 4, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 3500 },
-            consulting: { name: 'Consulting', cash: 12000, emp: 2, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 2000 },
-            ecommerce: { name: 'E-Commerce', cash: 9000, emp: 2, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 2100 }
+            easy: {
+                tech: { name: 'Tech Startup', cash: 8000, emp: 2, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 2200 },
+                retail: { name: 'Retail Store', cash: 10000, emp: 3, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 2800 },
+                restaurant: { name: 'Restaurant', cash: 7000, emp: 4, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 3500 },
+                consulting: { name: 'Consulting', cash: 12000, emp: 2, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 2000 },
+                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 2, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 2100 }
+            },
+            hard: {
+                tech: { name: 'Tech Startup', cash: 5000, emp: 1, qual: 20, cust: 0, rep: 10, rev: 0, exp: 1200 },
+                retail: { name: 'Retail Store', cash: 8000, emp: 2, qual: 30, cust: 0, rep: 15, rev: 0, exp: 1800 },
+                restaurant: { name: 'Restaurant', cash: 4000, emp: 2, qual: 25, cust: 0, rep: 10, rev: 0, exp: 2200 },
+                consulting: { name: 'Consulting', cash: 7000, emp: 1, qual: 35, cust: 0, rep: 20, rev: 0, exp: 1000 },
+                ecommerce: { name: 'E-Commerce', cash: 6000, emp: 1, qual: 25, cust: 0, rep: 12, rev: 0, exp: 1400 }
+            }
         };
 
         const actionDefs = {
@@ -581,7 +689,7 @@
             ],
             growth: [
                 { id: 'expand', label: 'New Location', cost: 15000 },
-                { id: 'product', label: 'New Product', cost: 8000 },
+                { id: 'product', label: 'New Product', cost: 'custom' },
                 { id: 'partner', label: 'Partnership', cost: 4000 },
                 { id: 'franchise', label: 'Franchise', cost: 12000 },
                 { id: 'acquire', label: 'Acquire Competitor', cost: 25000 },
@@ -609,6 +717,30 @@
                 { id: 'cross', label: 'Cross-Promote', cost: 2000 },
                 { id: 'merge', label: 'Merge', cost: 'free' },
                 { id: 'sell', label: 'Sell Company', cost: 'free' }
+            ]
+        };
+
+        const hardEvents = {
+            cash_flow: [
+                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", choices: [
+                    { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
+                    { text: "Delay vendor payments (Rep -15, possible lawsuits)", cost: 0, effects: { rep: -15, lawsuit: 0.3 } },
+                    { text: "Lay off staff temporarily (-2 emp, Morale -30)", cost: 0, effects: { emp: -2, morale: -30 } }
+                ]},
+            ],
+            competition: [
+                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", choices: [
+                    { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
+                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } },
+                    { text: "Do nothing (Cust -50, Rep -10)", cost: 0, effects: { cust: -50, rep: -10 } }
+                ]}
+            ],
+            regulatory: [
+                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", choices: [
+                    { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
+                    { text: "Minimal compliance (-$1500, risk fines)", cost: 1500, effects: { fineRisk: 0.4 } },
+                    { text: "Delay (automatic -$500/mo penalties)", cost: 0, effects: { exp: 500 } }
+                ]}
             ]
         };
 
@@ -667,6 +799,31 @@
             document.getElementById('settingsPanel').classList.toggle('hidden');
         }
 
+        function selectDifficulty(diff) {
+            document.querySelectorAll('.difficulty-option').forEach(el => el.classList.remove('selected'));
+            event.target.closest('.difficulty-option').classList.add('selected');
+            selectedDifficulty = diff;
+            isHardMode = (diff === 'hard');
+            
+            // Update business type stats display
+            updateBusinessStats();
+            
+            // Show setup screen
+            document.getElementById('difficultyScreen').classList.add('hidden');
+            document.getElementById('setupScreen').classList.remove('hidden');
+        }
+
+        function updateBusinessStats() {
+            const mode = isHardMode ? 'hard' : 'easy';
+            Object.keys(bizTypes[mode]).forEach(type => {
+                const stats = bizTypes[mode][type];
+                const el = document.getElementById(`${type}-stats`);
+                if (el) {
+                    el.textContent = `Start: $${(stats.cash/1000).toFixed(0)}K | ${stats.emp} employees | Quality: ${stats.qual}${isHardMode ? ' | NO INITIAL REVENUE' : ''}`;
+                }
+            });
+        }
+
         function selectBusiness(type) {
             document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
             event.target.closest('.business-type').classList.add('selected');
@@ -674,7 +831,8 @@
         }
 
         function createCo(type, name, first = false) {
-            const t = bizTypes[type];
+            const mode = isHardMode ? 'hard' : 'easy';
+            const t = bizTypes[mode][type];
             return {
                 id: nextId++, name, type, cash: first ? t.cash : 0, month: 1, emp: t.emp, rep: t.rep,
                 cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, exp: t.exp, revBoost: 0,
@@ -689,6 +847,7 @@
         function startGame() {
             const name = document.getElementById('companyName').value || 'TechCorp';
             if (!selectedBiz) return alert('Select business type');
+            if (!selectedDifficulty) return alert('Select difficulty first');
             companies = [createCo(selectedBiz, name, true)];
             activeIdx = 0;
             document.getElementById('setupScreen').classList.add('hidden');
@@ -706,7 +865,8 @@
                 actionDefs[tab].forEach(action => {
                     const btn = document.createElement('button');
                     btn.className = 'action-button';
-                    let costText = typeof action.cost === 'number' 
+                    let costText = action.cost === 'custom' ? 'CUSTOM' : 
+                                   typeof action.cost === 'number' 
                         ? (action.gain ? `+$${action.cost.toLocaleString()}` : `-$${action.cost.toLocaleString()}`)
                         : action.cost;
                     btn.innerHTML = `${action.label}<br>${costText}`;
@@ -757,16 +917,18 @@
 
         function calcRev(co) {
             const speed = getSpeed();
+            const hardModePenalty = isHardMode ? 0.8 : 1;
             let r = co.rev + co.emp * 400 / (1 + co.emp * 0.015) + co.cust * 12 / (1 + co.cust * 0.0008) + co.revBoost;
             r *= (co.qual / 100 + 0.6) * (co.rep / 100 + 0.6) * (co.morale / 100 * 0.25 + 0.85);
-            return Math.max(0, Math.floor(r * (0.9 + Math.random() * 0.2) * speed));
+            return Math.max(0, Math.floor(r * (0.9 + Math.random() * 0.2) * speed * hardModePenalty));
         }
 
         function calcExp(co) {
             const speed = getSpeed();
+            const hardModePenalty = isHardMode ? 1.2 : 1;
             let e = co.exp + co.emp * 450 * (1 + co.emp * 0.008);
             co.loans.forEach(l => e += l.monthly);
-            return Math.max(0, Math.floor(e * (co.morale < 40 ? 1.12 : 1) * speed));
+            return Math.max(0, Math.floor(e * (co.morale < 40 ? 1.12 : 1) * speed * hardModePenalty));
         }
 
         function calcDebt(co) {
@@ -816,9 +978,11 @@
             co.loans = co.loans.filter(l => { l.months--; if (l.months <= 0) co.exp -= l.monthly; return l.months > 0; });
             
             const speed = getSpeed();
-            co.qual = Math.max(0, co.qual - (2 * speed));
-            co.morale = Math.max(0, co.morale - (1.5 * speed));
-            co.cust = Math.max(0, Math.floor(co.cust * (0.98 - (speed - 1) * 0.01)));
+            const decayMultiplier = isHardMode ? 1.5 : 1;
+            co.qual = Math.max(0, co.qual - (2 * speed * decayMultiplier));
+            co.morale = Math.max(0, co.morale - (1.5 * speed * decayMultiplier));
+            const retentionRate = isHardMode ? 0.96 : 0.98;
+            co.cust = Math.max(0, Math.floor(co.cust * (retentionRate - (speed - 1) * 0.01)));
             co.revBoost = Math.floor(co.revBoost * 0.7);
             
             if (co.qual > 70) co.rep = Math.min(100, co.rep + 1);
@@ -831,9 +995,9 @@
                 `Net Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\n` +
                 `Cash Balance: $${co.cash.toLocaleString()}\n` +
                 (co.loans.length > 0 ? `Active Loans: ${co.loans.length} (${calcDebt(co)}% debt)\n` : '') +
-                `\nQuality -${(2 * speed).toFixed(1)}\n` +
-                `Morale -${(1.5 * speed).toFixed(1)}\n` +
-                `Customer retention: ${(98 - (speed - 1) * 1).toFixed(0)}%`;
+                `\nQuality -${(2 * speed * decayMultiplier).toFixed(1)}\n` +
+                `Morale -${(1.5 * speed * decayMultiplier).toFixed(1)}\n` +
+                `Customer retention: ${(retentionRate * 100).toFixed(0)}%`;
             
             document.getElementById('monthlyReportScreen').classList.remove('hidden');
             updateDisplay();
@@ -847,9 +1011,16 @@
 
         function showEvent() {
             hideAll();
-            const cats = Object.keys(events);
+            
+            // In hard mode, mix in hard events
+            let allEvents = {...events};
+            if (isHardMode && Math.random() < 0.4) {
+                allEvents = {...allEvents, ...hardEvents};
+            }
+            
+            const cats = Object.keys(allEvents);
             const cat = cats[Math.floor(Math.random() * cats.length)];
-            const evts = events[cat];
+            const evts = allEvents[cat];
             const evt = evts[Math.floor(Math.random() * evts.length)];
             
             document.getElementById('eventTitle').textContent = evt.title;
@@ -885,6 +1056,11 @@
             if (e.emp) { co.emp += e.emp; txt += `Employees: ${e.emp > 0 ? '+' : ''}${e.emp}\n`; }
             if (e.rev) { co.rev += e.rev; txt += `Base Revenue: ${e.rev > 0 ? '+' : ''}$${Math.abs(e.rev)}/mo\n`; }
             if (e.exp) { co.exp += e.exp; txt += `Base Expenses: ${e.exp > 0 ? '+' : ''}$${Math.abs(e.exp)}/mo\n`; }
+            if (e.loans) {
+                co.loans.push(e.loans);
+                co.exp += e.loans.monthly;
+                txt += `New Loan: -$${e.loans.monthly}/mo for ${e.loans.months} months\n`;
+            }
             
             txt += '\nTake additional actions before next month.';
             
@@ -969,8 +1145,109 @@
             updateSelector();
         }
 
+        function openProductModal() {
+            document.getElementById('productName').value = '';
+            document.getElementById('productType').value = '';
+            document.getElementById('marketingStrategy').value = '';
+            document.getElementById('targetMarket').value = '';
+            document.getElementById('devBudget').value = '';
+            updateProductCost();
+            document.getElementById('productModal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('productModal').classList.add('hidden');
+        }
+
+        function updateProductCost() {
+            let cost = 0;
+            const devBudget = document.getElementById('devBudget').value;
+            const marketing = document.getElementById('marketingStrategy').value;
+            
+            if (devBudget === 'low') cost += 5000;
+            if (devBudget === 'medium') cost += 10000;
+            if (devBudget === 'high') cost += 20000;
+            
+            if (marketing === 'aggressive') cost += 5000;
+            if (marketing === 'moderate') cost += 2500;
+            if (marketing === 'minimal') cost += 500;
+            
+            document.getElementById('productTotalCost').textContent = cost.toLocaleString();
+            
+            if (cost > 0) {
+                const type = document.getElementById('productType').value;
+                let estimate = '';
+                if (type === 'premium') estimate = 'Est: High margins, fewer customers';
+                if (type === 'standard') estimate = 'Est: Balanced approach';
+                if (type === 'budget') estimate = 'Est: Low margins, high volume';
+                document.getElementById('productEstimate').textContent = estimate;
+            }
+        }
+
+        ['productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('change', updateProductCost);
+        });
+
+        function confirmProduct() {
+            const co = getCo();
+            const name = document.getElementById('productName').value;
+            const type = document.getElementById('productType').value;
+            const marketing = document.getElementById('marketingStrategy').value;
+            const target = document.getElementById('targetMarket').value;
+            const budget = document.getElementById('devBudget').value;
+            
+            if (!name || !type || !marketing || !target || !budget) {
+                return alert('Please fill all fields');
+            }
+            
+            let cost = 0;
+            if (budget === 'low') cost += 5000;
+            if (budget === 'medium') cost += 10000;
+            if (budget === 'high') cost += 20000;
+            if (marketing === 'aggressive') cost += 5000;
+            if (marketing === 'moderate') cost += 2500;
+            if (marketing === 'minimal') cost += 500;
+            
+            if (co.cash < cost) {
+                return alert(`Need $${cost.toLocaleString()}`);
+            }
+            
+            co.cash -= cost;
+            
+            // Calculate effects based on choices
+            let revGain = 0, custGain = 0, qualGain = 0;
+            
+            if (budget === 'high') { qualGain += 15; revGain += 800; }
+            if (budget === 'medium') { qualGain += 10; revGain += 500; }
+            if (budget === 'low') { qualGain += 5; revGain += 300; }
+            
+            if (type === 'premium') { revGain += 600; custGain += 20; }
+            if (type === 'standard') { revGain += 400; custGain += 40; }
+            if (type === 'budget') { revGain += 200; custGain += 70; }
+            
+            if (marketing === 'aggressive') { custGain += 50; }
+            if (marketing === 'moderate') { custGain += 30; }
+            if (marketing === 'minimal') { custGain += 15; }
+            
+            co.rev += revGain;
+            co.cust += custGain;
+            co.qual += qualGain;
+            
+            log(`+ Launched "${name}" (${type}) - +$${revGain}/mo, +${custGain} cust, +${qualGain} qual`);
+            closeProductModal();
+            updateDisplay();
+            updateSelector();
+        }
+
         function act(type) {
             const co = getCo();
+            
+            if (type === 'product') {
+                openProductModal();
+                return;
+            }
+            
             const ops = {
                 hire: () => {
                     if (co.cash < 2500) return log('X Need $2,500');
@@ -1024,11 +1301,6 @@
                     if (co.cash < 15000) return log('X Need $15,000');
                     co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2;
                     log('+ New location (+80 cust, +$1200/mo)');
-                },
-                product: () => {
-                    if (co.cash < 8000) return log('X Need $8,000');
-                    co.cash -= 8000; co.rev += 600; co.cust += 45; co.qual += 12;
-                    log('+ New product (+45 cust, +$600/mo)');
                 },
                 partner: () => {
                     if (co.cash < 4000) return log('X Need $4,000');
@@ -1124,8 +1396,8 @@
                     if (total < 20000) return log('X Need $20K total');
                     const name = prompt('Company name:');
                     if (!name) return;
-                    const types = Object.keys(bizTypes);
-                    const choice = prompt('Type:\n' + types.map((t, i) => `${i + 1}. ${bizTypes[t].name}`).join('\n'));
+                    const types = Object.keys(bizTypes[isHardMode ? 'hard' : 'easy']);
+                    const choice = prompt('Type:\n' + types.map((t, i) => `${i + 1}. ${bizTypes[isHardMode ? 'hard' : 'easy'][t].name}`).join('\n'));
                     const type = types[parseInt(choice) - 1];
                     if (!type) return alert('Invalid');
                     getCo().cash -= 20000;
@@ -1186,6 +1458,7 @@
             const co = getCo();
             document.getElementById('victoryContent').textContent = 
                 `${co.name} reached $150,000+ with 75+ reputation!\n\n` +
+                `Difficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\n` +
                 `Time: ${co.month} months\n` +
                 `Cash: $${co.cash.toLocaleString()}\n` +
                 `Employees: ${co.emp}\n` +
@@ -1202,6 +1475,7 @@
             const co = getCo();
             document.getElementById('gameOverContent').textContent = 
                 `${co.name} declared bankruptcy.\n\n` +
+                `Difficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\n` +
                 `Survived: ${co.month} months\n` +
                 `Cash: $${co.cash.toLocaleString()}\n` +
                 (companies.length > 1 ? `\nYou have ${companies.length - 1} other company/companies.` : '');
@@ -1222,21 +1496,23 @@
 
         function resetGame() {
             document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('setupScreen').classList.remove('hidden');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('difficultyScreen').classList.remove('hidden');
             companies = [];
             activeIdx = 0;
             nextId = 1;
             selectedBiz = null;
+            selectedDifficulty = null;
+            isHardMode = false;
             document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
+            document.querySelectorAll('.difficulty-option').forEach(el => el.classList.remove('selected'));
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('setupScreen').classList.remove('hidden');
-            selectBusiness('tech');
+            document.getElementById('setupScreen').classList.add('hidden');
+            document.getElementById('difficultyScreen').classList.remove('hidden');
         });
-
-        selectBusiness('tech');
     </script>
 </body>
 </html>
