@@ -62,7 +62,7 @@
             border: 2px solid var(--ui-color);
             padding: 20px;
             z-index: 1000;
-            min-width: 300px;
+            min-width: 320px;
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -80,6 +80,25 @@
             border: 2px solid var(--ui-color);
             margin-left: 10px;
             vertical-align: middle;
+        }
+
+        .color-picker-group {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid var(--ui-color);
+        }
+
+        .color-picker-group label {
+            display: block;
+            margin: 10px 0;
+        }
+
+        .color-picker-group input[type="color"] {
+            width: 60px;
+            height: 40px;
+            border: 2px solid var(--ui-color);
+            cursor: pointer;
+            margin-left: 10px;
         }
 
         .company-selector {
@@ -446,6 +465,24 @@
             width: auto;
             margin-right: 10px;
         }
+
+        .settings-section {
+            margin: 20px 0;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--ui-hover);
+        }
+
+        .settings-section:last-of-type {
+            border-bottom: none;
+        }
+
+        .custom-color-display {
+            display: inline-block;
+            padding: 5px 10px;
+            border: 1px solid var(--ui-color);
+            margin-left: 10px;
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -454,17 +491,19 @@
     <div id="settingsPanel" class="settings-panel hidden">
         <h3>SETTINGS</h3>
         
-        <label style="display: block; margin: 15px 0;">
-            Game Speed:
-            <select id="speedSelect">
-                <option value="slow">Slow</option>
-                <option value="normal" selected>Normal</option>
-                <option value="fast">Fast</option>
-            </select>
-        </label>
+        <div class="settings-section">
+            <label style="display: block; margin: 15px 0;">
+                Game Speed:
+                <select id="speedSelect">
+                    <option value="slow">Slow</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="fast">Fast</option>
+                </select>
+            </label>
+        </div>
 
-        <div style="margin: 20px 0;">
-            <strong style="display: block; margin-bottom: 10px;">Color Scheme:</strong>
+        <div class="settings-section">
+            <strong style="display: block; margin-bottom: 10px;">Color Presets:</strong>
             
             <div class="color-option" onclick="changeColors('#000', '#0f0')">
                 <input type="radio" name="colorScheme" value="green" checked>
@@ -527,8 +566,30 @@
             </div>
         </div>
 
-        <button onclick="restartGame()" style="width: 100%; margin-bottom: 10px; border-color: var(--warning-color); color: var(--warning-color);">RESTART GAME</button>
-        <button onclick="toggleSettings()" style="width: 100%;">CLOSE</button>
+        <div class="settings-section">
+            <strong style="display: block; margin-bottom: 10px;">Custom Colors:</strong>
+            
+            <div class="color-picker-group">
+                <label>
+                    Background Color:
+                    <input type="color" id="bgColorPicker" value="#000000" onchange="applyCustomColors()">
+                    <span class="custom-color-display" id="bgColorValue">#000000</span>
+                </label>
+                
+                <label>
+                    Text/UI Color:
+                    <input type="color" id="uiColorPicker" value="#00ff00" onchange="applyCustomColors()">
+                    <span class="custom-color-display" id="uiColorValue">#00ff00</span>
+                </label>
+
+                <button onclick="applyCustomColors()" style="width: 100%; margin-top: 10px;">Apply Custom Colors</button>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <button onclick="restartGame()" style="width: 100%; margin-bottom: 10px; border-color: var(--warning-color); color: var(--warning-color);">RESTART GAME</button>
+            <button onclick="toggleSettings()" style="width: 100%;">CLOSE</button>
+        </div>
     </div>
 
     <div id="transferModal" class="modal hidden">
@@ -969,27 +1030,62 @@
             root.style.setProperty('--bg-color', bgColor);
             root.style.setProperty('--ui-color', uiColor);
             
-            // Calculate hover color based on UI color
             const hoverColor = calculateHoverColor(bgColor, uiColor);
             root.style.setProperty('--ui-hover', hoverColor);
             
+            // Update color pickers to match preset
+            document.getElementById('bgColorPicker').value = bgColor;
+            document.getElementById('uiColorPicker').value = uiColor;
+            document.getElementById('bgColorValue').textContent = bgColor;
+            document.getElementById('uiColorValue').textContent = uiColor;
+            
             // Update radio button selection
-            event.currentTarget.querySelector('input[type="radio"]').checked = true;
+            if (event && event.currentTarget) {
+                event.currentTarget.querySelector('input[type="radio"]').checked = true;
+            }
         }
 
+        function applyCustomColors() {
+            const bgColor = document.getElementById('bgColorPicker').value;
+            const uiColor = document.getElementById('uiColorPicker').value;
+            
+            const root = document.documentElement;
+            root.style.setProperty('--bg-color', bgColor);
+            root.style.setProperty('--ui-color', uiColor);
+            
+            const hoverColor = calculateHoverColor(bgColor, uiColor);
+            root.style.setProperty('--ui-hover', hoverColor);
+            
+            // Update display values
+            document.getElementById('bgColorValue').textContent = bgColor;
+            document.getElementById('uiColorValue').textContent = uiColor;
+            
+            // Uncheck all preset radio buttons
+            document.querySelectorAll('input[name="colorScheme"]').forEach(radio => {
+                radio.checked = false;
+            });
+        }
+
+        // Update color value displays when color pickers change
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('bgColorPicker').addEventListener('input', function() {
+                document.getElementById('bgColorValue').textContent = this.value;
+            });
+            
+            document.getElementById('uiColorPicker').addEventListener('input', function() {
+                document.getElementById('uiColorValue').textContent = this.value;
+            });
+        });
+
         function calculateHoverColor(bgColor, uiColor) {
-            // Simple hover color calculation - mix background with UI color
             if (bgColor === '#000' || bgColor === '#000000') {
-                // For black backgrounds, create a dark version of the UI color
                 return uiColor.replace(/[0-9a-f]{2}/gi, match => {
                     const val = parseInt(match, 16);
                     return ('0' + Math.floor(val * 0.2).toString(16)).slice(-2);
                 });
             } else if (bgColor === '#ffffff' || bgColor === '#fff') {
-                // For white backgrounds, create a light version of the UI color
                 return '#f0f0f0';
             } else {
-                // For other backgrounds, slightly lighten
                 return bgColor.replace(/[0-9a-f]{2}/gi, match => {
                     const val = parseInt(match, 16);
                     return ('0' + Math.min(255, Math.floor(val * 1.3)).toString(16)).slice(-2);
