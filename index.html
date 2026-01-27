@@ -5,42 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Empire Simulator</title>
     <style>
-        :root {
-            --bg-primary: #0a0e27;
-            --bg-secondary: #151932;
-            --bg-tertiary: #1a1f3a;
-            --bg-card: #1e2442;
-            --border-color: #00ff88;
-            --border-subtle: #2a3f5f;
-            --text-primary: #e0e6ff;
-            --text-secondary: #00ff88;
-            --text-muted: #8892b0;
-            --text-warning: #ff5555;
-            --text-success: #00ff88;
-            --button-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --button-hover: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            --glow: 0 0 20px rgba(0, 255, 136, 0.3);
-        }
-        
-        .theme-modern {
-            --bg-primary: #f8f9fa;
-            --bg-secondary: #ffffff;
-            --bg-tertiary: #f1f3f5;
-            --bg-card: #ffffff;
-            --border-color: #4c6ef5;
-            --border-subtle: #dee2e6;
-            --text-primary: #212529;
-            --text-secondary: #4c6ef5;
-            --text-muted: #868e96;
-            --text-warning: #fa5252;
-            --text-success: #51cf66;
-            --button-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --button-hover: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-            --shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            --glow: 0 0 0 rgba(0, 0, 0, 0);
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
@@ -48,254 +12,168 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #0f0;
             padding: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            transition: all 0.3s ease;
-            line-height: 1.6;
+            line-height: 1.4;
         }
 
         .game-container {
-            background: var(--bg-secondary);
-            border-radius: 16px;
-            padding: 24px;
-            box-shadow: var(--shadow);
+            max-width: 1200px;
+            margin: 0 auto;
+            border: 2px solid #0f0;
+            padding: 20px;
+            background: #000;
         }
 
         .settings-btn {
             position: fixed;
-            top: 24px;
-            right: 24px;
-            background: var(--button-bg);
-            color: white;
-            border: none;
-            padding: 12px 20px;
+            top: 20px;
+            right: 20px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 10px 15px;
             cursor: pointer;
-            border-radius: 12px;
+            font-family: 'Courier New', monospace;
             z-index: 999;
-            font-weight: 600;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
         }
 
         .settings-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            background: #0f0;
+            color: #000;
         }
 
         .settings-panel {
             position: fixed;
-            top: 80px;
-            right: 24px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            padding: 24px;
-            border-radius: 16px;
+            top: 60px;
+            right: 20px;
+            background: #000;
+            border: 2px solid #0f0;
+            padding: 20px;
             z-index: 1000;
-            min-width: 320px;
-            box-shadow: var(--shadow);
+            min-width: 300px;
         }
 
         .settings-panel h3 {
-            margin-bottom: 16px;
-            color: var(--text-secondary);
+            margin-bottom: 15px;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 5px;
         }
 
         .company-selector {
             display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
+            gap: 10px;
+            margin-bottom: 20px;
             overflow-x: auto;
-            padding: 16px;
-            background: var(--bg-tertiary);
-            border-radius: 12px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .company-selector::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .company-selector::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 4px;
-        }
-
-        .company-selector::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
+            padding: 10px;
+            border: 1px solid #0f0;
         }
 
         .company-tab {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
-            padding: 16px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 10px 15px;
             cursor: pointer;
             white-space: nowrap;
-            min-width: 180px;
+            min-width: 150px;
             text-align: center;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .company-tab:hover {
-            border-color: var(--border-color);
-            transform: translateY(-2px);
-            box-shadow: var(--glow);
+            background: #003300;
         }
 
         .company-tab.active {
-            background: var(--button-bg);
-            color: white;
-            border-color: var(--border-color);
-            box-shadow: var(--glow);
-        }
-
-        .company-tab .company-name {
-            font-weight: 700;
-            font-size: 16px;
-            margin-bottom: 8px;
-        }
-
-        .company-tab .company-stats {
-            font-size: 13px;
-            opacity: 0.9;
+            background: #0f0;
+            color: #000;
         }
 
         .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #0f0;
+            padding: 10px;
         }
 
-        .stat-card {
-            background: var(--bg-card);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-subtle);
-            transition: all 0.3s ease;
+        .stat-item {
+            padding: 5px;
+            border-bottom: 1px solid #003300;
         }
 
-        .stat-card:hover {
-            border-color: var(--border-color);
-            box-shadow: var(--glow);
-            transform: translateY(-2px);
+        .stat-item:last-child {
+            border-bottom: none;
         }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-secondary);
-        }
-
-        .stat-change {
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .stat-change.positive { color: var(--text-success); }
-        .stat-change.negative { color: var(--text-warning); }
 
         .event-container {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            padding: 32px;
-            margin-bottom: 24px;
-            border-radius: 16px;
-            box-shadow: var(--glow);
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin-bottom: 20px;
         }
 
         .event-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--border-subtle);
+            font-size: 18px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #0f0;
         }
 
         .event-description {
-            font-size: 16px;
-            line-height: 1.8;
-            margin-bottom: 24px;
-            color: var(--text-muted);
+            margin-bottom: 20px;
+            line-height: 1.6;
         }
 
         .choices {
             display: grid;
-            gap: 12px;
+            gap: 10px;
         }
 
         .choice-button {
-            background: var(--bg-tertiary);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
-            padding: 20px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 15px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
             text-align: left;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            line-height: 1.6;
         }
 
         .choice-button:hover:not(:disabled) {
-            background: var(--button-bg);
-            color: white;
-            border-color: var(--border-color);
-            transform: translateX(4px);
-            box-shadow: var(--shadow);
+            background: #0f0;
+            color: #000;
         }
 
         .choice-button:disabled {
-            opacity: 0.4;
+            opacity: 0.3;
             cursor: not-allowed;
         }
 
         .actions {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 8px;
+            margin-bottom: 20px;
         }
 
         .action-button {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
-            padding: 16px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 12px;
             cursor: pointer;
-            font-family: inherit;
-            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
             text-align: center;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            line-height: 1.5;
         }
 
         .action-button:hover:not(:disabled) {
-            background: var(--button-bg);
-            color: white;
-            border-color: var(--border-color);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow);
+            background: #0f0;
+            color: #000;
         }
 
         .action-button:disabled {
@@ -304,189 +182,130 @@
         }
 
         button {
-            background: var(--button-bg);
-            color: white;
-            border: none;
-            padding: 14px 24px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 12px 20px;
             cursor: pointer;
-            font-family: inherit;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow);
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
         }
 
         button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            background: #0f0;
+            color: #000;
         }
 
         .title {
             text-align: center;
-            font-size: 48px;
-            font-weight: 900;
-            margin-bottom: 32px;
-            padding-bottom: 24px;
-            border-bottom: 3px solid var(--border-color);
-            background: linear-gradient(135deg, var(--text-secondary) 0%, var(--text-primary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -1px;
+            font-size: 32px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 10px;
+            letter-spacing: 3px;
         }
 
-        .warning { color: var(--text-warning); }
-        .success { color: var(--text-success); }
+        .warning { color: #f00; }
+        .success { color: #0ff; }
 
         .business-type {
-            background: var(--bg-card);
-            border: 2px solid var(--border-subtle);
-            padding: 24px;
-            margin: 16px 0;
+            border: 2px solid #0f0;
+            padding: 15px;
+            margin: 10px 0;
             cursor: pointer;
-            border-radius: 12px;
-            transition: all 0.3s ease;
         }
 
         .business-type:hover {
-            border-color: var(--border-color);
-            transform: translateX(4px);
-            box-shadow: var(--glow);
+            background: #003300;
         }
 
         .business-type.selected {
-            background: var(--button-bg);
-            color: white;
-            border-color: var(--border-color);
-            box-shadow: var(--glow);
-        }
-
-        .business-type-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .business-type-desc {
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .business-type.selected .business-type-desc {
-            color: rgba(255, 255, 255, 0.9);
+            background: #0f0;
+            color: #000;
         }
 
         .hidden { display: none !important; }
 
         .tab-buttons {
             display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 15px;
         }
 
         .tab-button {
             flex: 1;
-            padding: 14px;
-            font-size: 14px;
-            min-width: 120px;
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
+            padding: 10px;
+            font-size: 12px;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
         }
 
         .tab-button.active {
-            background: var(--button-bg);
-            color: white;
-            border-color: var(--border-color);
+            background: #0f0;
+            color: #000;
         }
 
         .action-log {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            padding: 16px;
-            margin-bottom: 24px;
+            background: #000;
+            border: 1px solid #0f0;
+            padding: 15px;
+            margin-bottom: 15px;
             max-height: 200px;
             overflow-y: auto;
-            font-size: 13px;
-            border-radius: 12px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .action-log::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .action-log::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-            border-radius: 4px;
-        }
-
-        .action-log::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 4px;
+            font-size: 11px;
         }
 
         .loan-section {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            padding: 24px;
-            margin-bottom: 24px;
-            border-radius: 12px;
-            box-shadow: var(--glow);
+            border: 2px solid #0f0;
+            padding: 15px;
+            margin-bottom: 20px;
         }
 
         .loan-section h3 {
-            margin-bottom: 16px;
-            color: var(--text-secondary);
+            margin-bottom: 10px;
         }
 
         .loan-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
         }
 
         .debt-warning {
-            background: rgba(255, 85, 85, 0.1);
-            border: 2px solid var(--text-warning);
-            padding: 16px;
-            margin-bottom: 24px;
-            border-radius: 12px;
-            font-weight: 600;
+            background: #000;
+            border: 2px solid #f00;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #f00;
         }
 
         .portfolio-summary {
-            background: var(--bg-card);
-            border: 2px solid var(--border-color);
-            padding: 20px;
-            margin-bottom: 24px;
-            border-radius: 12px;
-            box-shadow: var(--glow);
+            border: 2px solid #0f0;
+            padding: 15px;
+            margin-bottom: 20px;
         }
 
         .portfolio-summary h3 {
-            margin-bottom: 12px;
-            color: var(--text-secondary);
+            margin-bottom: 10px;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 5px;
         }
 
         input, select {
-            background: var(--bg-card);
-            color: var(--text-primary);
-            border: 2px solid var(--border-subtle);
-            padding: 14px;
-            font-family: inherit;
+            background: #000;
+            color: #0f0;
+            border: 2px solid #0f0;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
             width: 100%;
-            margin: 12px 0;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s ease;
+            margin: 10px 0;
+            font-size: 14px;
         }
 
         input:focus, select:focus {
             outline: none;
-            border-color: var(--border-color);
-            box-shadow: var(--glow);
+            border-color: #0ff;
         }
 
         .modal {
@@ -495,62 +314,36 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 2000;
-            backdrop-filter: blur(8px);
         }
 
         .modal-content {
-            background: var(--bg-secondary);
-            padding: 32px;
-            border-radius: 16px;
+            background: #000;
+            padding: 30px;
+            border: 3px solid #0f0;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border: 2px solid var(--border-color);
         }
 
         .modal-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            color: var(--text-secondary);
+            font-size: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #0f0;
+            padding-bottom: 10px;
         }
 
         .modal-buttons {
             display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            gap: 10px;
+            margin-top: 20px;
         }
 
         .modal-buttons button {
             flex: 1;
-        }
-
-        .transfer-modal select {
-            margin: 16px 0;
-        }
-
-        .transfer-modal input[type="number"] {
-            margin: 16px 0;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-in {
-            animation: slideIn 0.5s ease;
         }
 
         @media (max-width: 768px) {
@@ -558,119 +351,140 @@
             .stats { grid-template-columns: 1fr 1fr; }
             .loan-grid { grid-template-columns: 1fr; }
         }
+
+        .report-box {
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-box {
+            border: 2px solid #0f0;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+
+        pre {
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
-    <button class="settings-btn" onclick="toggleSettings()">⚙️ Settings</button>
+    <button class="settings-btn" onclick="toggleSettings()">SETTINGS</button>
     
     <div id="settingsPanel" class="settings-panel hidden">
-        <h3>⚙️ Game Settings</h3>
-        <label style="display: block; margin: 16px 0;">
-            <span style="display: block; margin-bottom: 8px; font-weight: 600;">Theme</span>
-            <select id="themeSelect" onchange="changeTheme()">
-                <option value="dark">Dark (Cyberpunk)</option>
-                <option value="modern">Light (Modern)</option>
-            </select>
-        </label>
-        <label style="display: block; margin: 16px 0;">
-            <span style="display: block; margin-bottom: 8px; font-weight: 600;">Game Speed</span>
+        <h3>SETTINGS</h3>
+        <label style="display: block; margin: 15px 0;">
+            Game Speed:
             <select id="speedSelect">
-                <option value="slow">Slow (Realistic)</option>
+                <option value="slow">Slow</option>
                 <option value="normal" selected>Normal</option>
                 <option value="fast">Fast</option>
             </select>
         </label>
-        <button onclick="toggleSettings()" style="width: 100%; margin-top: 16px;">Close</button>
+        <button onclick="toggleSettings()" style="width: 100%;">CLOSE</button>
     </div>
 
     <div id="transferModal" class="modal hidden">
-        <div class="modal-content transfer-modal">
-            <div class="modal-title">💸 Transfer Funds</div>
-            <p style="color: var(--text-muted); margin-bottom: 16px;">Move money between your companies</p>
+        <div class="modal-content">
+            <div class="modal-title">TRANSFER FUNDS</div>
+            <p style="margin-bottom: 15px;">Move money between companies</p>
             <label>
-                <span style="display: block; margin-bottom: 8px; font-weight: 600;">From: <span id="fromCompanyName"></span></span>
-                <span style="color: var(--text-muted);">Available: $<span id="availableCash">0</span></span>
+                FROM: <span id="fromCompanyName"></span><br>
+                Available: $<span id="availableCash">0</span>
             </label>
             <label>
-                <span style="display: block; margin: 16px 0 8px 0; font-weight: 600;">To Company:</span>
+                TO:<br>
                 <select id="targetCompany"></select>
             </label>
             <label>
-                <span style="display: block; margin: 16px 0 8px 0; font-weight: 600;">Amount:</span>
+                AMOUNT:<br>
                 <input type="number" id="transferAmount" placeholder="Enter amount" min="0">
             </label>
             <div class="modal-buttons">
-                <button onclick="confirmTransfer()">Transfer</button>
-                <button onclick="closeTransferModal()" style="background: var(--bg-tertiary); color: var(--text-primary);">Cancel</button>
+                <button onclick="confirmTransfer()">TRANSFER</button>
+                <button onclick="closeTransferModal()">CANCEL</button>
             </div>
         </div>
     </div>
 
     <div class="game-container">
-        <div class="title">BUSINESS EMPIRE</div>
+        <div class="title">BUSINESS EMPIRE SIMULATOR</div>
         
         <div id="setupScreen">
-            <div style="max-width: 800px; margin: 0 auto;">
-                <h2 style="font-size: 32px; margin-bottom: 24px;">Create Your Business</h2>
-                <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
-                <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
-                
-                <h3 style="font-size: 24px; margin: 32px 0 16px 0;">Choose Your Industry</h3>
-                
-                <div class="business-type" onclick="selectBusiness('tech')">
-                    <div class="business-type-title">🖥️ Tech Startup</div>
-                    <div class="business-type-desc">High growth potential, volatile market</div>
-                    <div style="font-size: 13px; margin-top: 8px;">💰 $8,000 • 👥 2 employees • ⭐ Quality: 40</div>
-                </div>
-                
-                <div class="business-type" onclick="selectBusiness('retail')">
-                    <div class="business-type-title">🛍️ Retail Store</div>
-                    <div class="business-type-desc">Steady customer flow, inventory management</div>
-                    <div style="font-size: 13px; margin-top: 8px;">💰 $10,000 • 👥 3 employees • ⭐ Quality: 50</div>
-                </div>
-                
-                <div class="business-type" onclick="selectBusiness('restaurant')">
-                    <div class="business-type-title">🍽️ Restaurant</div>
-                    <div class="business-type-desc">High volume, quality-critical operations</div>
-                    <div style="font-size: 13px; margin-top: 8px;">💰 $7,000 • 👥 4 employees • ⭐ Quality: 45</div>
-                </div>
-                
-                <div class="business-type" onclick="selectBusiness('consulting')">
-                    <div class="business-type-title">💼 Consulting Firm</div>
-                    <div class="business-type-desc">Reputation-dependent, high margins</div>
-                    <div style="font-size: 13px; margin-top: 8px;">💰 $12,000 • 👥 2 employees • ⭐ Quality: 60</div>
-                </div>
-                
-                <div class="business-type" onclick="selectBusiness('ecommerce')">
-                    <div class="business-type-title">📦 E-Commerce</div>
-                    <div class="business-type-desc">Online sales, scalable infrastructure</div>
-                    <div style="font-size: 13px; margin-top: 8px;">💰 $9,000 • 👥 2 employees • ⭐ Quality: 45</div>
-                </div>
-                
-                <button onclick="startGame()" style="width: 100%; padding: 20px; margin-top: 32px; font-size: 18px;">🚀 Start Your Journey</button>
+            <h2 style="margin-bottom: 20px;">CREATE YOUR BUSINESS</h2>
+            <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
+            <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
+            
+            <h3 style="margin: 30px 0 15px 0; border-bottom: 1px solid #0f0; padding-bottom: 5px;">CHOOSE BUSINESS TYPE</h3>
+            
+            <div class="business-type" onclick="selectBusiness('tech')">
+                <strong>TECH STARTUP</strong><br>
+                High growth, volatile market<br>
+                Start: $8K | 2 employees | Quality: 40
             </div>
+            
+            <div class="business-type" onclick="selectBusiness('retail')">
+                <strong>RETAIL STORE</strong><br>
+                Steady income, inventory focus<br>
+                Start: $10K | 3 employees | Quality: 50
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('restaurant')">
+                <strong>RESTAURANT</strong><br>
+                High volume, quality critical<br>
+                Start: $7K | 4 employees | Quality: 45
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('consulting')">
+                <strong>CONSULTING FIRM</strong><br>
+                Reputation dependent, high margins<br>
+                Start: $12K | 2 employees | Quality: 60
+            </div>
+            
+            <div class="business-type" onclick="selectBusiness('ecommerce')">
+                <strong>E-COMMERCE</strong><br>
+                Online sales, scalable<br>
+                Start: $9K | 2 employees | Quality: 45
+            </div>
+            
+            <button onclick="startGame()" style="width: 100%; padding: 15px; margin-top: 20px;">START GAME</button>
         </div>
 
         <div id="gameScreen" class="hidden">
             <div id="portfolioSummary" class="portfolio-summary hidden">
-                <h3>📊 Portfolio Overview</h3>
-                <div id="portfolioContent" style="font-size: 14px; line-height: 2;"></div>
+                <h3>PORTFOLIO OVERVIEW</h3>
+                <pre id="portfolioContent"></pre>
             </div>
 
             <div id="debtWarning" class="debt-warning hidden"></div>
             <div id="companySelector" class="company-selector"></div>
 
-            <div class="stats" id="statsContainer"></div>
-
-            <div id="monthlyReportScreen" class="hidden animate-in">
-                <div style="background: var(--bg-card); padding: 32px; margin-bottom: 24px; border: 2px solid var(--border-color); border-radius: 16px; box-shadow: var(--glow);">
-                    <h3 style="font-size: 28px; margin-bottom: 24px; color: var(--text-secondary);">📊 Monthly Report - Month <span id="reportMonth"></span></h3>
-                    <div id="reportContent" style="font-size: 16px; line-height: 2;"></div>
-                </div>
-                <button onclick="showEvent()" style="width: 100%; padding: 20px; font-size: 16px;">Continue to Monthly Event →</button>
+            <div class="stats">
+                <div class="stat-item">CASH: $<span id="cash">0</span></div>
+                <div class="stat-item">MONTH: <span id="month">1</span></div>
+                <div class="stat-item">EMPLOYEES: <span id="employees">0</span></div>
+                <div class="stat-item">REPUTATION: <span id="reputation">0</span>/100</div>
+                <div class="stat-item">CUSTOMERS: <span id="customers">0</span></div>
+                <div class="stat-item">QUALITY: <span id="quality">0</span>/100</div>
+                <div class="stat-item">REVENUE/MO: $<span id="revenue">0</span></div>
+                <div class="stat-item">EXPENSES/MO: $<span id="expenses">0</span></div>
+                <div class="stat-item">MORALE: <span id="morale">0</span>/100</div>
+                <div class="stat-item">DEBT: <span id="debtCapacity">0</span>%</div>
             </div>
 
-            <div id="eventScreen" class="hidden animate-in">
+            <div id="monthlyReportScreen" class="hidden">
+                <div class="report-box">
+                    <h3>MONTHLY REPORT - MONTH <span id="reportMonth"></span></h3>
+                    <pre id="reportContent"></pre>
+                </div>
+                <button onclick="showEvent()" style="width: 100%; padding: 15px;">CONTINUE</button>
+            </div>
+
+            <div id="eventScreen" class="hidden">
                 <div class="event-container">
                     <div class="event-title" id="eventTitle"></div>
                     <div class="event-description" id="eventDescription"></div>
@@ -678,51 +492,38 @@
                 </div>
             </div>
 
-            <div id="freeActionScreen" class="hidden animate-in">
-                <div style="background: var(--bg-card); border: 2px solid var(--border-color); padding: 32px; margin-bottom: 24px; border-radius: 16px; box-shadow: var(--glow);" id="eventResult"></div>
+            <div id="freeActionScreen" class="hidden">
+                <div class="result-box" id="eventResult"></div>
                 
                 <div class="loan-section">
-                    <h3>💵 Financing Options</h3>
-                    <p style="color: var(--text-muted); margin-bottom: 16px;">Current debt capacity: <strong><span id="currentDebt">0</span>%</strong></p>
+                    <h3>FINANCING (DEBT: <span id="currentDebt">0</span>%)</h3>
                     <div class="loan-grid">
                         <button class="action-button" onclick="quickLoan(5000, 250, 36)">
-                            <div style="font-size: 16px; margin-bottom: 8px;">💳 Micro Loan</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">+$5,000</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">-$250/mo × 36</div>
-                            <div style="font-size: 11px; margin-top: 4px;">Max: 20% debt</div>
+                            MICRO LOAN<br>+$5,000<br>-$250/mo x36<br>Max: 20% debt
                         </button>
                         <button class="action-button" onclick="quickLoan(10000, 500, 36)">
-                            <div style="font-size: 16px; margin-bottom: 8px;">💼 Small Loan</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">+$10,000</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">-$500/mo × 36</div>
-                            <div style="font-size: 11px; margin-top: 4px;">Max: 30% debt</div>
+                            SMALL LOAN<br>+$10,000<br>-$500/mo x36<br>Max: 30% debt
                         </button>
                         <button class="action-button" onclick="quickLoan(30000, 1500, 36)">
-                            <div style="font-size: 16px; margin-bottom: 8px;">🏦 Business Loan</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">+$30,000</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">-$1,500/mo × 36</div>
-                            <div style="font-size: 11px; margin-top: 4px;">Max: 50% | Rep: 50+</div>
+                            BUSINESS LOAN<br>+$30,000<br>-$1,500/mo x36<br>Max: 50% | Rep: 50+
                         </button>
                         <button class="action-button" onclick="quickLoan(75000, 3500, 36)">
-                            <div style="font-size: 16px; margin-bottom: 8px;">🏛️ Credit Line</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">+$75,000</div>
-                            <div style="color: var(--text-muted); font-size: 12px;">-$3,500/mo × 36</div>
-                            <div style="font-size: 11px; margin-top: 4px;">Max: 65% | Rep: 70+</div>
+                            CREDIT LINE<br>+$75,000<br>-$3,500/mo x36<br>Max: 65% | Rep: 70+
                         </button>
                     </div>
                 </div>
 
                 <div class="action-log">
-                    <strong style="color: var(--text-secondary);">📝 Action Log:</strong><br>
-                    <span id="logContent" style="color: var(--text-muted);">No actions taken this month.</span>
+                    <strong>ACTION LOG:</strong>
+                    <div id="logContent" style="margin-top: 5px;">No actions taken this month.</div>
                 </div>
 
                 <div class="tab-buttons">
-                    <button class="tab-button active" onclick="showTab('ops')">🔧 Operations</button>
-                    <button class="tab-button" onclick="showTab('growth')">📈 Growth</button>
-                    <button class="tab-button" onclick="showTab('finance')">💰 Finance</button>
-                    <button class="tab-button" onclick="showTab('marketing')">📣 Marketing</button>
-                    <button class="tab-button" onclick="showTab('empire')">🏰 Empire</button>
+                    <button class="tab-button active" onclick="showTab('ops')">OPERATIONS</button>
+                    <button class="tab-button" onclick="showTab('growth')">GROWTH</button>
+                    <button class="tab-button" onclick="showTab('finance')">FINANCE</button>
+                    <button class="tab-button" onclick="showTab('marketing')">MARKETING</button>
+                    <button class="tab-button" onclick="showTab('empire')">EMPIRE</button>
                 </div>
 
                 <div id="opsTab" class="actions"></div>
@@ -731,29 +532,25 @@
                 <div id="marketingTab" class="actions hidden"></div>
                 <div id="empireTab" class="actions hidden"></div>
 
-                <button onclick="nextMonth()" style="width: 100%; padding: 20px; margin-top: 24px; font-size: 18px;">⏭️ ADVANCE TO NEXT MONTH</button>
+                <button onclick="nextMonth()" style="width: 100%; padding: 15px; margin-top: 15px;">ADVANCE TO NEXT MONTH</button>
             </div>
 
-            <div id="victoryScreen" class="hidden animate-in">
-                <div style="background: var(--bg-card); border: 3px solid var(--text-success); padding: 48px; text-align: center; border-radius: 16px; box-shadow: 0 0 40px rgba(0, 255, 136, 0.5);">
-                    <h2 style="font-size: 48px; margin-bottom: 24px;">🎉 MILESTONE ACHIEVED! 🎉</h2>
-                    <div id="victoryContent" style="font-size: 18px; line-height: 2;"></div>
+            <div id="victoryScreen" class="hidden">
+                <div class="result-box" style="text-align: center;">
+                    <h2 style="margin-bottom: 20px;">VICTORY!</h2>
+                    <pre id="victoryContent"></pre>
                 </div>
-                <div style="display: grid; gap: 12px; margin-top: 24px;">
-                    <button onclick="continueAfterVictory()" style="width: 100%; padding: 20px;">Continue Building Empire</button>
-                    <button onclick="resetGame()" style="width: 100%; padding: 20px; background: var(--bg-tertiary); color: var(--text-primary);">Start Fresh</button>
-                </div>
+                <button onclick="continueAfterVictory()" style="width: 100%; padding: 15px; margin-bottom: 10px;">CONTINUE</button>
+                <button onclick="resetGame()" style="width: 100%; padding: 15px;">NEW GAME</button>
             </div>
 
-            <div id="gameOverScreen" class="hidden animate-in">
-                <div style="background: var(--bg-card); border: 3px solid var(--text-warning); padding: 48px; text-align: center; border-radius: 16px;">
-                    <h2 style="font-size: 48px; margin-bottom: 24px;" class="warning">💀 BANKRUPTCY 💀</h2>
-                    <div id="gameOverContent" style="font-size: 18px; line-height: 2;"></div>
+            <div id="gameOverScreen" class="hidden">
+                <div class="result-box" style="text-align: center;">
+                    <h2 class="warning" style="margin-bottom: 20px;">BANKRUPTCY</h2>
+                    <pre id="gameOverContent"></pre>
                 </div>
-                <div style="display: grid; gap: 12px; margin-top: 24px;">
-                    <button onclick="closeCompany()" style="width: 100%; padding: 20px;">Close This Company</button>
-                    <button onclick="resetGame()" style="width: 100%; padding: 20px; background: var(--bg-tertiary); color: var(--text-primary);">New Game</button>
-                </div>
+                <button onclick="closeCompany()" style="width: 100%; padding: 15px; margin-bottom: 10px;">CLOSE COMPANY</button>
+                <button onclick="resetGame()" style="width: 100%; padding: 15px;">NEW GAME</button>
             </div>
         </div>
     </div>
@@ -772,107 +569,102 @@
 
         const actionDefs = {
             ops: [
-                { id: 'hire', icon: '👥', label: 'Hire Employee', cost: 2500 },
-                { id: 'fire', icon: '❌', label: 'Fire Employee', cost: 800, gain: true },
-                { id: 'train', icon: '📚', label: 'Train Staff', cost: 1500 },
-                { id: 'wages', icon: '💵', label: 'Raise Wages', cost: 'varies' },
-                { id: 'workplace', icon: '🏢', label: 'Improve Workplace', cost: 3000 },
-                { id: 'automate', icon: '🤖', label: 'Automate Process', cost: 5000 },
-                { id: 'quality', icon: '✨', label: 'Quality Control', cost: 2000 },
-                { id: 'cs', icon: '☎️', label: 'Customer Service', cost: 1800 },
-                { id: 'maintain', icon: '🔧', label: 'Maintenance', cost: 1000 }
+                { id: 'hire', label: 'Hire Employee', cost: 2500 },
+                { id: 'fire', label: 'Fire Employee', cost: 800, gain: true },
+                { id: 'train', label: 'Train Staff', cost: 1500 },
+                { id: 'wages', label: 'Raise Wages', cost: 'varies' },
+                { id: 'workplace', label: 'Improve Workplace', cost: 3000 },
+                { id: 'automate', label: 'Automate', cost: 5000 },
+                { id: 'quality', label: 'Quality Control', cost: 2000 },
+                { id: 'cs', label: 'Customer Service', cost: 1800 },
+                { id: 'maintain', label: 'Maintenance', cost: 1000 }
             ],
             growth: [
-                { id: 'expand', icon: '🏪', label: 'New Location', cost: 15000 },
-                { id: 'product', icon: '📦', label: 'New Product', cost: 8000 },
-                { id: 'partner', icon: '🤝', label: 'Partnership', cost: 4000 },
-                { id: 'franchise', icon: '🏬', label: 'Franchise', cost: 12000 },
-                { id: 'acquire', icon: '🎯', label: 'Acquire Competitor', cost: 25000 },
-                { id: 'intl', icon: '🌍', label: 'Go International', cost: 35000 }
+                { id: 'expand', label: 'New Location', cost: 15000 },
+                { id: 'product', label: 'New Product', cost: 8000 },
+                { id: 'partner', label: 'Partnership', cost: 4000 },
+                { id: 'franchise', label: 'Franchise', cost: 12000 },
+                { id: 'acquire', label: 'Acquire Competitor', cost: 25000 },
+                { id: 'intl', label: 'Go International', cost: 35000 }
             ],
             finance: [
-                { id: 'investor', icon: '💼', label: 'Seek Investor', cost: 'equity' },
-                { id: 'cut', icon: '✂️', label: 'Cut Costs', cost: 'harsh' },
-                { id: 'stocks', icon: '📈', label: 'Invest Stocks', cost: 5000 },
-                { id: 'realestate', icon: '🏠', label: 'Real Estate', cost: 18000 },
-                { id: 'refinance', icon: '🔄', label: 'Refinance', cost: 3000 },
-                { id: 'payoff', icon: '💳', label: 'Pay Off Loan', cost: 'varies' }
+                { id: 'investor', label: 'Seek Investor', cost: 'equity' },
+                { id: 'cut', label: 'Cut Costs', cost: 'harsh' },
+                { id: 'stocks', label: 'Invest Stocks', cost: 5000 },
+                { id: 'realestate', label: 'Real Estate', cost: 18000 },
+                { id: 'refinance', label: 'Refinance', cost: 3000 },
+                { id: 'payoff', label: 'Pay Off Loan', cost: 'varies' }
             ],
             marketing: [
-                { id: 'marketing', icon: '📢', label: 'Campaign', cost: 3500 },
-                { id: 'social', icon: '📱', label: 'Social Media', cost: 1200 },
-                { id: 'pr', icon: '📰', label: 'PR Campaign', cost: 2500 },
-                { id: 'rebrand', icon: '🎨', label: 'Rebrand', cost: 5000 },
-                { id: 'influencer', icon: '⭐', label: 'Influencer', cost: 4000 },
-                { id: 'seo', icon: '🔍', label: 'SEO', cost: 3000 }
+                { id: 'marketing', label: 'Campaign', cost: 3500 },
+                { id: 'social', label: 'Social Media', cost: 1200 },
+                { id: 'pr', label: 'PR Campaign', cost: 2500 },
+                { id: 'rebrand', label: 'Rebrand', cost: 5000 },
+                { id: 'influencer', label: 'Influencer', cost: 4000 },
+                { id: 'seo', label: 'SEO', cost: 3000 }
             ],
             empire: [
-                { id: 'newco', icon: '🏢', label: 'Start Company', cost: 20000 },
-                { id: 'transfer', icon: '💸', label: 'Transfer Funds', cost: 'free' },
-                { id: 'cross', icon: '🔗', label: 'Cross-Promote', cost: 2000 },
-                { id: 'merge', icon: '🔀', label: 'Merge', cost: 'free' },
-                { id: 'sell', icon: '💰', label: 'Sell Company', cost: 'free' }
+                { id: 'newco', label: 'Start Company', cost: 20000 },
+                { id: 'transfer', label: 'Transfer Funds', cost: 'free' },
+                { id: 'cross', label: 'Cross-Promote', cost: 2000 },
+                { id: 'merge', label: 'Merge', cost: 'free' },
+                { id: 'sell', label: 'Sell Company', cost: 'free' }
             ]
         };
 
         const events = {
             quality: [
-                { title: "Quality Complaints Rising", desc: "Multiple customers report quality issues with your products. Social media sentiment is turning negative and you're seeing increased return requests.", choices: [
-                    { text: "Full refund program + public apology (-$800, Rep +8, preserve brand trust)", cost: 800, effects: { rep: 8, cust: -3 } },
-                    { text: "Hire dedicated QA team (-$4000, Quality +20, prevent future issues)", cost: 4000, effects: { qual: 20, emp: 1 } },
-                    { text: "Ignore and focus on marketing (Risk: Rep -20, Cust -25)", cost: 0, effects: { rep: -20, cust: -25 } }
+                { title: "Quality Complaints", desc: "Multiple customers report quality issues. Social media sentiment turning negative.", choices: [
+                    { text: "Refund program + apology (-$800, Rep +8)", cost: 800, effects: { rep: 8, cust: -3 } },
+                    { text: "Hire QA team (-$4000, Quality +20)", cost: 4000, effects: { qual: 20, emp: 1 } },
+                    { text: "Ignore (Rep -20, Cust -25)", cost: 0, effects: { rep: -20, cust: -25 } }
                 ]},
-                { title: "Equipment Breakdown", desc: "Your primary production equipment has failed during peak season. Every day of downtime costs revenue and customer trust.", choices: [
-                    { text: "Emergency 24/7 repair (-$5000, Quality +8, back in 2 days)", cost: 5000, effects: { qual: 8 } },
-                    { text: "Standard repair (-$2000, Quality -5, back in 1 week)", cost: 2000, effects: { qual: -5, rev: -800 } },
-                    { text: "Upgrade to new equipment (-$12000, Quality +30, long-term benefit)", cost: 12000, effects: { qual: 30, exp: -200 } }
+                { title: "Equipment Failure", desc: "Primary production equipment failed during peak season.", choices: [
+                    { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
+                    { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
+                    { text: "Upgrade equipment (-$12000, Quality +30)", cost: 12000, effects: { qual: 30, exp: -200 } }
                 ]}
             ],
             employee: [
-                { title: "Top Talent Being Poached", desc: "Your star employee received an offer from a competitor - 60% higher salary plus equity. They're seriously considering leaving.", choices: [
-                    { text: "Match offer fully (Expenses +$1800/mo, keep expertise)", cost: 0, effects: { exp: 1800, morale: 10 } },
-                    { text: "Counter with equity package (Expenses +$900/mo, Morale +15)", cost: 0, effects: { exp: 900, morale: 15 } },
-                    { text: "Let them go, hire replacement (-$3500, Quality -15 temporarily)", cost: 3500, effects: { qual: -15, morale: -8 } }
+                { title: "Talent Poaching", desc: "Star employee received competitor offer - 60% higher salary.", choices: [
+                    { text: "Match offer (Expenses +$1800/mo)", cost: 0, effects: { exp: 1800, morale: 10 } },
+                    { text: "Counter with equity (Expenses +$900/mo)", cost: 0, effects: { exp: 900, morale: 15 } },
+                    { text: "Let go, hire replacement (-$3500, Qual -15)", cost: 3500, effects: { qual: -15, morale: -8 } }
                 ]},
-                { title: "Team Morale Crisis", desc: "Anonymous employee survey reveals widespread dissatisfaction. Multiple team members are interviewing elsewhere.", choices: [
-                    { text: "Company-wide retreat + bonuses (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
-                    { text: "Raise salaries 15% across board (Expenses +$2000/mo, Morale +25)", cost: 0, effects: { exp: 2000, morale: 25 } },
-                    { text: "Do nothing (Risk losing employees, Morale -15)", cost: 0, effects: { morale: -15, emp: -1 } }
+                { title: "Morale Crisis", desc: "Employee survey reveals widespread dissatisfaction.", choices: [
+                    { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
+                    { text: "Raise salaries (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } },
+                    { text: "Do nothing (Morale -15, lose employee)", cost: 0, effects: { morale: -15, emp: -1 } }
                 ]}
             ],
             customer: [
-                { title: "Enterprise Client Opportunity", desc: "A Fortune 500 company wants to become your largest client, but demands 24/7 support and rapid scaling.", choices: [
-                    { text: "Accept with full expansion (-$10000, Revenue +$3500/mo, Employees +3)", cost: 10000, effects: { rev: 3500, emp: 3 } },
-                    { text: "Negotiate reduced scope (-$4000, Revenue +$1800/mo)", cost: 4000, effects: { rev: 1800 } },
-                    { text: "Decline - too risky for now", cost: 0, effects: {} }
+                { title: "Enterprise Client", desc: "Fortune 500 company wants exclusivity deal.", choices: [
+                    { text: "Accept + expand (-$10000, Rev +$3500/mo)", cost: 10000, effects: { rev: 3500, emp: 3 } },
+                    { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } },
+                    { text: "Decline", cost: 0, effects: {} }
                 ]},
-                { title: "Viral Positive Publicity", desc: "A major influencer spontaneously praised your business to millions of followers. Orders are flooding in faster than you can handle!", choices: [
-                    { text: "Scale up immediately (-$8000, Customers +100, capitalize on momentum)", cost: 8000, effects: { cust: 100, emp: 3 } },
-                    { text: "Moderate expansion (-$4000, Customers +60, maintain quality)", cost: 4000, effects: { cust: 60 } },
-                    { text: "Organic growth only (Customers +30, Quality +15, no debt)", cost: 0, effects: { cust: 30, qual: 15 } }
+                { title: "Viral Publicity", desc: "Influencer praised your business. Orders flooding in.", choices: [
+                    { text: "Scale up (-$8000, Cust +100)", cost: 8000, effects: { cust: 100, emp: 3 } },
+                    { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } },
+                    { text: "Organic growth (Cust +30, Qual +15)", cost: 0, effects: { cust: 30, qual: 15 } }
                 ]}
             ],
             market: [
-                { title: "Aggressive Competitor", desc: "A well-funded competitor just slashed prices by 40%. They're clearly trying to drive you out of business.", choices: [
-                    { text: "Price war response (Revenue -$2000/mo, Customers +25)", cost: 0, effects: { rev: -2000, cust: 25 } },
-                    { text: "Quality differentiation (-$5000, Quality +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } },
-                    { text: "Do nothing (Lose customers, Cust -40)", cost: 0, effects: { cust: -40 } }
+                { title: "Price War", desc: "Well-funded competitor slashed prices by 40%.", choices: [
+                    { text: "Match prices (Rev -$2000/mo, Cust +25)", cost: 0, effects: { rev: -2000, cust: 25 } },
+                    { text: "Quality focus (-$5000, Qual +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } },
+                    { text: "Do nothing (Cust -40)", cost: 0, effects: { cust: -40 } }
                 ]},
-                { title: "New Market Discovery", desc: "Market research reveals an underserved customer segment that perfectly matches your capabilities.", choices: [
-                    { text: "Full market entry (-$15000, Revenue +$3500/mo, Customers +80)", cost: 15000, effects: { rev: 3500, cust: 80 } },
-                    { text: "Test pilot program (-$6000, Revenue +$1500/mo, Customers +35)", cost: 6000, effects: { rev: 1500, cust: 35 } },
-                    { text: "Skip this opportunity", cost: 0, effects: {} }
+                { title: "New Market", desc: "Research reveals underserved segment.", choices: [
+                    { text: "Full entry (-$15000, Rev +$3500/mo)", cost: 15000, effects: { rev: 3500, cust: 80 } },
+                    { text: "Test pilot (-$6000, Rev +$1500/mo)", cost: 6000, effects: { rev: 1500, cust: 35 } },
+                    { text: "Skip", cost: 0, effects: {} }
                 ]}
             ]
         };
 
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('hidden');
-        }
-
-        function changeTheme() {
-            const theme = document.getElementById('themeSelect').value;
-            document.body.className = theme !== 'dark' ? 'theme-' + theme : '';
         }
 
         function selectBusiness(type) {
@@ -896,7 +688,7 @@
 
         function startGame() {
             const name = document.getElementById('companyName').value || 'TechCorp';
-            if (!selectedBiz) return alert('Please select a business type');
+            if (!selectedBiz) return alert('Select business type');
             companies = [createCo(selectedBiz, name, true)];
             activeIdx = 0;
             document.getElementById('setupScreen').classList.add('hidden');
@@ -917,11 +709,7 @@
                     let costText = typeof action.cost === 'number' 
                         ? (action.gain ? `+$${action.cost.toLocaleString()}` : `-$${action.cost.toLocaleString()}`)
                         : action.cost;
-                    btn.innerHTML = `
-                        <div style="font-size: 20px; margin-bottom: 8px;">${action.icon}</div>
-                        <div style="font-weight: 700; margin-bottom: 4px;">${action.label}</div>
-                        <div style="font-size: 12px; color: var(--text-muted);">${costText}</div>
-                    `;
+                    btn.innerHTML = `${action.label}<br>${costText}`;
                     btn.onclick = () => act(action.id);
                     container.appendChild(btn);
                 });
@@ -935,23 +723,14 @@
                 const net = calcRev(co) - calcExp(co);
                 const tab = document.createElement('div');
                 tab.className = 'company-tab' + (i === activeIdx ? ' active' : '');
-                tab.innerHTML = `
-                    <div class="company-name">${co.name}</div>
-                    <div class="company-stats">
-                        💰 $${co.cash.toLocaleString()}<br>
-                        ${net >= 0 ? '📈' : '📉'} ${net >= 0 ? '+' : ''}$${net.toLocaleString()}/mo
-                    </div>
-                `;
+                tab.innerHTML = `${co.name}<br>$${co.cash.toLocaleString()}<br>${net >= 0 ? '+' : ''}$${net.toLocaleString()}/mo`;
                 tab.onclick = () => switchCo(i);
                 sel.appendChild(tab);
             });
             const newTab = document.createElement('div');
             newTab.className = 'company-tab';
             newTab.style.borderStyle = 'dashed';
-            newTab.innerHTML = `
-                <div class="company-name">➕ New</div>
-                <div class="company-stats" style="font-size: 12px;">Start another<br>company</div>
-            `;
+            newTab.innerHTML = '+ NEW<br>COMPANY';
             newTab.onclick = () => act('newco');
             sel.appendChild(newTab);
             updatePortfolio();
@@ -962,12 +741,11 @@
                 const cash = companies.reduce((s, c) => s + c.cash, 0);
                 const rev = companies.reduce((s, c) => s + calcRev(c), 0);
                 const emp = companies.reduce((s, c) => s + c.emp, 0);
-                document.getElementById('portfolioContent').innerHTML = `
-                    <strong>Companies:</strong> ${companies.length}<br>
-                    <strong>Total Cash:</strong> $${cash.toLocaleString()}<br>
-                    <strong>Combined Revenue:</strong> $${rev.toLocaleString()}/mo<br>
-                    <strong>Total Employees:</strong> ${emp}
-                `;
+                document.getElementById('portfolioContent').textContent = 
+                    `Companies: ${companies.length}\n` +
+                    `Total Cash: $${cash.toLocaleString()}\n` +
+                    `Combined Revenue: $${rev.toLocaleString()}/mo\n` +
+                    `Total Employees: ${emp}`;
                 document.getElementById('portfolioSummary').classList.remove('hidden');
             } else {
                 document.getElementById('portfolioSummary').classList.add('hidden');
@@ -998,33 +776,20 @@
 
         function updateDisplay() {
             const co = getCo();
-            const container = document.getElementById('statsContainer');
-            
-            const stats = [
-                { label: 'Cash Balance', value: `$${co.cash.toLocaleString()}`, change: null },
-                { label: 'Month', value: co.month, change: null },
-                { label: 'Employees', value: co.emp, change: null },
-                { label: 'Reputation', value: `${Math.max(0, Math.min(100, co.rep))}/100`, change: null },
-                { label: 'Customers', value: co.cust, change: null },
-                { label: 'Quality', value: `${Math.max(0, Math.min(100, co.qual))}/100`, change: null },
-                { label: 'Revenue/Month', value: `$${calcRev(co).toLocaleString()}`, change: co.prevRev ? calcRev(co) - co.prevRev : null },
-                { label: 'Expenses/Month', value: `$${calcExp(co).toLocaleString()}`, change: co.prevExp ? calcExp(co) - co.prevExp : null },
-                { label: 'Morale', value: `${Math.max(0, Math.min(100, co.morale))}/100`, change: null },
-                { label: 'Debt Capacity', value: `${calcDebt(co)}%`, change: null }
-            ];
-
-            container.innerHTML = stats.map(stat => `
-                <div class="stat-card">
-                    <div class="stat-label">${stat.label}</div>
-                    <div class="stat-value">${stat.value}</div>
-                    ${stat.change !== null ? `<div class="stat-change ${stat.change >= 0 ? 'positive' : 'negative'}">${stat.change >= 0 ? '+' : ''}${stat.change}</div>` : ''}
-                </div>
-            `).join('');
-
+            document.getElementById('cash').textContent = co.cash.toLocaleString();
+            document.getElementById('month').textContent = co.month;
+            document.getElementById('employees').textContent = co.emp;
+            document.getElementById('reputation').textContent = Math.max(0, Math.min(100, co.rep));
+            document.getElementById('customers').textContent = co.cust;
+            document.getElementById('quality').textContent = Math.max(0, Math.min(100, co.qual));
+            document.getElementById('morale').textContent = Math.max(0, Math.min(100, co.morale));
+            document.getElementById('revenue').textContent = calcRev(co).toLocaleString();
+            document.getElementById('expenses').textContent = calcExp(co).toLocaleString();
             const debt = calcDebt(co);
+            document.getElementById('debtCapacity').textContent = debt;
             document.getElementById('currentDebt').textContent = debt;
             if (debt > 60) {
-                document.getElementById('debtWarning').textContent = `⚠️ HIGH DEBT WARNING: ${debt}% capacity. Pay off loans to improve financial health.`;
+                document.getElementById('debtWarning').textContent = `WARNING: HIGH DEBT ${debt}%`;
                 document.getElementById('debtWarning').classList.remove('hidden');
             } else {
                 document.getElementById('debtWarning').classList.add('hidden');
@@ -1059,19 +824,17 @@
             if (co.qual > 70) co.rep = Math.min(100, co.rep + 1);
             
             document.getElementById('reportMonth').textContent = co.month;
-            document.getElementById('reportContent').innerHTML = `
-                <div style="margin-bottom: 16px;"><strong style="font-size: 20px; color: var(--text-secondary);">${co.name}</strong></div>
-                <div style="display: grid; gap: 12px;">
-                    <div><span class="success">📈 Revenue:</span> +$${rev.toLocaleString()}</div>
-                    <div><span class="warning">📉 Expenses:</span> -$${exp.toLocaleString()}</div>
-                    <div style="font-size: 18px; font-weight: 700;"><span style="color: var(--text-secondary);">💰 Net Income:</span> <span class="${net >= 0 ? 'success' : 'warning'}">${net >= 0 ? '+' : ''}$${net.toLocaleString()}</span></div>
-                    <div style="margin-top: 8px;"><strong>💵 Cash Balance:</strong> $${co.cash.toLocaleString()}</div>
-                    ${co.loans.length > 0 ? `<div><strong>📋 Active Loans:</strong> ${co.loans.length} (${calcDebt(co)}% debt)</div>` : ''}
-                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-size: 14px;">
-                        Natural changes: Quality -${(2 * speed).toFixed(1)}, Morale -${(1.5 * speed).toFixed(1)}, Customer retention ${(98 - (speed - 1) * 1).toFixed(0)}%
-                    </div>
-                </div>
-            `;
+            document.getElementById('reportContent').textContent = 
+                `${co.name}\n\n` +
+                `Revenue: +$${rev.toLocaleString()}\n` +
+                `Expenses: -$${exp.toLocaleString()}\n` +
+                `Net Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\n` +
+                `Cash Balance: $${co.cash.toLocaleString()}\n` +
+                (co.loans.length > 0 ? `Active Loans: ${co.loans.length} (${calcDebt(co)}% debt)\n` : '') +
+                `\nQuality -${(2 * speed).toFixed(1)}\n` +
+                `Morale -${(1.5 * speed).toFixed(1)}\n` +
+                `Customer retention: ${(98 - (speed - 1) * 1).toFixed(0)}%`;
+            
             document.getElementById('monthlyReportScreen').classList.remove('hidden');
             updateDisplay();
             updateSelector();
@@ -1089,7 +852,7 @@
             const evts = events[cat];
             const evt = evts[Math.floor(Math.random() * evts.length)];
             
-            document.getElementById('eventTitle').textContent = '📋 ' + evt.title;
+            document.getElementById('eventTitle').textContent = evt.title;
             document.getElementById('eventDescription').textContent = evt.desc;
             
             const container = document.getElementById('eventChoices');
@@ -1099,8 +862,8 @@
                 btn.className = 'choice-button';
                 btn.onclick = () => handleChoice(choice);
                 btn.disabled = getCo().cash < choice.cost;
-                btn.innerHTML = choice.text + (getCo().cash < choice.cost && choice.cost > 0 ? 
-                    ` <strong style="color: var(--text-warning);">[Need $${choice.cost.toLocaleString()}]</strong>` : '');
+                btn.textContent = choice.text + (getCo().cash < choice.cost && choice.cost > 0 ? 
+                    ` [Need $${choice.cost.toLocaleString()}]` : '');
                 container.appendChild(btn);
             });
             document.getElementById('eventScreen').classList.remove('hidden');
@@ -1111,24 +874,19 @@
             const co = getCo();
             co.cash -= choice.cost;
             
-            let txt = `<h3 style="color: var(--text-secondary); margin-bottom: 16px;">📋 Event Decision</h3>`;
-            txt += `<p style="margin-bottom: 24px; line-height: 1.8;">${choice.text}</p>`;
-            txt += `<h4 style="margin-bottom: 12px; color: var(--text-secondary);">Immediate Effects:</h4>`;
-            txt += `<div style="display: grid; gap: 8px;">`;
-            
-            if (choice.cost !== 0) txt += `<div>💰 Cash: ${choice.cost > 0 ? '-' : '+'}$${Math.abs(choice.cost).toLocaleString()}</div>`;
+            let txt = `DECISION: ${choice.text}\n\nEFFECTS:\n`;
+            if (choice.cost !== 0) txt += `Cash: ${choice.cost > 0 ? '-' : '+'}$${Math.abs(choice.cost).toLocaleString()}\n`;
             
             const e = choice.effects;
-            if (e.rep) { co.rep += e.rep; txt += `<div>⭐ Reputation: ${e.rep > 0 ? '+' : ''}${e.rep}</div>`; }
-            if (e.cust) { co.cust += e.cust; txt += `<div>👤 Customers: ${e.cust > 0 ? '+' : ''}${e.cust}</div>`; }
-            if (e.qual) { co.qual += e.qual; txt += `<div>✨ Quality: ${e.qual > 0 ? '+' : ''}${e.qual}</div>`; }
-            if (e.morale) { co.morale += e.morale; txt += `<div>😊 Morale: ${e.morale > 0 ? '+' : ''}${e.morale}</div>`; }
-            if (e.emp) { co.emp += e.emp; txt += `<div>👥 Employees: ${e.emp > 0 ? '+' : ''}${e.emp}</div>`; }
-            if (e.rev) { co.rev += e.rev; txt += `<div>📈 Base Revenue: ${e.rev > 0 ? '+' : ''}$${Math.abs(e.rev)}/mo</div>`; }
-            if (e.exp) { co.exp += e.exp; txt += `<div>📉 Base Expenses: ${e.exp > 0 ? '+' : ''}$${Math.abs(e.exp)}/mo</div>`; }
+            if (e.rep) { co.rep += e.rep; txt += `Reputation: ${e.rep > 0 ? '+' : ''}${e.rep}\n`; }
+            if (e.cust) { co.cust += e.cust; txt += `Customers: ${e.cust > 0 ? '+' : ''}${e.cust}\n`; }
+            if (e.qual) { co.qual += e.qual; txt += `Quality: ${e.qual > 0 ? '+' : ''}${e.qual}\n`; }
+            if (e.morale) { co.morale += e.morale; txt += `Morale: ${e.morale > 0 ? '+' : ''}${e.morale}\n`; }
+            if (e.emp) { co.emp += e.emp; txt += `Employees: ${e.emp > 0 ? '+' : ''}${e.emp}\n`; }
+            if (e.rev) { co.rev += e.rev; txt += `Base Revenue: ${e.rev > 0 ? '+' : ''}$${Math.abs(e.rev)}/mo\n`; }
+            if (e.exp) { co.exp += e.exp; txt += `Base Expenses: ${e.exp > 0 ? '+' : ''}$${Math.abs(e.exp)}/mo\n`; }
             
-            txt += `</div>`;
-            txt += `<p style="margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--border-subtle); color: var(--text-muted);">You can now take additional actions before advancing to the next month.</p>`;
+            txt += '\nTake additional actions before next month.';
             
             co.rep = Math.max(0, Math.min(100, co.rep));
             co.qual = Math.max(0, Math.min(100, co.qual));
@@ -1136,9 +894,9 @@
             co.cust = Math.max(0, co.cust);
             co.emp = Math.max(1, co.emp);
             
-            document.getElementById('eventResult').innerHTML = txt;
+            document.getElementById('eventResult').innerHTML = '<pre>' + txt + '</pre>';
             actions = [];
-            document.getElementById('logContent').innerHTML = '<span style="color: var(--text-muted);">No actions taken this month.</span>';
+            document.getElementById('logContent').textContent = 'No actions taken this month.';
             document.getElementById('freeActionScreen').classList.remove('hidden');
             updateDisplay();
             updateSelector();
@@ -1146,9 +904,7 @@
 
         function log(msg) {
             actions.push(msg);
-            document.getElementById('logContent').innerHTML = actions.map(a => 
-                `<div style="margin: 4px 0;">${a}</div>`
-            ).join('');
+            document.getElementById('logContent').innerHTML = actions.join('<br>');
         }
 
         function showTab(tab) {
@@ -1167,19 +923,19 @@
             if (amt >= 10000) max = 30;
             if (amt >= 30000) max = 50;
             if (amt >= 75000) max = 65;
-            if (debt >= max) return log(`<span class="warning">✗ Debt capacity too high (${debt}%)</span>`);
-            if (amt >= 30000 && co.rep < 50) return log('<span class="warning">✗ Reputation too low (need 50+)</span>');
-            if (amt >= 75000 && co.rep < 70) return log('<span class="warning">✗ Reputation too low (need 70+)</span>');
+            if (debt >= max) return log(`X Debt too high (${debt}%)`);
+            if (amt >= 30000 && co.rep < 50) return log('X Reputation too low (need 50+)');
+            if (amt >= 75000 && co.rep < 70) return log('X Reputation too low (need 70+)');
             co.cash += amt;
             co.loans.push({ monthly: mo, months: mos });
             co.exp += mo;
-            log(`<span class="success">✓ Loan approved: +$${amt.toLocaleString()} (-$${mo}/mo × ${mos})</span>`);
+            log(`+ Loan: +$${amt.toLocaleString()} (-$${mo}/mo x${mos})`);
             updateDisplay();
             updateSelector();
         }
 
         function openTransferModal() {
-            if (companies.length < 2) return log('<span class="warning">✗ Need 2+ companies</span>');
+            if (companies.length < 2) return log('X Need 2+ companies');
             const co = getCo();
             document.getElementById('fromCompanyName').textContent = co.name;
             document.getElementById('availableCash').textContent = co.cash.toLocaleString();
@@ -1207,7 +963,7 @@
             
             co.cash -= amt;
             companies[targetIdx].cash += amt;
-            log(`<span class="success">✓ Transferred $${amt.toLocaleString()} to ${companies[targetIdx].name}</span>`);
+            log(`+ Transfer: $${amt.toLocaleString()} to ${companies[targetIdx].name}`);
             closeTransferModal();
             updateDisplay();
             updateSelector();
@@ -1217,185 +973,181 @@
             const co = getCo();
             const ops = {
                 hire: () => {
-                    if (co.cash < 2500) return log('<span class="warning">✗ Need $2,500</span>');
+                    if (co.cash < 2500) return log('X Need $2,500');
                     co.cash -= 2500; co.emp++; co.qual += 3;
-                    log('<span class="success">✓ Hired employee (+1 emp, Qual +3)</span>');
+                    log('+ Hired employee (+1, Qual +3)');
                 },
                 fire: () => {
-                    if (co.emp <= 1) return log('<span class="warning">✗ Cannot fire yourself</span>');
+                    if (co.emp <= 1) return log('X Cannot fire self');
                     co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5;
-                    log('<span class="warning">✓ Fired employee (+$800, Rep -8, Morale -15, Qual -5)</span>');
+                    log('+ Fired employee (+$800, Rep -8)');
                 },
                 train: () => {
-                    if (co.cash < 1500) return log('<span class="warning">✗ Need $1,500</span>');
+                    if (co.cash < 1500) return log('X Need $1,500');
                     co.cash -= 1500; co.qual += 10; co.morale += 12;
-                    log('<span class="success">✓ Training completed (Qual +10, Morale +12)</span>');
+                    log('+ Training (Qual +10, Morale +12)');
                 },
                 wages: () => {
                     const cost = co.emp * 300;
-                    if (co.cash < cost) return log(`<span class="warning">✗ Need $${cost.toLocaleString()}</span>`);
+                    if (co.cash < cost) return log(`X Need $${cost.toLocaleString()}`);
                     co.cash -= cost; co.exp += co.emp * 30; co.morale += 20; co.rep += 5;
-                    log(`<span class="success">✓ Wages raised (Morale +20, Rep +5, +$${co.emp * 30}/mo expenses)</span>`);
+                    log(`+ Wages raised (Morale +20, +$${co.emp * 30}/mo exp)`);
                 },
                 workplace: () => {
-                    if (co.cash < 3000) return log('<span class="warning">✗ Need $3,000</span>');
+                    if (co.cash < 3000) return log('X Need $3,000');
                     co.cash -= 3000; co.morale += 18; co.rep += 8;
-                    log('<span class="success">✓ Workplace improved (Morale +18, Rep +8)</span>');
+                    log('+ Workplace improved (Morale +18)');
                 },
                 automate: () => {
-                    if (co.cash < 5000) return log('<span class="warning">✗ Need $5,000</span>');
+                    if (co.cash < 5000) return log('X Need $5,000');
                     co.cash -= 5000; co.qual += 12; co.exp += 200;
-                    log('<span class="success">✓ Process automated (Qual +12, +$200/mo maintenance)</span>');
+                    log('+ Automated (Qual +12, +$200/mo)');
                 },
                 quality: () => {
-                    if (co.cash < 2000) return log('<span class="warning">✗ Need $2,000</span>');
+                    if (co.cash < 2000) return log('X Need $2,000');
                     co.cash -= 2000; co.qual += 15; co.revBoost += 400;
-                    log('<span class="success">✓ Quality control (Qual +15, +$400/mo temp boost)</span>');
+                    log('+ QC (Qual +15, +$400/mo temp)');
                 },
                 cs: () => {
-                    if (co.cash < 1800) return log('<span class="warning">✗ Need $1,800</span>');
+                    if (co.cash < 1800) return log('X Need $1,800');
                     co.cash -= 1800;
                     const gain = Math.floor(25 / (1 + co.cust * 0.004));
                     co.cust += gain; co.rep += 10;
-                    log(`<span class="success">✓ Customer service (+${gain} cust, Rep +10)</span>`);
+                    log(`+ CS (+${gain} cust, Rep +10)`);
                 },
                 maintain: () => {
-                    if (co.cash < 1000) return log('<span class="warning">✗ Need $1,000</span>');
+                    if (co.cash < 1000) return log('X Need $1,000');
                     co.cash -= 1000; co.qual += 6;
-                    log('<span class="success">✓ Maintenance (Qual +6)</span>');
+                    log('+ Maintenance (Qual +6)');
                 },
                 expand: () => {
-                    if (co.cash < 15000) return log('<span class="warning">✗ Need $15,000</span>');
+                    if (co.cash < 15000) return log('X Need $15,000');
                     co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2;
-                    log('<span class="success">✓ New location (+80 cust, +$1200/mo, +2 emp)</span>');
+                    log('+ New location (+80 cust, +$1200/mo)');
                 },
                 product: () => {
-                    if (co.cash < 8000) return log('<span class="warning">✗ Need $8,000</span>');
+                    if (co.cash < 8000) return log('X Need $8,000');
                     co.cash -= 8000; co.rev += 600; co.cust += 45; co.qual += 12;
-                    log('<span class="success">✓ New product (+45 cust, Qual +12, +$600/mo)</span>');
+                    log('+ New product (+45 cust, +$600/mo)');
                 },
                 partner: () => {
-                    if (co.cash < 4000) return log('<span class="warning">✗ Need $4,000</span>');
+                    if (co.cash < 4000) return log('X Need $4,000');
                     co.cash -= 4000; co.cust += 50; co.rep += 12; co.revBoost += 800;
-                    log('<span class="success">✓ Partnership (+50 cust, Rep +12, +$800/mo temp)</span>');
+                    log('+ Partnership (+50 cust, +$800/mo temp)');
                 },
                 franchise: () => {
-                    if (co.cash < 12000) return log('<span class="warning">✗ Need $12,000</span>');
+                    if (co.cash < 12000) return log('X Need $12,000');
                     co.cash -= 12000; co.rev += 1500; co.cust += 60; co.rep += 15;
-                    log('<span class="success">✓ Franchise (+60 cust, +$1500/mo, Rep +15)</span>');
+                    log('+ Franchise (+60 cust, +$1500/mo)');
                 },
                 acquire: () => {
-                    if (co.cash < 25000) return log('<span class="warning">✗ Need $25,000</span>');
+                    if (co.cash < 25000) return log('X Need $25,000');
                     co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800;
-                    log('<span class="success">✓ Acquisition (+75 cust, +3 emp, +$1800/mo)</span>');
+                    log('+ Acquisition (+75 cust, +$1800/mo)');
                 },
                 intl: () => {
-                    if (co.cash < 35000) return log('<span class="warning">✗ Need $35,000</span>');
+                    if (co.cash < 35000) return log('X Need $35,000');
                     co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20;
-                    log('<span class="success">✓ International expansion (+120 cust, +$3000/mo, +5 emp, Rep +20)</span>');
+                    log('+ International (+120 cust, +$3000/mo)');
                 },
                 investor: () => {
-                    if (co.rep < 40) return log('<span class="warning">✗ Reputation too low</span>');
+                    if (co.rep < 40) return log('X Reputation too low');
                     co.cash += 20000; co.exp += Math.floor(co.rev * 0.08);
-                    log('<span class="success">✓ Investor secured (+$20K, 8% revenue share)</span>');
+                    log('+ Investor (+$20K, 8% rev share)');
                 },
                 cut: () => {
-                    if (co.emp <= 2) return log('<span class="warning">✗ Not enough employees</span>');
+                    if (co.emp <= 2) return log('X Not enough employees');
                     co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10;
-                    log('<span class="warning">✓ Emergency cuts (-2 emp, +$1500, severe morale impact)</span>');
+                    log('+ Emergency cuts (-2 emp, +$1500)');
                 },
                 stocks: () => {
-                    if (co.cash < 5000) return log('<span class="warning">✗ Need $5,000</span>');
+                    if (co.cash < 5000) return log('X Need $5,000');
                     co.cash -= 5000;
                     const gain = Math.random() > 0.5 ? Math.floor(Math.random() * 3000 + 1000) : -Math.floor(Math.random() * 2000);
                     co.cash += gain;
-                    log(`<span class="${gain > 0 ? 'success' : 'warning'}">✓ Stock market ${gain > 0 ? 'gained' : 'lost'} $${Math.abs(gain).toLocaleString()}</span>`);
+                    log(`+ Stocks ${gain > 0 ? 'gained' : 'lost'} $${Math.abs(gain).toLocaleString()}`);
                 },
                 realestate: () => {
-                    if (co.cash < 18000) return log('<span class="warning">✗ Need $18,000</span>');
+                    if (co.cash < 18000) return log('X Need $18,000');
                     co.cash -= 18000; co.rev += 1000;
-                    log('<span class="success">✓ Real estate purchased (+$1000/mo passive income)</span>');
+                    log('+ Real estate (+$1000/mo)');
                 },
                 refinance: () => {
-                    if (co.loans.length === 0) return log('<span class="warning">✗ No loans to refinance</span>');
-                    if (co.cash < 3000) return log('<span class="warning">✗ Need $3,000</span>');
+                    if (co.loans.length === 0) return log('X No loans');
+                    if (co.cash < 3000) return log('X Need $3,000');
                     co.cash -= 3000;
                     co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.exp -= r; l.monthly -= r; });
-                    log('<span class="success">✓ Debt refinanced (25% payment reduction)</span>');
+                    log('+ Refinanced (25% reduction)');
                 },
                 payoff: () => {
-                    if (co.loans.length === 0) return log('<span class="warning">✗ No loans outstanding</span>');
+                    if (co.loans.length === 0) return log('X No loans');
                     const loan = co.loans[0];
                     const owed = loan.monthly * loan.months;
-                    if (co.cash < owed) return log(`<span class="warning">✗ Need $${owed.toLocaleString()}</span>`);
+                    if (co.cash < owed) return log(`X Need $${owed.toLocaleString()}`);
                     co.cash -= owed; co.exp -= loan.monthly; co.loans.shift();
-                    log(`<span class="success">✓ Loan paid off (-$${owed.toLocaleString()})</span>`);
+                    log(`+ Paid off (-$${owed.toLocaleString()})`);
                 },
                 marketing: () => {
-                    if (co.cash < 3500) return log('<span class="warning">✗ Need $3,500</span>');
+                    if (co.cash < 3500) return log('X Need $3,500');
                     co.cash -= 3500;
                     const gain = Math.floor(40 / (1 + co.cust * 0.002));
                     co.revBoost += 2000; co.cust += gain; co.rep += 10;
-                    log(`<span class="success">✓ Marketing campaign (+${gain} cust, Rep +10, +$2000/mo temp)</span>`);
+                    log(`+ Campaign (+${gain} cust, +$2000/mo temp)`);
                 },
                 social: () => {
-                    if (co.cash < 1200) return log('<span class="warning">✗ Need $1,200</span>');
+                    if (co.cash < 1200) return log('X Need $1,200');
                     co.cash -= 1200; co.cust += 20;
-                    log('<span class="success">✓ Social media (+20 customers)</span>');
+                    log('+ Social media (+20 cust)');
                 },
                 pr: () => {
-                    if (co.cash < 2500) return log('<span class="warning">✗ Need $2,500</span>');
+                    if (co.cash < 2500) return log('X Need $2,500');
                     co.cash -= 2500; co.rep += 18; co.cust += 25;
-                    log('<span class="success">✓ PR campaign (Rep +18, +25 cust)</span>');
+                    log('+ PR (Rep +18, +25 cust)');
                 },
                 rebrand: () => {
-                    if (co.cash < 5000) return log('<span class="warning">✗ Need $5,000</span>');
+                    if (co.cash < 5000) return log('X Need $5,000');
                     co.cash -= 5000; co.rep += 15; co.cust += 40;
-                    log('<span class="success">✓ Rebranded (Rep +15, +40 cust)</span>');
+                    log('+ Rebrand (Rep +15, +40 cust)');
                 },
                 influencer: () => {
-                    if (co.cash < 4000) return log('<span class="warning">✗ Need $4,000</span>');
+                    if (co.cash < 4000) return log('X Need $4,000');
                     co.cash -= 4000; co.cust += 55; co.rep += 15;
-                    log('<span class="success">✓ Influencer campaign (+55 cust, Rep +15)</span>');
+                    log('+ Influencer (+55 cust, Rep +15)');
                 },
                 seo: () => {
-                    if (co.cash < 3000) return log('<span class="warning">✗ Need $3,000</span>');
+                    if (co.cash < 3000) return log('X Need $3,000');
                     co.cash -= 3000; co.cust += 35; co.rev += 600;
-                    log('<span class="success">✓ SEO optimization (+35 cust, +$600/mo)</span>');
+                    log('+ SEO (+35 cust, +$600/mo)');
                 },
                 newco: () => {
                     const total = companies.reduce((s, c) => s + c.cash, 0);
-                    if (total < 20000) return log('<span class="warning">✗ Need $20K total across portfolio</span>');
-                    const name = prompt('Enter company name:');
+                    if (total < 20000) return log('X Need $20K total');
+                    const name = prompt('Company name:');
                     if (!name) return;
                     const types = Object.keys(bizTypes);
-                    const choice = prompt('Choose business type:\n' + types.map((t, i) => 
-                        `${i + 1}. ${bizTypes[t].name}`
-                    ).join('\n'));
+                    const choice = prompt('Type:\n' + types.map((t, i) => `${i + 1}. ${bizTypes[t].name}`).join('\n'));
                     const type = types[parseInt(choice) - 1];
-                    if (!type) return alert('Invalid selection');
+                    if (!type) return alert('Invalid');
                     getCo().cash -= 20000;
                     companies.push(createCo(type, name, false));
                     activeIdx = companies.length - 1;
                     updateSelector();
                     updateDisplay();
-                    log(`<span class="success">✓ Started ${name}</span>`);
+                    log(`+ Started ${name}`);
                 },
-                transfer: () => {
-                    openTransferModal();
-                },
+                transfer: () => { openTransferModal(); },
                 cross: () => {
-                    if (companies.length < 2) return log('<span class="warning">✗ Need 2+ companies</span>');
-                    if (co.cash < 2000) return log('<span class="warning">✗ Need $2,000</span>');
+                    if (companies.length < 2) return log('X Need 2+ companies');
+                    if (co.cash < 2000) return log('X Need $2,000');
                     co.cash -= 2000;
                     companies.forEach(c => { c.cust += 12; c.rep += 4; });
-                    log('<span class="success">✓ Cross-promotion (+12 cust, +4 rep to all companies)</span>');
+                    log('+ Cross-promo (+12 cust all)');
                     updateSelector();
                 },
                 merge: () => {
-                    if (companies.length < 2) return log('<span class="warning">✗ Need 2+ companies</span>');
+                    if (companies.length < 2) return log('X Need 2+ companies');
                     const idx = parseInt(prompt('Merge with:\n' + companies.map((c, i) => 
-                        i !== activeIdx ? `${i + 1}. ${c.name} ($${c.cash.toLocaleString()})` : ''
+                        i !== activeIdx ? `${i + 1}. ${c.name}` : ''
                     ).filter(Boolean).join('\n'))) - 1;
                     if (idx < 0 || idx >= companies.length || idx === activeIdx) return;
                     const target = companies[idx];
@@ -1404,11 +1156,11 @@
                     co.qual = Math.floor((co.qual + target.qual) / 2);
                     companies.splice(idx, 1);
                     if (idx < activeIdx) activeIdx--;
-                    log(`<span class="success">✓ Merged ${target.name} into ${co.name}</span>`);
+                    log(`+ Merged ${target.name}`);
                     updateSelector();
                 },
                 sell: () => {
-                    if (companies.length <= 1) return log('<span class="warning">✗ Cannot sell only company</span>');
+                    if (companies.length <= 1) return log('X Cannot sell only company');
                     const val = co.cash + (calcRev(co) - calcExp(co)) * 15;
                     if (confirm(`Sell ${co.name} for $${val.toLocaleString()}?`)) {
                         companies.splice(activeIdx, 1);
@@ -1416,7 +1168,7 @@
                         companies[activeIdx].cash += val;
                         updateSelector();
                         updateDisplay();
-                        log(`<span class="success">✓ Sold company for $${val.toLocaleString()}</span>`);
+                        log(`+ Sold for $${val.toLocaleString()}`);
                     }
                 }
             };
@@ -1432,17 +1184,14 @@
         function showVictory() {
             hideAll();
             const co = getCo();
-            document.getElementById('victoryContent').innerHTML = `
-                <p style="font-size: 20px; margin-bottom: 24px;">${co.name} has reached <strong>$150,000+</strong> with <strong>75+ reputation</strong>!</p>
-                <div style="text-align: left; display: inline-block;">
-                    <p><strong>Time to Success:</strong> ${co.month} months</p>
-                    <p><strong>Final Cash:</strong> $${co.cash.toLocaleString()}</p>
-                    <p><strong>Employees:</strong> ${co.emp}</p>
-                    <p><strong>Customers:</strong> ${co.cust}</p>
-                    <p><strong>Reputation:</strong> ${co.rep}/100</p>
-                </div>
-                <p style="margin-top: 24px;">Continue building your empire or start fresh!</p>
-            `;
+            document.getElementById('victoryContent').textContent = 
+                `${co.name} reached $150,000+ with 75+ reputation!\n\n` +
+                `Time: ${co.month} months\n` +
+                `Cash: $${co.cash.toLocaleString()}\n` +
+                `Employees: ${co.emp}\n` +
+                `Customers: ${co.cust}\n` +
+                `Reputation: ${co.rep}/100\n\n` +
+                `Continue building your empire!`;
             document.getElementById('victoryScreen').classList.remove('hidden');
         }
 
@@ -1451,14 +1200,11 @@
         function showGameOver() {
             hideAll();
             const co = getCo();
-            document.getElementById('gameOverContent').innerHTML = `
-                <p style="font-size: 18px; margin-bottom: 24px;">${co.name} has declared bankruptcy.</p>
-                <div style="text-align: left; display: inline-block;">
-                    <p><strong>Survived:</strong> ${co.month} months</p>
-                    <p><strong>Final Cash:</strong> $${co.cash.toLocaleString()}</p>
-                    ${companies.length > 1 ? `<p style="margin-top: 16px;">You still have ${companies.length - 1} other ${companies.length > 2 ? 'companies' : 'company'}.</p>` : ''}
-                </div>
-            `;
+            document.getElementById('gameOverContent').textContent = 
+                `${co.name} declared bankruptcy.\n\n` +
+                `Survived: ${co.month} months\n` +
+                `Cash: $${co.cash.toLocaleString()}\n` +
+                (companies.length > 1 ? `\nYou have ${companies.length - 1} other company/companies.` : '');
             document.getElementById('gameOverScreen').classList.remove('hidden');
         }
 
@@ -1484,7 +1230,6 @@
             document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
         }
 
-        // Initialize - make sure setup screen is shown and game screen hidden on load
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('setupScreen').classList.remove('hidden');
