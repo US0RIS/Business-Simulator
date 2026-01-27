@@ -153,6 +153,16 @@
             cursor: not-allowed;
         }
 
+        .choice-button.ignore {
+            border-color: #f00;
+            color: #f00;
+        }
+
+        .choice-button.ignore:hover:not(:disabled) {
+            background: #f00;
+            color: #000;
+        }
+
         .actions {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -413,6 +423,7 @@
                 <option value="fast">Fast</option>
             </select>
         </label>
+        <button onclick="restartGame()" style="width: 100%; margin-bottom: 10px; background: #330000; border-color: #f00; color: #f00;">RESTART GAME</button>
         <button onclick="toggleSettings()" style="width: 100%;">CLOSE</button>
     </div>
 
@@ -701,18 +712,18 @@
 
         const bizTypes = {
             easy: {
-                tech: { name: 'Tech Startup', cash: 8000, emp: 2, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 2200 },
-                retail: { name: 'Retail Store', cash: 10000, emp: 3, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 2800 },
-                restaurant: { name: 'Restaurant', cash: 7000, emp: 4, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 3500 },
-                consulting: { name: 'Consulting', cash: 12000, emp: 2, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 2000 },
-                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 2, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 2100 }
+                tech: { name: 'Tech Startup', cash: 8000, emp: 0, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 800 },
+                retail: { name: 'Retail Store', cash: 10000, emp: 0, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 1200 },
+                restaurant: { name: 'Restaurant', cash: 7000, emp: 0, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 1500 },
+                consulting: { name: 'Consulting', cash: 12000, emp: 0, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 800 },
+                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 0, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 900 }
             },
             hard: {
-                tech: { name: 'Tech Startup', cash: 20000, emp: 1, qual: 20, cust: 0, rep: 10, rev: 0, exp: 1200 },
-                retail: { name: 'Retail Store', cash: 20000, emp: 2, qual: 30, cust: 0, rep: 15, rev: 0, exp: 1800 },
-                restaurant: { name: 'Restaurant', cash: 20000, emp: 2, qual: 25, cust: 0, rep: 10, rev: 0, exp: 2200 },
-                consulting: { name: 'Consulting', cash: 20000, emp: 1, qual: 35, cust: 0, rep: 20, rev: 0, exp: 1000 },
-                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 1, qual: 25, cust: 0, rep: 12, rev: 0, exp: 1400 }
+                tech: { name: 'Tech Startup', cash: 20000, emp: 0, qual: 20, cust: 0, rep: 10, rev: 0, exp: 500 },
+                retail: { name: 'Retail Store', cash: 20000, emp: 0, qual: 30, cust: 0, rep: 15, rev: 0, exp: 600 },
+                restaurant: { name: 'Restaurant', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 10, rev: 0, exp: 700 },
+                consulting: { name: 'Consulting', cash: 20000, emp: 0, qual: 35, cust: 0, rep: 20, rev: 0, exp: 400 },
+                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 12, rev: 0, exp: 500 }
             }
         };
 
@@ -763,81 +774,101 @@
 
         const hardEvents = {
             cash_flow: [
-                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", choices: [
+                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", 
+                  ignoreEffect: { cash: -5000, rep: -20, morale: -30 },
+                  choices: [
                     { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
-                    { text: "Delay vendor payments (Rep -15, possible lawsuits)", cost: 0, effects: { rep: -15, lawsuit: 0.3 } },
-                    { text: "Lay off staff temporarily (-2 emp, Morale -30)", cost: 0, effects: { emp: -2, morale: -30 } }
+                    { text: "Delay vendor payments (Rep -15, possible lawsuits)", cost: 0, effects: { rep: -15 } }
                 ]},
             ],
             competition: [
-                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", choices: [
+                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
+                  ignoreEffect: { cust: -50, rep: -10 },
+                  choices: [
                     { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
-                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } },
-                    { text: "Do nothing (Cust -50, Rep -10)", cost: 0, effects: { cust: -50, rep: -10 } }
+                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
                 ]}
             ],
             regulatory: [
-                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", choices: [
+                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", 
+                  ignoreEffect: { exp: 500 },
+                  choices: [
                     { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
-                    { text: "Minimal compliance (-$1500, risk fines)", cost: 1500, effects: { fineRisk: 0.4 } },
-                    { text: "Delay (automatic -$500/mo penalties)", cost: 0, effects: { exp: 500 } }
+                    { text: "Minimal compliance (-$1500, risk fines)", cost: 1500, effects: {} }
                 ]}
             ]
         };
 
         const events = {
             quality: [
-                { title: "Quality Complaints", desc: "Multiple customers report quality issues. Social media sentiment turning negative.", choices: [
+                { title: "Quality Complaints", desc: "Multiple customers report quality issues. Social media sentiment turning negative.", 
+                  ignoreEffect: { rep: -20, cust: -25 },
+                  choices: [
                     { text: "Refund program + apology (-$800, Rep +8)", cost: 800, effects: { rep: 8, cust: -3 } },
-                    { text: "Hire QA team (-$4000, Quality +20)", cost: 4000, effects: { qual: 20, emp: 1 } },
-                    { text: "Ignore (Rep -20, Cust -25)", cost: 0, effects: { rep: -20, cust: -25 } }
+                    { text: "Hire QA team (-$4000, Quality +20, +1 emp)", cost: 4000, effects: { qual: 20, emp: 1, exp: 600 } }
                 ]},
-                { title: "Equipment Failure", desc: "Primary production equipment failed during peak season.", choices: [
+                { title: "Equipment Failure", desc: "Primary production equipment failed during peak season.", 
+                  ignoreEffect: { qual: -15, rev: -1500 },
+                  choices: [
                     { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
                     { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
-                    { text: "Upgrade equipment (-$12000, Quality +30)", cost: 12000, effects: { qual: 30, exp: -200 } }
+                    { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo maintenance)", cost: 12000, effects: { qual: 30, exp: 200 } }
                 ]}
             ],
             employee: [
-                { title: "Talent Poaching", desc: "Star employee received competitor offer - 60% higher salary.", choices: [
+                { title: "Talent Poaching", desc: "Star employee received competitor offer - 60% higher salary.", 
+                  ignoreEffect: { qual: -15, morale: -8, emp: -1 },
+                  choices: [
                     { text: "Match offer (Expenses +$1800/mo)", cost: 0, effects: { exp: 1800, morale: 10 } },
                     { text: "Counter with equity (Expenses +$900/mo)", cost: 0, effects: { exp: 900, morale: 15 } },
                     { text: "Let go, hire replacement (-$3500, Qual -15)", cost: 3500, effects: { qual: -15, morale: -8 } }
                 ]},
-                { title: "Morale Crisis", desc: "Employee survey reveals widespread dissatisfaction.", choices: [
+                { title: "Morale Crisis", desc: "Employee survey reveals widespread dissatisfaction.", 
+                  ignoreEffect: { morale: -15, emp: -1 },
+                  choices: [
                     { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
-                    { text: "Raise salaries (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } },
-                    { text: "Do nothing (Morale -15, lose employee)", cost: 0, effects: { morale: -15, emp: -1 } }
+                    { text: "Raise salaries 10% (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } }
                 ]}
             ],
             customer: [
-                { title: "Enterprise Client", desc: "Fortune 500 company wants exclusivity deal.", choices: [
-                    { text: "Accept + expand (-$10000, Rev +$3500/mo)", cost: 10000, effects: { rev: 3500, emp: 3 } },
-                    { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } },
-                    { text: "Decline", cost: 0, effects: {} }
+                { title: "Enterprise Client", desc: "Fortune 500 company wants exclusivity deal.", 
+                  ignoreEffect: {},
+                  choices: [
+                    { text: "Accept + expand (-$10000, Rev +$3500/mo, +3 emp)", cost: 10000, effects: { rev: 3500, emp: 3, exp: 1800 } },
+                    { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } }
                 ]},
-                { title: "Viral Publicity", desc: "Influencer praised your business. Orders flooding in.", choices: [
-                    { text: "Scale up (-$8000, Cust +100)", cost: 8000, effects: { cust: 100, emp: 3 } },
-                    { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } },
-                    { text: "Organic growth (Cust +30, Qual +15)", cost: 0, effects: { cust: 30, qual: 15 } }
+                { title: "Viral Publicity", desc: "Influencer praised your business. Orders flooding in.", 
+                  ignoreEffect: { cust: 30, qual: 15 },
+                  choices: [
+                    { text: "Scale up (-$8000, Cust +100, +3 emp)", cost: 8000, effects: { cust: 100, emp: 3, exp: 1800 } },
+                    { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } }
                 ]}
             ],
             market: [
-                { title: "Price War", desc: "Well-funded competitor slashed prices by 40%.", choices: [
+                { title: "Price War", desc: "Well-funded competitor slashed prices by 40%.", 
+                  ignoreEffect: { cust: -40 },
+                  choices: [
                     { text: "Match prices (Rev -$2000/mo, Cust +25)", cost: 0, effects: { rev: -2000, cust: 25 } },
-                    { text: "Quality focus (-$5000, Qual +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } },
-                    { text: "Do nothing (Cust -40)", cost: 0, effects: { cust: -40 } }
+                    { text: "Quality focus (-$5000, Qual +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } }
                 ]},
-                { title: "New Market", desc: "Research reveals underserved segment.", choices: [
-                    { text: "Full entry (-$15000, Rev +$3500/mo)", cost: 15000, effects: { rev: 3500, cust: 80 } },
-                    { text: "Test pilot (-$6000, Rev +$1500/mo)", cost: 6000, effects: { rev: 1500, cust: 35 } },
-                    { text: "Skip", cost: 0, effects: {} }
+                { title: "New Market", desc: "Research reveals underserved segment.", 
+                  ignoreEffect: {},
+                  choices: [
+                    { text: "Full entry (-$15000, Rev +$3500/mo, Cust +80)", cost: 15000, effects: { rev: 3500, cust: 80 } },
+                    { text: "Test pilot (-$6000, Rev +$1500/mo, Cust +35)", cost: 6000, effects: { rev: 1500, cust: 35 } }
                 ]}
             ]
         };
 
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('hidden');
+        }
+
+        function restartGame() {
+            if (confirm('Are you sure you want to restart? All progress will be lost.')) {
+                resetGame();
+                toggleSettings();
+            }
         }
 
         function selectDifficulty(diff) {
@@ -858,7 +889,7 @@
                 const stats = bizTypes[mode][type];
                 const el = document.getElementById(`${type}-stats`);
                 if (el) {
-                    el.textContent = `Start: $${(stats.cash/1000).toFixed(0)}K | ${stats.emp} employees | Quality: ${stats.qual}${isHardMode ? ' | NO INITIAL REVENUE' : ''}`;
+                    el.textContent = `Start: $${(stats.cash/1000).toFixed(0)}K | 0 employees | Quality: ${stats.qual}${isHardMode ? ' | NO INITIAL REVENUE' : ''}`;
                 }
             });
         }
@@ -1087,6 +1118,14 @@
                     ` [Need $${choice.cost.toLocaleString()}]` : '');
                 container.appendChild(btn);
             });
+            
+            // Add ignore button
+            const ignoreBtn = document.createElement('button');
+            ignoreBtn.className = 'choice-button ignore';
+            ignoreBtn.onclick = () => handleIgnore(evt.ignoreEffect);
+            ignoreBtn.textContent = 'IGNORE SITUATION (Suffer consequences)';
+            container.appendChild(ignoreBtn);
+            
             document.getElementById('eventScreen').classList.remove('hidden');
         }
 
@@ -1094,6 +1133,7 @@
             quickLoan(amt, mo, mos);
             // Refresh event screen to update button states
             const container = document.getElementById('eventChoices');
+            const lastChild = container.lastChild;
             container.innerHTML = '';
             currentEventChoices.forEach(choice => {
                 const btn = document.createElement('button');
@@ -1104,6 +1144,42 @@
                     ` [Need $${choice.cost.toLocaleString()}]` : '');
                 container.appendChild(btn);
             });
+            container.appendChild(lastChild); // Re-add ignore button
+        }
+
+        function handleIgnore(effects) {
+            hideAll();
+            const co = getCo();
+            
+            let txt = `DECISION: Ignored the situation\n\nCONSEQUENCES:\n`;
+            
+            if (effects.cash) { co.cash += effects.cash; txt += `Cash: ${effects.cash > 0 ? '+' : ''}$${effects.cash.toLocaleString()}\n`; }
+            if (effects.rep) { co.rep += effects.rep; txt += `Reputation: ${effects.rep > 0 ? '+' : ''}${effects.rep}\n`; }
+            if (effects.cust) { co.cust += effects.cust; txt += `Customers: ${effects.cust > 0 ? '+' : ''}${effects.cust}\n`; }
+            if (effects.qual) { co.qual += effects.qual; txt += `Quality: ${effects.qual > 0 ? '+' : ''}${effects.qual}\n`; }
+            if (effects.morale) { co.morale += effects.morale; txt += `Morale: ${effects.morale > 0 ? '+' : ''}${effects.morale}\n`; }
+            if (effects.emp) { co.emp += effects.emp; txt += `Employees: ${effects.emp > 0 ? '+' : ''}${effects.emp}\n`; }
+            if (effects.rev) { co.rev += effects.rev; txt += `Base Revenue: ${effects.rev > 0 ? '+' : ''}$${Math.abs(effects.rev)}/mo\n`; }
+            if (effects.exp) { co.exp += effects.exp; txt += `Base Expenses: ${effects.exp > 0 ? '+' : ''}$${Math.abs(effects.exp)}/mo\n`; }
+            
+            if (!effects.cash && !effects.rep && !effects.cust && !effects.qual && !effects.morale && !effects.emp && !effects.rev && !effects.exp) {
+                txt += 'No immediate consequences.\n';
+            }
+            
+            txt += '\nTake additional actions before next month.';
+            
+            co.rep = Math.max(0, Math.min(100, co.rep));
+            co.qual = Math.max(0, Math.min(100, co.qual));
+            co.morale = Math.max(0, Math.min(100, co.morale));
+            co.cust = Math.max(0, co.cust);
+            co.emp = Math.max(0, co.emp);
+            
+            document.getElementById('eventResult').innerHTML = '<pre>' + txt + '</pre>';
+            actions = [];
+            document.getElementById('logContent').textContent = 'No actions taken this month.';
+            document.getElementById('freeActionScreen').classList.remove('hidden');
+            updateDisplay();
+            updateSelector();
         }
 
         function handleChoice(choice) {
@@ -1134,7 +1210,7 @@
             co.qual = Math.max(0, Math.min(100, co.qual));
             co.morale = Math.max(0, Math.min(100, co.morale));
             co.cust = Math.max(0, co.cust);
-            co.emp = Math.max(1, co.emp);
+            co.emp = Math.max(0, co.emp);
             
             document.getElementById('eventResult').innerHTML = '<pre>' + txt + '</pre>';
             actions = [];
@@ -1329,20 +1405,22 @@
             const ops = {
                 hire: () => {
                     if (co.cash < 2500) return log('X Need $2,500');
-                    co.cash -= 2500; co.emp++; co.qual += 3;
-                    log('+ Hired employee (+1, Qual +3)');
+                    co.cash -= 2500; co.emp++; co.qual += 3; co.exp += 600;
+                    log('+ Hired employee (+1, Qual +3, +$600/mo)');
                 },
                 fire: () => {
-                    if (co.emp <= 1) return log('X Cannot fire self');
-                    co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5;
-                    log('+ Fired employee (+$800, Rep -8)');
+                    if (co.emp <= 0) return log('X No employees to fire');
+                    co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5; co.exp -= 600;
+                    log('+ Fired employee (+$800, -$600/mo, Rep -8)');
                 },
                 train: () => {
+                    if (co.emp === 0) return log('X No employees to train');
                     if (co.cash < 1500) return log('X Need $1,500');
                     co.cash -= 1500; co.qual += 10; co.morale += 12;
                     log('+ Training (Qual +10, Morale +12)');
                 },
                 wages: () => {
+                    if (co.emp === 0) return log('X No employees');
                     const cost = co.emp * 300;
                     if (co.cash < cost) return log(`X Need $${cost.toLocaleString()}`);
                     co.cash -= cost; co.exp += co.emp * 30; co.morale += 20; co.rep += 5;
@@ -1356,7 +1434,7 @@
                 automate: () => {
                     if (co.cash < 5000) return log('X Need $5,000');
                     co.cash -= 5000; co.qual += 12; co.exp += 200;
-                    log('+ Automated (Qual +12, +$200/mo)');
+                    log('+ Automated (Qual +12, +$200/mo maintenance)');
                 },
                 quality: () => {
                     if (co.cash < 2000) return log('X Need $2,000');
@@ -1377,8 +1455,8 @@
                 },
                 expand: () => {
                     if (co.cash < 15000) return log('X Need $15,000');
-                    co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2;
-                    log('+ New location (+80 cust, +$1200/mo)');
+                    co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2; co.exp += 1200;
+                    log('+ New location (+80 cust, +$1200/mo, +2 emp, +$1200/mo exp)');
                 },
                 partner: () => {
                     if (co.cash < 4000) return log('X Need $4,000');
@@ -1392,23 +1470,23 @@
                 },
                 acquire: () => {
                     if (co.cash < 25000) return log('X Need $25,000');
-                    co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800;
-                    log('+ Acquisition (+75 cust, +$1800/mo)');
+                    co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800; co.exp += 1800;
+                    log('+ Acquisition (+75 cust, +$1800/mo, +3 emp, +$1800/mo exp)');
                 },
                 intl: () => {
                     if (co.cash < 35000) return log('X Need $35,000');
-                    co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20;
-                    log('+ International (+120 cust, +$3000/mo)');
+                    co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20; co.exp += 3000;
+                    log('+ International (+120 cust, +$3000/mo, +5 emp, +$3000/mo exp)');
                 },
                 investor: () => {
                     if (co.rep < 40) return log('X Reputation too low');
                     co.cash += 20000; co.exp += Math.floor(co.rev * 0.08);
-                    log('+ Investor (+$20K, 8% rev share)');
+                    log('+ Investor (+$20K, 8% rev share as ongoing expense)');
                 },
                 cut: () => {
-                    if (co.emp <= 2) return log('X Not enough employees');
-                    co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10;
-                    log('+ Emergency cuts (-2 emp, +$1500)');
+                    if (co.emp <= 1) return log('X Not enough employees');
+                    co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10; co.exp -= 1200;
+                    log('+ Emergency cuts (-2 emp, +$1500, -$1200/mo exp)');
                 },
                 stocks: () => {
                     if (co.cash < 5000) return log('X Need $5,000');
@@ -1420,14 +1498,14 @@
                 realestate: () => {
                     if (co.cash < 18000) return log('X Need $18,000');
                     co.cash -= 18000; co.rev += 1000;
-                    log('+ Real estate (+$1000/mo)');
+                    log('+ Real estate (+$1000/mo passive income)');
                 },
                 refinance: () => {
                     if (co.loans.length === 0) return log('X No loans');
                     if (co.cash < 3000) return log('X Need $3,000');
                     co.cash -= 3000;
                     co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.exp -= r; l.monthly -= r; });
-                    log('+ Refinanced (25% reduction)');
+                    log('+ Refinanced (25% payment reduction)');
                 },
                 payoff: () => {
                     if (co.loans.length === 0) return log('X No loans');
@@ -1435,7 +1513,7 @@
                     const owed = loan.monthly * loan.months;
                     if (co.cash < owed) return log(`X Need $${owed.toLocaleString()}`);
                     co.cash -= owed; co.exp -= loan.monthly; co.loans.shift();
-                    log(`+ Paid off (-$${owed.toLocaleString()})`);
+                    log(`+ Paid off (-$${owed.toLocaleString()}, -$${loan.monthly}/mo)`);
                 },
                 marketing: () => {
                     if (co.cash < 3500) return log('X Need $3,500');
