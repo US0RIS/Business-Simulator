@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Business Empire Simulator 5.1</title>
+    <title>Business Empire Simulator</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,27 +13,36 @@
 
         body {
             font-family: 'Courier New', monospace;
-            background: #000;
-            color: #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
             padding: 20px;
             line-height: 1.4;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        :root {
+            --bg-color: #000;
+            --ui-color: #0f0;
+            --ui-hover: #003300;
+            --warning-color: #f00;
+            --success-color: #0ff;
         }
 
         .game-container {
             max-width: 1200px;
             margin: 0 auto;
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 20px;
-            background: #000;
+            background: var(--bg-color);
         }
 
         .settings-btn {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 10px 15px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
@@ -41,25 +50,36 @@
         }
 
         .settings-btn:hover {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .settings-panel {
             position: fixed;
             top: 60px;
             right: 20px;
-            background: #000;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            border: 2px solid var(--ui-color);
             padding: 20px;
             z-index: 1000;
             min-width: 300px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .settings-panel h3 {
             margin-bottom: 15px;
-            border-bottom: 1px solid #0f0;
+            border-bottom: 1px solid var(--ui-color);
             padding-bottom: 5px;
+        }
+
+        .color-preview {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 2px solid var(--ui-color);
+            margin-left: 10px;
+            vertical-align: middle;
         }
 
         .company-selector {
@@ -68,13 +88,13 @@
             margin-bottom: 20px;
             overflow-x: auto;
             padding: 10px;
-            border: 1px solid #0f0;
+            border: 1px solid var(--ui-color);
         }
 
         .company-tab {
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 10px 15px;
             cursor: pointer;
             white-space: nowrap;
@@ -83,12 +103,12 @@
         }
 
         .company-tab:hover {
-            background: #003300;
+            background: var(--ui-hover);
         }
 
         .company-tab.active {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .stats {
@@ -96,13 +116,13 @@
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 10px;
             margin-bottom: 20px;
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 10px;
         }
 
         .stat-item {
             padding: 5px;
-            border-bottom: 1px solid #003300;
+            border-bottom: 1px solid var(--ui-hover);
         }
 
         .stat-item:last-child {
@@ -110,7 +130,7 @@
         }
 
         .event-container {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 20px;
             margin-bottom: 20px;
         }
@@ -119,7 +139,7 @@
             font-size: 18px;
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #0f0;
+            border-bottom: 1px solid var(--ui-color);
         }
 
         .event-description {
@@ -133,9 +153,9 @@
         }
 
         .choice-button {
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 15px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
@@ -144,8 +164,8 @@
         }
 
         .choice-button:hover:not(:disabled) {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .choice-button:disabled {
@@ -154,13 +174,13 @@
         }
 
         .choice-button.ignore {
-            border-color: #f00;
-            color: #f00;
+            border-color: var(--warning-color);
+            color: var(--warning-color);
         }
 
         .choice-button.ignore:hover:not(:disabled) {
-            background: #f00;
-            color: #000;
+            background: var(--warning-color);
+            color: var(--bg-color);
         }
 
         .actions {
@@ -171,9 +191,9 @@
         }
 
         .action-button {
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 12px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
@@ -182,8 +202,8 @@
         }
 
         .action-button:hover:not(:disabled) {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .action-button:disabled {
@@ -192,9 +212,9 @@
         }
 
         button {
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 12px 20px;
             cursor: pointer;
             font-family: 'Courier New', monospace;
@@ -202,36 +222,36 @@
         }
 
         button:hover {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .title {
             text-align: center;
             font-size: 32px;
             margin-bottom: 20px;
-            border-bottom: 2px solid #0f0;
+            border-bottom: 2px solid var(--ui-color);
             padding-bottom: 10px;
             letter-spacing: 3px;
         }
 
-        .warning { color: #f00; }
-        .success { color: #0ff; }
+        .warning { color: var(--warning-color); }
+        .success { color: var(--success-color); }
 
         .business-type, .difficulty-option {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 15px;
             margin: 10px 0;
             cursor: pointer;
         }
 
         .business-type:hover, .difficulty-option:hover {
-            background: #003300;
+            background: var(--ui-hover);
         }
 
         .business-type.selected, .difficulty-option.selected {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .hidden { display: none !important; }
@@ -246,19 +266,19 @@
             flex: 1;
             padding: 10px;
             font-size: 12px;
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
         }
 
         .tab-button.active {
-            background: #0f0;
-            color: #000;
+            background: var(--ui-color);
+            color: var(--bg-color);
         }
 
         .action-log {
-            background: #000;
-            border: 1px solid #0f0;
+            background: var(--bg-color);
+            border: 1px solid var(--ui-color);
             padding: 15px;
             margin-bottom: 15px;
             max-height: 200px;
@@ -267,7 +287,7 @@
         }
 
         .loan-section {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 15px;
             margin-bottom: 20px;
         }
@@ -283,29 +303,29 @@
         }
 
         .debt-warning {
-            background: #000;
-            border: 2px solid #f00;
+            background: var(--bg-color);
+            border: 2px solid var(--warning-color);
             padding: 15px;
             margin-bottom: 20px;
-            color: #f00;
+            color: var(--warning-color);
         }
 
         .portfolio-summary {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 15px;
             margin-bottom: 20px;
         }
 
         .portfolio-summary h3 {
             margin-bottom: 10px;
-            border-bottom: 1px solid #0f0;
+            border-bottom: 1px solid var(--ui-color);
             padding-bottom: 5px;
         }
 
         input, select, textarea {
-            background: #000;
-            color: #0f0;
-            border: 2px solid #0f0;
+            background: var(--bg-color);
+            color: var(--ui-color);
+            border: 2px solid var(--ui-color);
             padding: 10px;
             font-family: 'Courier New', monospace;
             width: 100%;
@@ -320,7 +340,7 @@
 
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #0ff;
+            border-color: var(--success-color);
         }
 
         .modal {
@@ -337,9 +357,9 @@
         }
 
         .modal-content {
-            background: #000;
+            background: var(--bg-color);
             padding: 30px;
-            border: 3px solid #0f0;
+            border: 3px solid var(--ui-color);
             max-width: 600px;
             width: 90%;
             max-height: 80vh;
@@ -349,7 +369,7 @@
         .modal-title {
             font-size: 20px;
             margin-bottom: 15px;
-            border-bottom: 1px solid #0f0;
+            border-bottom: 1px solid var(--ui-color);
             padding-bottom: 10px;
         }
 
@@ -370,13 +390,13 @@
         }
 
         .report-box {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 20px;
             margin-bottom: 20px;
         }
 
         .result-box {
-            border: 2px solid #0f0;
+            border: 2px solid var(--ui-color);
             padding: 20px;
             margin-bottom: 20px;
             min-height: 100px;
@@ -398,15 +418,33 @@
         }
 
         .loan-options-inline {
-            border: 2px solid #0ff;
+            border: 2px solid var(--success-color);
             padding: 15px;
             margin: 15px 0;
-            background: #001100;
+            background: var(--ui-hover);
         }
 
         .loan-options-inline h4 {
-            color: #0ff;
+            color: var(--success-color);
             margin-bottom: 10px;
+        }
+
+        .color-option {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            cursor: pointer;
+            padding: 8px;
+            border: 2px solid transparent;
+        }
+
+        .color-option:hover {
+            border-color: var(--ui-color);
+        }
+
+        .color-option input[type="radio"] {
+            width: auto;
+            margin-right: 10px;
         }
     </style>
 </head>
@@ -415,6 +453,7 @@
     
     <div id="settingsPanel" class="settings-panel hidden">
         <h3>SETTINGS</h3>
+        
         <label style="display: block; margin: 15px 0;">
             Game Speed:
             <select id="speedSelect">
@@ -423,7 +462,72 @@
                 <option value="fast">Fast</option>
             </select>
         </label>
-        <button onclick="restartGame()" style="width: 100%; margin-bottom: 10px; background: #330000; border-color: #f00; color: #f00;">RESTART GAME</button>
+
+        <div style="margin: 20px 0;">
+            <strong style="display: block; margin-bottom: 10px;">Color Scheme:</strong>
+            
+            <div class="color-option" onclick="changeColors('#000', '#0f0')">
+                <input type="radio" name="colorScheme" value="green" checked>
+                <span>Classic (Green on Black)</span>
+                <span class="color-preview" style="background: #0f0;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#000', '#00ffff')">
+                <input type="radio" name="colorScheme" value="cyan">
+                <span>Cyan on Black</span>
+                <span class="color-preview" style="background: #00ffff;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#000', '#ff00ff')">
+                <input type="radio" name="colorScheme" value="magenta">
+                <span>Magenta on Black</span>
+                <span class="color-preview" style="background: #ff00ff;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#000', '#ffff00')">
+                <input type="radio" name="colorScheme" value="yellow">
+                <span>Yellow on Black</span>
+                <span class="color-preview" style="background: #ffff00;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#000', '#ff8800')">
+                <input type="radio" name="colorScheme" value="orange">
+                <span>Orange on Black</span>
+                <span class="color-preview" style="background: #ff8800;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#1a1a2e', '#0f0')">
+                <input type="radio" name="colorScheme" value="darkblue">
+                <span>Green on Dark Blue</span>
+                <span class="color-preview" style="background: #1a1a2e; border: 1px solid #0f0;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#ffffff', '#000000')">
+                <input type="radio" name="colorScheme" value="light">
+                <span>Black on White</span>
+                <span class="color-preview" style="background: #ffffff; border: 1px solid #000;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#2b2b2b', '#ffffff')">
+                <input type="radio" name="colorScheme" value="gray">
+                <span>White on Dark Gray</span>
+                <span class="color-preview" style="background: #2b2b2b; border: 1px solid #fff;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#1e1e1e', '#00d4ff')">
+                <input type="radio" name="colorScheme" value="blue">
+                <span>Blue on Dark</span>
+                <span class="color-preview" style="background: #00d4ff;"></span>
+            </div>
+
+            <div class="color-option" onclick="changeColors('#0d1117', '#58a6ff')">
+                <input type="radio" name="colorScheme" value="github">
+                <span>GitHub Dark</span>
+                <span class="color-preview" style="background: #58a6ff;"></span>
+            </div>
+        </div>
+
+        <button onclick="restartGame()" style="width: 100%; margin-bottom: 10px; border-color: var(--warning-color); color: var(--warning-color);">RESTART GAME</button>
         <button onclick="toggleSettings()" style="width: 100%;">CLOSE</button>
     </div>
 
@@ -500,7 +604,7 @@
                 </select>
             </div>
 
-            <div style="border: 1px solid #0f0; padding: 10px; margin: 15px 0;">
+            <div style="border: 1px solid var(--ui-color); padding: 10px; margin: 15px 0;">
                 <strong>TOTAL COST: $<span id="productTotalCost">0</span></strong><br>
                 <span id="productEstimate" style="font-size: 12px;"></span>
             </div>
@@ -554,7 +658,7 @@
             <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
             <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
             
-            <h3 style="margin: 30px 0 15px 0; border-bottom: 1px solid #0f0; padding-bottom: 5px;">CHOOSE BUSINESS TYPE</h3>
+            <h3 style="margin: 30px 0 15px 0; border-bottom: 1px solid var(--ui-color); padding-bottom: 5px;">CHOOSE BUSINESS TYPE</h3>
             
             <div class="business-type" onclick="selectBusiness('tech')">
                 <strong>TECH STARTUP</strong><br>
@@ -860,6 +964,39 @@
             ]
         };
 
+        function changeColors(bgColor, uiColor) {
+            const root = document.documentElement;
+            root.style.setProperty('--bg-color', bgColor);
+            root.style.setProperty('--ui-color', uiColor);
+            
+            // Calculate hover color based on UI color
+            const hoverColor = calculateHoverColor(bgColor, uiColor);
+            root.style.setProperty('--ui-hover', hoverColor);
+            
+            // Update radio button selection
+            event.currentTarget.querySelector('input[type="radio"]').checked = true;
+        }
+
+        function calculateHoverColor(bgColor, uiColor) {
+            // Simple hover color calculation - mix background with UI color
+            if (bgColor === '#000' || bgColor === '#000000') {
+                // For black backgrounds, create a dark version of the UI color
+                return uiColor.replace(/[0-9a-f]{2}/gi, match => {
+                    const val = parseInt(match, 16);
+                    return ('0' + Math.floor(val * 0.2).toString(16)).slice(-2);
+                });
+            } else if (bgColor === '#ffffff' || bgColor === '#fff') {
+                // For white backgrounds, create a light version of the UI color
+                return '#f0f0f0';
+            } else {
+                // For other backgrounds, slightly lighten
+                return bgColor.replace(/[0-9a-f]{2}/gi, match => {
+                    const val = parseInt(match, 16);
+                    return ('0' + Math.min(255, Math.floor(val * 1.3)).toString(16)).slice(-2);
+                });
+            }
+        }
+
         function toggleSettings() {
             document.getElementById('settingsPanel').classList.toggle('hidden');
         }
@@ -1097,7 +1234,6 @@
             document.getElementById('eventTitle').textContent = evt.title;
             document.getElementById('eventDescription').textContent = evt.desc;
             
-            // Check if any choices cost more than current cash
             const co = getCo();
             const hasUnaffordableOptions = evt.choices.some(choice => choice.cost > co.cash);
             
@@ -1119,7 +1255,6 @@
                 container.appendChild(btn);
             });
             
-            // Add ignore button
             const ignoreBtn = document.createElement('button');
             ignoreBtn.className = 'choice-button ignore';
             ignoreBtn.onclick = () => handleIgnore(evt.ignoreEffect);
@@ -1131,7 +1266,6 @@
 
         function quickLoanFromEvent(amt, mo, mos) {
             quickLoan(amt, mo, mos);
-            // Refresh event screen to update button states
             const container = document.getElementById('eventChoices');
             const lastChild = container.lastChild;
             container.innerHTML = '';
@@ -1144,7 +1278,7 @@
                     ` [Need $${choice.cost.toLocaleString()}]` : '');
                 container.appendChild(btn);
             });
-            container.appendChild(lastChild); // Re-add ignore button
+            container.appendChild(lastChild);
         }
 
         function handleIgnore(effects) {
@@ -1316,7 +1450,6 @@
             
             document.getElementById('productTotalCost').textContent = cost.toLocaleString();
             
-            // Show loan options if cost exceeds current cash
             const co = getCo();
             if (cost > 0 && cost > co.cash) {
                 document.getElementById('productLoanOptions').classList.remove('hidden');
@@ -1336,7 +1469,7 @@
 
         function quickLoanFromModal(amt, mo, mos) {
             quickLoan(amt, mo, mos);
-            updateProductCost(); // Refresh to hide loan options if now affordable
+            updateProductCost();
         }
 
         ['productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
