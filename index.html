@@ -401,7 +401,7 @@
                     <option value="">-- Select Type --</option>
                     <option value="premium">Premium (High price, high quality)</option>
                     <option value="standard">Standard (Balanced price/quality)</option>
-                    <option value="budget">Budget (Low price, volume sales)</option>
+                    <option value="budget">Budget (Low price, high volume sales)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -410,7 +410,7 @@
                     <option value="">-- Select Strategy --</option>
                     <option value="aggressive">Aggressive (+$5000 cost, max reach)</option>
                     <option value="moderate">Moderate (+$2500 cost, good reach)</option>
-                    <option value="minimal">Minimal (+$500 cost, organic growth)</option>
+                    <option value="minimal">Minimal (+$500 cost, minimal growth)</option>
                 </select>
             </div>
             <div class="form-group">
@@ -450,7 +450,7 @@
     </div>
 
     <div class="game-container">
-        <div class="title">BUSINESS EMPIRE SIMULATOR</div>
+        <div class="title">BUSINESS EMPIRE SIMULATOR (Alpha Development)</div>
         
         <div id="difficultyScreen">
             <h2 style="margin-bottom: 20px;">SELECT DIFFICULTY</h2>
@@ -462,7 +462,7 @@
                 Good for learning the game
             </div>
             <div class="difficulty-option" onclick="selectDifficulty('hard')">
-                <strong>HARD MODE (REALISTIC)</strong><br>
+                <strong>REALISTIC MODE (Harder)</strong><br>
                 Start with $20,000 but ZERO revenue<br>
                 Must build customer base from scratch<br>
                 Realistic business challenges<br>
@@ -473,8 +473,8 @@
 
         <div id="setupScreen" class="hidden">
             <h2 style="margin-bottom: 20px;">CREATE YOUR BUSINESS</h2>
-            <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
-            <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
+            <input type="text" id="playerName" placeholder="Your name" value="John Doe">
+            <input type="text" id="companyName" placeholder="Company name" value="John and Doe LLC">
             <h3 style="margin: 30px 0 15px 0; border-bottom: 1px solid var(--ui-color); padding-bottom: 5px;">CHOOSE BUSINESS TYPE</h3>
             <div id="businessTypes"></div>
             <button onclick="startGame()" style="width: 100%; padding: 15px; margin-top: 20px;">START GAME</button>
