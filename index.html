@@ -578,18 +578,18 @@
 
         const bizTypes = {
             easy: {
-                tech: { name: 'Tech Startup', cash: 8000, emp: 0, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 800, desc: 'High growth, volatile market' },
-                retail: { name: 'Retail Store', cash: 10000, emp: 0, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 1200, desc: 'Steady income, inventory focus' },
-                restaurant: { name: 'Restaurant', cash: 7000, emp: 0, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 1500, desc: 'High volume, quality critical' },
-                consulting: { name: 'Consulting', cash: 12000, emp: 0, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 800, desc: 'Reputation dependent, high margins' },
-                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 0, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 900, desc: 'Online sales, scalable' }
+                tech: { name: 'Tech Startup', cash: 8000, emp: 0, qual: 40, cust: 30, rep: 35, rev: 2800, baseExp: 800, desc: 'High growth, volatile market' },
+                retail: { name: 'Retail Store', cash: 10000, emp: 0, qual: 50, cust: 80, rep: 45, rev: 4000, baseExp: 1200, desc: 'Steady income, inventory focus' },
+                restaurant: { name: 'Restaurant', cash: 7000, emp: 0, qual: 45, cust: 60, rep: 40, rev: 4500, baseExp: 1500, desc: 'High volume, quality critical' },
+                consulting: { name: 'Consulting', cash: 12000, emp: 0, qual: 60, cust: 20, rep: 55, rev: 5500, baseExp: 800, desc: 'Reputation dependent, high margins' },
+                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 0, qual: 45, cust: 50, rep: 38, rev: 3200, baseExp: 900, desc: 'Online sales, scalable' }
             },
             hard: {
-                tech: { name: 'Tech Startup', cash: 20000, emp: 0, qual: 20, cust: 0, rep: 10, rev: 0, exp: 500, desc: 'High growth, volatile market' },
-                retail: { name: 'Retail Store', cash: 20000, emp: 0, qual: 30, cust: 0, rep: 15, rev: 0, exp: 600, desc: 'Steady income, inventory focus' },
-                restaurant: { name: 'Restaurant', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 10, rev: 0, exp: 700, desc: 'High volume, quality critical' },
-                consulting: { name: 'Consulting', cash: 20000, emp: 0, qual: 35, cust: 0, rep: 20, rev: 0, exp: 400, desc: 'Reputation dependent, high margins' },
-                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 12, rev: 0, exp: 500, desc: 'Online sales, scalable' }
+                tech: { name: 'Tech Startup', cash: 20000, emp: 0, qual: 20, cust: 0, rep: 10, rev: 0, baseExp: 500, desc: 'High growth, volatile market' },
+                retail: { name: 'Retail Store', cash: 20000, emp: 0, qual: 30, cust: 0, rep: 15, rev: 0, baseExp: 600, desc: 'Steady income, inventory focus' },
+                restaurant: { name: 'Restaurant', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 10, rev: 0, baseExp: 700, desc: 'High volume, quality critical' },
+                consulting: { name: 'Consulting', cash: 20000, emp: 0, qual: 35, cust: 0, rep: 20, rev: 0, baseExp: 400, desc: 'Reputation dependent, high margins' },
+                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 12, rev: 0, baseExp: 500, desc: 'Online sales, scalable' }
             }
         };
 
@@ -638,9 +638,32 @@
             ]
         };
 
+        // MIGRATION FUNCTION to fix old saves
+        function migrateCompany(co) {
+            // If this is an old save with 'exp' but no 'baseExp'
+            if (co.exp !== undefined && co.baseExp === undefined) {
+                // Get the base expense from the business type
+                const mode = isHardMode ? 'hard' : 'easy';
+                const typeData = bizTypes[mode][co.type];
+                
+                if (typeData) {
+                    co.baseExp = typeData.baseExp || 500;
+                    co.expAdd = 0; // Start fresh with added expenses
+                    delete co.exp; // Remove old property
+                    console.log(`Migrated ${co.name}: baseExp=${co.baseExp}, expAdd=0`);
+                }
+            }
+            
+            // Ensure expAdd exists
+            if (co.expAdd === undefined) {
+                co.expAdd = 0;
+            }
+            
+            return co;
+        }
+
         // EVENTS with requirements and positive events
         const events = {
-            // POSITIVE EVENTS (20%)
             positive: [
                 { 
                     title: "Unexpected Windfall", 
@@ -698,7 +721,6 @@
                     ]
                 },
             ],
-            // NEGATIVE EVENTS (80%)
             quality: [
                 { 
                     title: "Quality Complaints", 
@@ -827,7 +849,6 @@
             ]
         };
 
-        // Initialize UI
         document.addEventListener('DOMContentLoaded', () => {
             renderColorPresets();
             renderBusinessTypes();
@@ -842,6 +863,9 @@
             document.getElementById('uiColorPicker').addEventListener('input', function() {
                 document.getElementById('uiColorValue').textContent = this.value;
             });
+            
+            // Migrate existing companies if needed
+            companies.forEach(co => migrateCompany(co));
         });
 
         function renderColorPresets() {
@@ -934,8 +958,8 @@
             return {
                 id: nextId++, name, type, cash: first ? t.cash : 0, month: 1, emp: t.emp, rep: t.rep,
                 cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, 
-                baseExp: t.exp, // FIXED: Separate base expenses from modifiers
-                expAdd: 0, // FIXED: Track added recurring expenses separately
+                baseExp: t.baseExp,
+                expAdd: 0,
                 revBoost: 0,
                 loans: [], total: { rev: 0, exp: 0 }, victory: false, eventHistory: []
             };
@@ -970,6 +994,7 @@
         function updateSelector() {
             const sel = document.getElementById('companySelector');
             sel.innerHTML = companies.map((co, i) => {
+                migrateCompany(co); // Migrate on every update
                 const net = calcRev(co) - calcExp(co);
                 return `<div class="company-tab ${i === activeIdx ? 'active' : ''}" onclick="switchCo(${i})">${co.name}<br>$${co.cash.toLocaleString()}<br>${net >= 0 ? '+' : ''}$${net.toLocaleString()}/mo</div>`;
             }).join('') + `<div class="company-tab" style="border-style: dashed;" onclick="act('newco')">+ NEW<br>COMPANY</div>`;
@@ -990,7 +1015,11 @@
         }
 
         function switchCo(i) { activeIdx = i; updateSelector(); updateDisplay(); }
-        function getCo() { return companies[activeIdx]; }
+        function getCo() { 
+            const co = companies[activeIdx];
+            migrateCompany(co); // Always migrate before using
+            return co;
+        }
 
         function calcRev(co) {
             const speed = getSpeed();
@@ -1007,18 +1036,19 @@
             return Math.max(0, Math.floor(totalRev * (0.95 + Math.random() * 0.1) * speed * hardModePenalty));
         }
 
-        // FIXED: Separate base expenses from recurring additions
         function calcExp(co) {
             const speed = getSpeed();
             const hardModePenalty = isHardMode ? 1.2 : 1;
             
-            // Base expenses (fixed) + employee salaries ($600 each) + added recurring expenses
-            let e = co.baseExp + (co.emp * 600) + co.expAdd;
+            // Ensure proper structure
+            if (co.baseExp === undefined) {
+                migrateCompany(co);
+            }
             
-            // Add loan payments
+            let e = co.baseExp + (co.emp * 600) + (co.expAdd || 0);
+            
             co.loans.forEach(l => e += l.monthly);
             
-            // Apply morale penalty if very low
             const moralePenalty = co.morale < 40 ? 1.12 : 1;
             
             return Math.max(0, Math.floor(e * moralePenalty * speed * hardModePenalty));
@@ -1087,7 +1117,9 @@
             
             document.getElementById('reportMonth').textContent = co.month;
             document.getElementById('reportContent').textContent = 
-                `${co.name}\n\nRevenue: +$${rev.toLocaleString()}\nExpenses: -$${exp.toLocaleString()}\nNet Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\nCash Balance: $${co.cash.toLocaleString()}\n` +
+                `${co.name}\n\nRevenue: +$${rev.toLocaleString()}\nExpenses: -$${exp.toLocaleString()}\n` +
+                `(Base: $${co.baseExp} + Employees: $${co.emp * 600} + Other: $${co.expAdd || 0} + Loans: $${co.loans.reduce((s,l)=>s+l.monthly,0)})\n` +
+                `Net Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\nCash Balance: $${co.cash.toLocaleString()}\n` +
                 (co.loans.length > 0 ? `Active Loans: ${co.loans.length} (${calcDebt(co)}% debt)\n` : '') +
                 `\nQuality -${(2 * speed * decayMultiplier).toFixed(1)}\nMorale -${(1.5 * speed * decayMultiplier).toFixed(1)}\nCustomer retention: ${(retentionRate * 100).toFixed(0)}%`;
             
