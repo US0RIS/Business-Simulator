@@ -713,7 +713,7 @@
                     title: "Loyal Customer Referrals", 
                     desc: "Your best customers are actively referring new business.", 
                     positive: true,
-                    requires: { cust: 20, qual: 50 },
+                    requires: { cust: 10, qual: 60 },
                     ignoreEffect: {},
                     choices: [
                         { text: "Launch referral program (-$2000, +60 cust)", cost: 2000, effects: { cust: 60, rep: 10 } },
@@ -735,7 +735,7 @@
                 { 
                     title: "Equipment Failure", 
                     desc: "Primary production equipment failed during peak season.", 
-                    requires: {},
+                    requires: { cust: 20 },
                     ignoreEffect: { qual: -15, rev: -1500 },
                     choices: [
                         { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
@@ -751,7 +751,7 @@
                     requires: { emp: 2 },
                     ignoreEffect: { qual: -15, morale: -8, emp: -1, expAdd: -600 },
                     choices: [
-                        { text: "Match offer (+$1800/mo)", cost: 0, effects: { expAdd: 1800, morale: 10 } },
+                        { text: "Match offer (+$1800/mo, Morale +10)", cost: 0, effects: { expAdd: 1800, morale: 10 } },
                         { text: "Counter with equity (+$900/mo)", cost: 0, effects: { expAdd: 900, morale: 15 } },
                         { text: "Let go, hire replacement (-$3500, Qual -15, no exp change)", cost: 3500, effects: { qual: -15, morale: -8 } }
                     ]
@@ -759,11 +759,11 @@
                 { 
                     title: "Morale Crisis", 
                     desc: "Employee survey reveals widespread dissatisfaction.", 
-                    requires: { emp: 3 },
-                    ignoreEffect: { morale: -15, emp: -1, expAdd: -600 },
+                    requires: { emp: 5 },
+                    ignoreEffect: { morale: -15, emp: -2, expAdd: -1200 },
                     choices: [
                         { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
-                        { text: "Raise salaries 10% (+$2000/mo)", cost: 0, effects: { expAdd: 2000, morale: 25 } }
+                        { text: "Raise salaries 10% (+$2000/mo, Morale +25)", cost: 0, effects: { expAdd: 2000, morale: 25 } }
                     ]
                 }
             ],
@@ -826,12 +826,12 @@
             competition: [
                 { 
                     title: "Market Disruption", 
-                    desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
+                    desc: "Well-funded competitor launching aggressive marketing campaign. Market share at risk.", 
                     requires: { cust: 30 },
                     ignoreEffect: { cust: -50, rep: -10 },
                     choices: [
-                        { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
-                        { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
+                        { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 30, cust: 50 } },
+                        { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 20 } }
                     ]
                 }
             ],
@@ -843,7 +843,7 @@
                     ignoreEffect: { expAdd: 500 },
                     choices: [
                         { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
-                        { text: "Minimal compliance (-$1500)", cost: 1500, effects: {} }
+                        { text: "Minimal required compliance (-$1500)", cost: 1500, effects: {} }
                     ]
                 }
             ]
