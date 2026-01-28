@@ -120,11 +120,18 @@
             padding: 20px;
             margin-bottom: 20px;
         }
+        .event-container.positive {
+            border-color: var(--success-color);
+        }
         .event-title {
             font-size: 18px;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--ui-color);
+        }
+        .event-title.positive {
+            color: var(--success-color);
+            border-bottom-color: var(--success-color);
         }
         .event-description { margin-bottom: 20px; line-height: 1.6; }
         .choices { display: grid; gap: 10px; }
@@ -491,8 +498,8 @@
             </div>
 
             <div id="eventScreen" class="hidden">
-                <div class="event-container">
-                    <div class="event-title" id="eventTitle"></div>
+                <div id="eventContainer" class="event-container">
+                    <div id="eventTitle" class="event-title"></div>
                     <div class="event-description" id="eventDescription"></div>
                     <div id="eventLoanOptions" class="loan-options-inline hidden">
                         <h4>NEED FUNDS FOR THESE OPTIONS? TAKE A LOAN:</h4>
@@ -631,88 +638,192 @@
             ]
         };
 
+        // EVENTS with requirements and positive events
         const events = {
+            // POSITIVE EVENTS (20%)
+            positive: [
+                { 
+                    title: "Unexpected Windfall", 
+                    desc: "A client overpaid and told you to keep the difference as a bonus.", 
+                    positive: true,
+                    requires: { cust: 10 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Accept graciously (Free +$5000)", cost: 0, effects: { cash: 5000, rep: 5 } },
+                        { text: "Invest in growth (-$2000 + windfall, +40 cust)", cost: -3000, effects: { cust: 40 } }
+                    ]
+                },
+                { 
+                    title: "Media Feature", 
+                    desc: "Local news wants to feature your business in a positive story.", 
+                    positive: true,
+                    requires: { rep: 30 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Accept (Free +50 cust, +15 rep)", cost: 0, effects: { cust: 50, rep: 15 } },
+                        { text: "Decline politely", cost: 0, effects: {} }
+                    ]
+                },
+                { 
+                    title: "Talented Applicant", 
+                    desc: "An overqualified candidate wants to work for you at standard pay.", 
+                    positive: true,
+                    requires: {},
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Hire immediately (-$2500, +1 emp, +20 qual)", cost: 2500, effects: { emp: 1, qual: 20, exp: 600 } },
+                        { text: "Pass on opportunity", cost: 0, effects: {} }
+                    ]
+                },
+                { 
+                    title: "Government Grant", 
+                    desc: "You qualify for a small business development grant.", 
+                    positive: true,
+                    requires: { emp: 1 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Apply (Free +$8000)", cost: 0, effects: { cash: 8000 } },
+                        { text: "Decline", cost: 0, effects: {} }
+                    ]
+                },
+                { 
+                    title: "Loyal Customer Referrals", 
+                    desc: "Your best customers are actively referring new business.", 
+                    positive: true,
+                    requires: { cust: 20, qual: 50 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Launch referral program (-$2000, +60 cust)", cost: 2000, effects: { cust: 60, rep: 10 } },
+                        { text: "Just thank them (Free +30 cust)", cost: 0, effects: { cust: 30 } }
+                    ]
+                },
+            ],
+            // NEGATIVE EVENTS (80%)
             quality: [
-                { title: "Quality Complaints", desc: "Multiple customers report quality issues. Social media sentiment turning negative.", 
-                  ignoreEffect: { rep: -20, cust: -25 },
-                  choices: [
-                    { text: "Refund program + apology (-$800, Rep +8)", cost: 800, effects: { rep: 8, cust: -3 } },
-                    { text: "Hire QA team (-$4000, Quality +20, +1 emp)", cost: 4000, effects: { qual: 20, emp: 1, exp: 600 } }
-                ]},
-                { title: "Equipment Failure", desc: "Primary production equipment failed during peak season.", 
-                  ignoreEffect: { qual: -15, rev: -1500 },
-                  choices: [
-                    { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
-                    { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
-                    { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo)", cost: 12000, effects: { qual: 30, exp: 200 } }
-                ]}
+                { 
+                    title: "Quality Complaints", 
+                    desc: "Multiple customers report quality issues. Social media sentiment turning negative.", 
+                    requires: { cust: 20, qual: 1 },
+                    ignoreEffect: { rep: -20, cust: -25 },
+                    choices: [
+                        { text: "Refund program + apology (-$800, Rep +8)", cost: 800, effects: { rep: 8, cust: -3 } },
+                        { text: "Hire QA team (-$4000, Quality +20, +1 emp)", cost: 4000, effects: { qual: 20, emp: 1, exp: 600 } }
+                    ]
+                },
+                { 
+                    title: "Equipment Failure", 
+                    desc: "Primary production equipment failed during peak season.", 
+                    requires: {},
+                    ignoreEffect: { qual: -15, rev: -1500 },
+                    choices: [
+                        { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
+                        { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
+                        { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo)", cost: 12000, effects: { qual: 30, exp: 200 } }
+                    ]
+                }
             ],
             employee: [
-                { title: "Talent Poaching", desc: "Star employee received competitor offer - 60% higher salary.", 
-                  ignoreEffect: { qual: -15, morale: -8, emp: -1 },
-                  choices: [
-                    { text: "Match offer (Expenses +$1800/mo)", cost: 0, effects: { exp: 1800, morale: 10 } },
-                    { text: "Counter with equity (Expenses +$900/mo)", cost: 0, effects: { exp: 900, morale: 15 } },
-                    { text: "Let go, hire replacement (-$3500, Qual -15)", cost: 3500, effects: { qual: -15, morale: -8 } }
-                ]},
-                { title: "Morale Crisis", desc: "Employee survey reveals widespread dissatisfaction.", 
-                  ignoreEffect: { morale: -15, emp: -1 },
-                  choices: [
-                    { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
-                    { text: "Raise salaries 10% (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } }
-                ]}
+                { 
+                    title: "Talent Poaching", 
+                    desc: "Star employee received competitor offer - 60% higher salary.", 
+                    requires: { emp: 2 },
+                    ignoreEffect: { qual: -15, morale: -8, emp: -1 },
+                    choices: [
+                        { text: "Match offer (Expenses +$1800/mo)", cost: 0, effects: { exp: 1800, morale: 10 } },
+                        { text: "Counter with equity (Expenses +$900/mo)", cost: 0, effects: { exp: 900, morale: 15 } },
+                        { text: "Let go, hire replacement (-$3500, Qual -15)", cost: 3500, effects: { qual: -15, morale: -8 } }
+                    ]
+                },
+                { 
+                    title: "Morale Crisis", 
+                    desc: "Employee survey reveals widespread dissatisfaction.", 
+                    requires: { emp: 3 },
+                    ignoreEffect: { morale: -15, emp: -1 },
+                    choices: [
+                        { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
+                        { text: "Raise salaries 10% (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } }
+                    ]
+                }
             ],
             customer: [
-                { title: "Enterprise Client", desc: "Fortune 500 company wants exclusivity deal.", 
-                  ignoreEffect: {},
-                  choices: [
-                    { text: "Accept + expand (-$10000, Rev +$3500/mo, +3 emp)", cost: 10000, effects: { rev: 3500, emp: 3, exp: 1800 } },
-                    { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } }
-                ]},
-                { title: "Viral Publicity", desc: "Influencer praised your business. Orders flooding in.", 
-                  ignoreEffect: { cust: 30, qual: 15 },
-                  choices: [
-                    { text: "Scale up (-$8000, Cust +100, +3 emp)", cost: 8000, effects: { cust: 100, emp: 3, exp: 1800 } },
-                    { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } }
-                ]}
+                { 
+                    title: "Enterprise Client", 
+                    desc: "Fortune 500 company wants exclusivity deal.", 
+                    requires: { rep: 40, cust: 30 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Accept + expand (-$10000, Rev +$3500/mo, +3 emp)", cost: 10000, effects: { rev: 3500, emp: 3, exp: 1800 } },
+                        { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } }
+                    ]
+                },
+                { 
+                    title: "Viral Publicity", 
+                    desc: "Influencer praised your business. Orders flooding in.", 
+                    requires: { cust: 15, qual: 40 },
+                    ignoreEffect: { cust: 30, qual: 15 },
+                    choices: [
+                        { text: "Scale up (-$8000, Cust +100, +3 emp)", cost: 8000, effects: { cust: 100, emp: 3, exp: 1800 } },
+                        { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } }
+                    ]
+                }
             ],
             market: [
-                { title: "Price War", desc: "Well-funded competitor slashed prices by 40%.", 
-                  ignoreEffect: { cust: -40 },
-                  choices: [
-                    { text: "Match prices (Rev -$2000/mo, Cust +25)", cost: 0, effects: { rev: -2000, cust: 25 } },
-                    { text: "Quality focus (-$5000, Qual +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } }
-                ]},
-                { title: "New Market", desc: "Research reveals underserved segment.", 
-                  ignoreEffect: {},
-                  choices: [
-                    { text: "Full entry (-$15000, Rev +$3500/mo, Cust +80)", cost: 15000, effects: { rev: 3500, cust: 80 } },
-                    { text: "Test pilot (-$6000, Rev +$1500/mo, Cust +35)", cost: 6000, effects: { rev: 1500, cust: 35 } }
-                ]}
+                { 
+                    title: "Price War", 
+                    desc: "Well-funded competitor slashed prices by 40%.", 
+                    requires: { cust: 25 },
+                    ignoreEffect: { cust: -40 },
+                    choices: [
+                        { text: "Match prices (Rev -$2000/mo, Cust +25)", cost: 0, effects: { rev: -2000, cust: 25 } },
+                        { text: "Quality focus (-$5000, Qual +30, Rep +20)", cost: 5000, effects: { qual: 30, rep: 20 } }
+                    ]
+                },
+                { 
+                    title: "New Market", 
+                    desc: "Research reveals underserved segment.", 
+                    requires: { rep: 35 },
+                    ignoreEffect: {},
+                    choices: [
+                        { text: "Full entry (-$15000, Rev +$3500/mo, Cust +80)", cost: 15000, effects: { rev: 3500, cust: 80 } },
+                        { text: "Test pilot (-$6000, Rev +$1500/mo, Cust +35)", cost: 6000, effects: { rev: 1500, cust: 35 } }
+                    ]
+                }
             ],
             cash_flow: [
-                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", 
-                  ignoreEffect: { cash: -5000, rep: -20, morale: -30 },
-                  choices: [
-                    { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
-                    { text: "Delay vendor payments (Rep -15)", cost: 0, effects: { rep: -15 } }
-                ]},
+                { 
+                    title: "Cash Flow Crisis", 
+                    desc: "Major client payment delayed 60 days. You need to make payroll now.", 
+                    requires: { emp: 2, rev: 1000 },
+                    ignoreEffect: { cash: -5000, rep: -20, morale: -30 },
+                    choices: [
+                        { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
+                        { text: "Delay vendor payments (Rep -15)", cost: 0, effects: { rep: -15 } }
+                    ]
+                },
             ],
             competition: [
-                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
-                  ignoreEffect: { cust: -50, rep: -10 },
-                  choices: [
-                    { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
-                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
-                ]}
+                { 
+                    title: "Market Disruption", 
+                    desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
+                    requires: { cust: 30 },
+                    ignoreEffect: { cust: -50, rep: -10 },
+                    choices: [
+                        { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
+                        { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
+                    ]
+                }
             ],
             regulatory: [
-                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", 
-                  ignoreEffect: { exp: 500 },
-                  choices: [
-                    { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
-                    { text: "Minimal compliance (-$1500)", cost: 1500, effects: {} }
-                ]}
+                { 
+                    title: "License Renewal", 
+                    desc: "Business license renewal with new compliance requirements.", 
+                    requires: {},
+                    ignoreEffect: { exp: 500 },
+                    choices: [
+                        { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
+                        { text: "Minimal compliance (-$1500)", cost: 1500, effects: {} }
+                    ]
+                }
             ]
         };
 
@@ -823,7 +934,7 @@
             return {
                 id: nextId++, name, type, cash: first ? t.cash : 0, month: 1, emp: t.emp, rep: t.rep,
                 cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, exp: t.exp, revBoost: 0,
-                loans: [], total: { rev: 0, exp: 0 }, victory: false
+                loans: [], total: { rev: 0, exp: 0 }, victory: false, eventHistory: []
             };
         }
 
@@ -878,38 +989,18 @@
         function switchCo(i) { activeIdx = i; updateSelector(); updateDisplay(); }
         function getCo() { return companies[activeIdx]; }
 
-        // IMPROVED REVENUE CALCULATION - More customers = more revenue (always positive)
         function calcRev(co) {
             const speed = getSpeed();
             const hardModePenalty = isHardMode ? 0.8 : 1;
-            
-            // Base revenue from business operations
             let baseRev = co.rev;
-            
-            // Revenue per customer (increases with quality and reputation)
-            // Each customer generates between $8-$25 per month depending on quality/rep
             const revenuePerCustomer = (8 + (co.qual / 100) * 10 + (co.rep / 100) * 7);
             const customerRevenue = co.cust * revenuePerCustomer;
-            
-            // Employee productivity (diminishing returns after 10 employees)
             const employeeMultiplier = co.emp > 0 ? Math.min(2.0, 1 + (co.emp * 0.1)) : 1;
-            
-            // Quality multiplier (50-150% of base)
             const qualityMultiplier = 0.5 + (co.qual / 100);
-            
-            // Reputation multiplier (50-150% of base)
             const reputationMultiplier = 0.5 + (co.rep / 100);
-            
-            // Morale multiplier (75-110% of base)
             const moraleMultiplier = 0.75 + (co.morale / 100) * 0.35;
-            
-            // Calculate total revenue
             let totalRev = (baseRev + customerRevenue) * employeeMultiplier * qualityMultiplier * reputationMultiplier * moraleMultiplier;
-            
-            // Add temporary boost
             totalRev += co.revBoost;
-            
-            // Apply speed and difficulty modifiers with small variance
             return Math.max(0, Math.floor(totalRev * (0.95 + Math.random() * 0.1) * speed * hardModePenalty));
         }
 
@@ -978,6 +1069,11 @@
             
             if (co.qual > 70) co.rep = Math.min(100, co.rep + 1);
             
+            // Clean up old event history (keep only last 10 months)
+            if (co.eventHistory.length > 10) {
+                co.eventHistory = co.eventHistory.slice(-10);
+            }
+            
             document.getElementById('reportMonth').textContent = co.month;
             document.getElementById('reportContent').textContent = 
                 `${co.name}\n\nRevenue: +$${rev.toLocaleString()}\nExpenses: -$${exp.toLocaleString()}\nNet Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\nCash Balance: $${co.cash.toLocaleString()}\n` +
@@ -994,24 +1090,69 @@
             } else if (co.cash < -20000) showGameOver();
         }
 
+        function meetsRequirements(evt, co) {
+            const req = evt.requires || {};
+            return (!req.cust || co.cust >= req.cust) &&
+                   (!req.emp || co.emp >= req.emp) &&
+                   (!req.rep || co.rep >= req.rep) &&
+                   (!req.qual || co.qual >= req.qual) &&
+                   (!req.rev || co.rev >= req.rev);
+        }
+
         function showEvent() {
             hideAll();
-            let allEvents = {...events};
-            if (isHardMode && Math.random() < 0.4) {
-                allEvents = {...events, ...{cash_flow: events.cash_flow, competition: events.competition, regulatory: events.regulatory}};
+            const co = getCo();
+            
+            // Collect all eligible events
+            let allEligible = [];
+            
+            // 20% chance for positive event
+            if (Math.random() < 0.2) {
+                allEligible = events.positive.filter(e => meetsRequirements(e, co) && !co.eventHistory.includes(e.title));
             }
-            const cats = Object.keys(allEvents);
-            const evt = allEvents[cats[Math.floor(Math.random() * cats.length)]][Math.floor(Math.random() * allEvents[cats[Math.floor(Math.random() * cats.length)]].length)];
+            
+            // If no positive events eligible or 80% chance, use negative events
+            if (allEligible.length === 0) {
+                const negativeCategories = Object.keys(events).filter(k => k !== 'positive');
+                negativeCategories.forEach(cat => {
+                    const eligible = events[cat].filter(e => meetsRequirements(e, co) && !co.eventHistory.includes(e.title));
+                    allEligible = allEligible.concat(eligible);
+                });
+            }
+            
+            // If no eligible events at all, use any event that meets requirements
+            if (allEligible.length === 0) {
+                Object.keys(events).forEach(cat => {
+                    allEligible = allEligible.concat(events[cat].filter(e => meetsRequirements(e, co)));
+                });
+            }
+            
+            // Select random event
+            const evt = allEligible[Math.floor(Math.random() * allEligible.length)];
+            
+            // Add to history
+            co.eventHistory.push(evt.title);
             
             currentEventChoices = evt.choices;
-            document.getElementById('eventTitle').textContent = evt.title;
+            
+            // Apply positive styling if needed
+            const container = document.getElementById('eventContainer');
+            const titleEl = document.getElementById('eventTitle');
+            if (evt.positive) {
+                container.classList.add('positive');
+                titleEl.classList.add('positive');
+            } else {
+                container.classList.remove('positive');
+                titleEl.classList.remove('positive');
+            }
+            
+            titleEl.textContent = evt.title;
             document.getElementById('eventDescription').textContent = evt.desc;
             
-            const co = getCo();
             document.getElementById('eventLoanOptions').classList.toggle('hidden', !evt.choices.some(c => c.cost > co.cash));
             
-            const container = document.getElementById('eventChoices');
-            container.innerHTML = evt.choices.map(c => {
+            const choicesContainer = document.getElementById('eventChoices');
+            choicesContainer.innerHTML = evt.choices.map(c => {
                 const disabled = getCo().cash < c.cost;
                 return `<button class="choice-button" ${disabled ? 'disabled' : ''} onclick='handleChoice(${JSON.stringify(c).replace(/'/g, "\\'")})'>${c.text}${disabled && c.cost > 0 ? ` [Need $${c.cost.toLocaleString()}]` : ''}</button>`;
             }).join('') + `<button class="choice-button ignore" onclick='handleIgnore(${JSON.stringify(evt.ignoreEffect).replace(/'/g, "\\'")})'>IGNORE SITUATION (Suffer consequences)</button>`;
