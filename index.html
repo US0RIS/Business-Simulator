@@ -671,7 +671,7 @@
                     requires: {},
                     ignoreEffect: {},
                     choices: [
-                        { text: "Hire immediately (-$2500, +1 emp, +20 qual)", cost: 2500, effects: { emp: 1, qual: 20, exp: 600 } },
+                        { text: "Hire immediately (-$2500, +1 emp, +20 qual, +$600/mo)", cost: 2500, effects: { emp: 1, qual: 20, expAdd: 600 } },
                         { text: "Pass on opportunity", cost: 0, effects: {} }
                     ]
                 },
@@ -707,7 +707,7 @@
                     ignoreEffect: { rep: -20, cust: -25 },
                     choices: [
                         { text: "Refund program + apology (-$800, Rep +8)", cost: 800, effects: { rep: 8, cust: -3 } },
-                        { text: "Hire QA team (-$4000, Quality +20, +1 emp)", cost: 4000, effects: { qual: 20, emp: 1, exp: 600 } }
+                        { text: "Hire QA team (-$4000, Quality +20, +1 emp, +$600/mo)", cost: 4000, effects: { qual: 20, emp: 1, expAdd: 600 } }
                     ]
                 },
                 { 
@@ -718,7 +718,7 @@
                     choices: [
                         { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
                         { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
-                        { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo)", cost: 12000, effects: { qual: 30, exp: 200 } }
+                        { text: "Upgrade equipment (-$12000, Quality +30, +$200/mo)", cost: 12000, effects: { qual: 30, expAdd: 200 } }
                     ]
                 }
             ],
@@ -727,21 +727,21 @@
                     title: "Talent Poaching", 
                     desc: "Star employee received competitor offer - 60% higher salary.", 
                     requires: { emp: 2 },
-                    ignoreEffect: { qual: -15, morale: -8, emp: -1 },
+                    ignoreEffect: { qual: -15, morale: -8, emp: -1, expAdd: -600 },
                     choices: [
-                        { text: "Match offer (Expenses +$1800/mo)", cost: 0, effects: { exp: 1800, morale: 10 } },
-                        { text: "Counter with equity (Expenses +$900/mo)", cost: 0, effects: { exp: 900, morale: 15 } },
-                        { text: "Let go, hire replacement (-$3500, Qual -15)", cost: 3500, effects: { qual: -15, morale: -8 } }
+                        { text: "Match offer (+$1800/mo)", cost: 0, effects: { expAdd: 1800, morale: 10 } },
+                        { text: "Counter with equity (+$900/mo)", cost: 0, effects: { expAdd: 900, morale: 15 } },
+                        { text: "Let go, hire replacement (-$3500, Qual -15, no exp change)", cost: 3500, effects: { qual: -15, morale: -8 } }
                     ]
                 },
                 { 
                     title: "Morale Crisis", 
                     desc: "Employee survey reveals widespread dissatisfaction.", 
                     requires: { emp: 3 },
-                    ignoreEffect: { morale: -15, emp: -1 },
+                    ignoreEffect: { morale: -15, emp: -1, expAdd: -600 },
                     choices: [
                         { text: "Company retreat (-$4500, Morale +30)", cost: 4500, effects: { morale: 30 } },
-                        { text: "Raise salaries 10% (Expenses +$2000/mo)", cost: 0, effects: { exp: 2000, morale: 25 } }
+                        { text: "Raise salaries 10% (+$2000/mo)", cost: 0, effects: { expAdd: 2000, morale: 25 } }
                     ]
                 }
             ],
@@ -752,7 +752,7 @@
                     requires: { rep: 40, cust: 30 },
                     ignoreEffect: {},
                     choices: [
-                        { text: "Accept + expand (-$10000, Rev +$3500/mo, +3 emp)", cost: 10000, effects: { rev: 3500, emp: 3, exp: 1800 } },
+                        { text: "Accept + expand (-$10000, Rev +$3500/mo, +3 emp, +$1800/mo)", cost: 10000, effects: { rev: 3500, emp: 3, expAdd: 1800 } },
                         { text: "Negotiate smaller (-$4000, Rev +$1800/mo)", cost: 4000, effects: { rev: 1800 } }
                     ]
                 },
@@ -762,7 +762,7 @@
                     requires: { cust: 15, qual: 40 },
                     ignoreEffect: { cust: 30, qual: 15 },
                     choices: [
-                        { text: "Scale up (-$8000, Cust +100, +3 emp)", cost: 8000, effects: { cust: 100, emp: 3, exp: 1800 } },
+                        { text: "Scale up (-$8000, Cust +100, +3 emp, +$1800/mo)", cost: 8000, effects: { cust: 100, emp: 3, expAdd: 1800 } },
                         { text: "Moderate expansion (-$4000, Cust +60)", cost: 4000, effects: { cust: 60 } }
                     ]
                 }
@@ -818,7 +818,7 @@
                     title: "License Renewal", 
                     desc: "Business license renewal with new compliance requirements.", 
                     requires: {},
-                    ignoreEffect: { exp: 500 },
+                    ignoreEffect: { expAdd: 500 },
                     choices: [
                         { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
                         { text: "Minimal compliance (-$1500)", cost: 1500, effects: {} }
@@ -933,7 +933,10 @@
             const t = bizTypes[mode][type];
             return {
                 id: nextId++, name, type, cash: first ? t.cash : 0, month: 1, emp: t.emp, rep: t.rep,
-                cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, exp: t.exp, revBoost: 0,
+                cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, 
+                baseExp: t.exp, // FIXED: Separate base expenses from modifiers
+                expAdd: 0, // FIXED: Track added recurring expenses separately
+                revBoost: 0,
                 loans: [], total: { rev: 0, exp: 0 }, victory: false, eventHistory: []
             };
         }
@@ -1004,12 +1007,21 @@
             return Math.max(0, Math.floor(totalRev * (0.95 + Math.random() * 0.1) * speed * hardModePenalty));
         }
 
+        // FIXED: Separate base expenses from recurring additions
         function calcExp(co) {
             const speed = getSpeed();
             const hardModePenalty = isHardMode ? 1.2 : 1;
-            let e = co.exp + co.emp * 450 * (1 + co.emp * 0.008);
+            
+            // Base expenses (fixed) + employee salaries ($600 each) + added recurring expenses
+            let e = co.baseExp + (co.emp * 600) + co.expAdd;
+            
+            // Add loan payments
             co.loans.forEach(l => e += l.monthly);
-            return Math.max(0, Math.floor(e * (co.morale < 40 ? 1.12 : 1) * speed * hardModePenalty));
+            
+            // Apply morale penalty if very low
+            const moralePenalty = co.morale < 40 ? 1.12 : 1;
+            
+            return Math.max(0, Math.floor(e * moralePenalty * speed * hardModePenalty));
         }
 
         function calcDebt(co) {
@@ -1057,7 +1069,7 @@
             co.total.rev += rev;
             co.total.exp += exp;
             
-            co.loans = co.loans.filter(l => { l.months--; if (l.months <= 0) co.exp -= l.monthly; return l.months > 0; });
+            co.loans = co.loans.filter(l => { l.months--; if (l.months <= 0) co.expAdd -= l.monthly; return l.months > 0; });
             
             const speed = getSpeed();
             const decayMultiplier = isHardMode ? 1.5 : 1;
@@ -1069,7 +1081,6 @@
             
             if (co.qual > 70) co.rep = Math.min(100, co.rep + 1);
             
-            // Clean up old event history (keep only last 10 months)
             if (co.eventHistory.length > 10) {
                 co.eventHistory = co.eventHistory.slice(-10);
             }
@@ -1103,15 +1114,12 @@
             hideAll();
             const co = getCo();
             
-            // Collect all eligible events
             let allEligible = [];
             
-            // 20% chance for positive event
             if (Math.random() < 0.2) {
                 allEligible = events.positive.filter(e => meetsRequirements(e, co) && !co.eventHistory.includes(e.title));
             }
             
-            // If no positive events eligible or 80% chance, use negative events
             if (allEligible.length === 0) {
                 const negativeCategories = Object.keys(events).filter(k => k !== 'positive');
                 negativeCategories.forEach(cat => {
@@ -1120,22 +1128,18 @@
                 });
             }
             
-            // If no eligible events at all, use any event that meets requirements
             if (allEligible.length === 0) {
                 Object.keys(events).forEach(cat => {
                     allEligible = allEligible.concat(events[cat].filter(e => meetsRequirements(e, co)));
                 });
             }
             
-            // Select random event
             const evt = allEligible[Math.floor(Math.random() * allEligible.length)];
             
-            // Add to history
             co.eventHistory.push(evt.title);
             
             currentEventChoices = evt.choices;
             
-            // Apply positive styling if needed
             const container = document.getElementById('eventContainer');
             const titleEl = document.getElementById('eventTitle');
             if (evt.positive) {
@@ -1178,8 +1182,13 @@
             let txt = `DECISION: Ignored the situation\n\nCONSEQUENCES:\n`;
             Object.keys(effects).forEach(k => {
                 if (effects[k]) {
-                    co[k] = (co[k] || 0) + effects[k];
-                    txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${effects[k] > 0 ? '+' : ''}${k === 'cash' || k === 'rev' || k === 'exp' ? '$' : ''}${Math.abs(effects[k]).toLocaleString()}${k === 'rev' || k === 'exp' ? '/mo' : ''}\n`;
+                    if (k === 'expAdd') {
+                        co.expAdd += effects[k];
+                        txt += `Monthly Expenses: ${effects[k] > 0 ? '+' : ''}$${Math.abs(effects[k])}/mo\n`;
+                    } else {
+                        co[k] = (co[k] || 0) + effects[k];
+                        txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${effects[k] > 0 ? '+' : ''}${k === 'cash' || k === 'rev' ? '$' : ''}${Math.abs(effects[k]).toLocaleString()}${k === 'rev' ? '/mo' : ''}\n`;
+                    }
                 }
             });
             if (Object.keys(effects).length === 0) txt += 'No immediate consequences.\n';
@@ -1205,11 +1214,14 @@
             Object.keys(e).forEach(k => {
                 if (k === 'loans') {
                     co.loans.push(e.loans);
-                    co.exp += e.loans.monthly;
+                    co.expAdd += e.loans.monthly;
                     txt += `New Loan: -$${e.loans.monthly}/mo for ${e.loans.months} months\n`;
+                } else if (k === 'expAdd' && e[k]) {
+                    co.expAdd += e[k];
+                    txt += `Monthly Expenses: ${e[k] > 0 ? '+' : ''}$${Math.abs(e[k])}/mo\n`;
                 } else if (e[k]) {
                     co[k] = (co[k] || 0) + e[k];
-                    txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${e[k] > 0 ? '+' : ''}${k === 'rev' || k === 'exp' ? '$' : ''}${Math.abs(e[k])}${k === 'rev' || k === 'exp' ? '/mo' : ''}\n`;
+                    txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${e[k] > 0 ? '+' : ''}${k === 'rev' ? '$' : ''}${Math.abs(e[k])}${k === 'rev' ? '/mo' : ''}\n`;
                 }
             });
             txt += '\nTake additional actions before next month.';
@@ -1245,7 +1257,7 @@
             if ((amt >= 30000 && co.rep < 50) || (amt >= 75000 && co.rep < 70)) return log(`X Reputation too low (need ${amt >= 75000 ? 70 : 50}+)`);
             co.cash += amt;
             co.loans.push({ monthly: mo, months: mos });
-            co.exp += mo;
+            co.expAdd += mo;
             log(`+ Loan: +$${amt.toLocaleString()} (-$${mo}/mo x${mos})`);
             updateDisplay();
             updateSelector();
@@ -1349,13 +1361,13 @@
             hire: () => {
                 const co = getCo();
                 if (co.cash < 2500) return log('X Need $2,500');
-                co.cash -= 2500; co.emp++; co.qual += 3; co.exp += 600;
+                co.cash -= 2500; co.emp++; co.qual += 3; co.expAdd += 600;
                 log('+ Hired employee (+1, Qual +3, +$600/mo)');
             },
             fire: () => {
                 const co = getCo();
                 if (co.emp <= 0) return log('X No employees to fire');
-                co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5; co.exp -= 600;
+                co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5; co.expAdd -= 600;
                 log('+ Fired employee (+$800, -$600/mo, Rep -8)');
             },
             train: () => {
@@ -1370,7 +1382,7 @@
                 if (co.emp === 0) return log('X No employees');
                 const cost = co.emp * 300;
                 if (co.cash < cost) return log(`X Need $${cost.toLocaleString()}`);
-                co.cash -= cost; co.exp += co.emp * 30; co.morale += 20; co.rep += 5;
+                co.cash -= cost; co.expAdd += co.emp * 30; co.morale += 20; co.rep += 5;
                 log(`+ Wages raised (Morale +20, +$${co.emp * 30}/mo exp)`);
             },
             workplace: () => {
@@ -1382,7 +1394,7 @@
             automate: () => {
                 const co = getCo();
                 if (co.cash < 5000) return log('X Need $5,000');
-                co.cash -= 5000; co.qual += 12; co.exp += 200;
+                co.cash -= 5000; co.qual += 12; co.expAdd += 200;
                 log('+ Automated (Qual +12, +$200/mo maintenance)');
             },
             quality: () => {
@@ -1408,7 +1420,7 @@
             expand: () => {
                 const co = getCo();
                 if (co.cash < 15000) return log('X Need $15,000');
-                co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2; co.exp += 1200;
+                co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2; co.expAdd += 1200;
                 log('+ New location (+80 cust, +$1200/mo, +2 emp, +$1200/mo exp)');
             },
             product: () => openProductModal(),
@@ -1427,25 +1439,25 @@
             acquire: () => {
                 const co = getCo();
                 if (co.cash < 25000) return log('X Need $25,000');
-                co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800; co.exp += 1800;
+                co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800; co.expAdd += 1800;
                 log('+ Acquisition (+75 cust, +$1800/mo, +3 emp, +$1800/mo exp)');
             },
             intl: () => {
                 const co = getCo();
                 if (co.cash < 35000) return log('X Need $35,000');
-                co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20; co.exp += 3000;
+                co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20; co.expAdd += 3000;
                 log('+ International (+120 cust, +$3000/mo, +5 emp, +$3000/mo exp)');
             },
             investor: () => {
                 const co = getCo();
                 if (co.rep < 40) return log('X Reputation too low');
-                co.cash += 20000; co.exp += Math.floor(co.rev * 0.08);
+                co.cash += 20000; co.expAdd += Math.floor(co.rev * 0.08);
                 log('+ Investor (+$20K, 8% rev share as ongoing expense)');
             },
             cut: () => {
                 const co = getCo();
                 if (co.emp <= 1) return log('X Not enough employees');
-                co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10; co.exp -= 1200;
+                co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10; co.expAdd -= 1200;
                 log('+ Emergency cuts (-2 emp, +$1500, -$1200/mo exp)');
             },
             stocks: () => {
@@ -1467,7 +1479,7 @@
                 if (co.loans.length === 0) return log('X No loans');
                 if (co.cash < 3000) return log('X Need $3,000');
                 co.cash -= 3000;
-                co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.exp -= r; l.monthly -= r; });
+                co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.expAdd -= r; l.monthly -= r; });
                 log('+ Refinanced (25% payment reduction)');
             },
             payoff: () => {
@@ -1476,7 +1488,7 @@
                 const loan = co.loans[0];
                 const owed = loan.monthly * loan.months;
                 if (co.cash < owed) return log(`X Need $${owed.toLocaleString()}`);
-                co.cash -= owed; co.exp -= loan.monthly; co.loans.shift();
+                co.cash -= owed; co.expAdd -= loan.monthly; co.loans.shift();
                 log(`+ Paid off (-$${owed.toLocaleString()}, -$${loan.monthly}/mo)`);
             },
             marketing: () => {
@@ -1552,7 +1564,7 @@
                 const co = getCo();
                 const target = companies[idx];
                 co.cash += target.cash; co.emp += target.emp; co.cust += target.cust;
-                co.rev += target.rev; co.exp += target.exp;
+                co.rev += target.rev; co.expAdd += target.expAdd;
                 co.qual = Math.floor((co.qual + target.qual) / 2);
                 companies.splice(idx, 1);
                 if (idx < activeIdx) activeIdx--;
