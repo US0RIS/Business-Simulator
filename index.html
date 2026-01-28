@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Business Empire Simulator</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
+        * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: 'Courier New', monospace;
             background: var(--bg-color);
@@ -19,7 +14,6 @@
             line-height: 1.4;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
         :root {
             --bg-color: #000;
             --ui-color: #0f0;
@@ -27,7 +21,6 @@
             --warning-color: #f00;
             --success-color: #0ff;
         }
-
         .game-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -35,7 +28,6 @@
             padding: 20px;
             background: var(--bg-color);
         }
-
         .settings-btn {
             position: fixed;
             top: 20px;
@@ -48,12 +40,7 @@
             font-family: 'Courier New', monospace;
             z-index: 999;
         }
-
-        .settings-btn:hover {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
+        .settings-btn:hover { background: var(--ui-color); color: var(--bg-color); }
         .settings-panel {
             position: fixed;
             top: 60px;
@@ -66,13 +53,11 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-
         .settings-panel h3 {
             margin-bottom: 15px;
             border-bottom: 1px solid var(--ui-color);
             padding-bottom: 5px;
         }
-
         .color-preview {
             display: inline-block;
             width: 30px;
@@ -81,18 +66,15 @@
             margin-left: 10px;
             vertical-align: middle;
         }
-
         .color-picker-group {
             margin: 20px 0;
             padding: 15px;
             border: 1px solid var(--ui-color);
         }
-
         .color-picker-group label {
             display: block;
             margin: 10px 0;
         }
-
         .color-picker-group input[type="color"] {
             width: 60px;
             height: 40px;
@@ -100,7 +82,6 @@
             cursor: pointer;
             margin-left: 10px;
         }
-
         .company-selector {
             display: flex;
             gap: 10px;
@@ -109,7 +90,6 @@
             padding: 10px;
             border: 1px solid var(--ui-color);
         }
-
         .company-tab {
             background: var(--bg-color);
             color: var(--ui-color);
@@ -120,16 +100,8 @@
             min-width: 150px;
             text-align: center;
         }
-
-        .company-tab:hover {
-            background: var(--ui-hover);
-        }
-
-        .company-tab.active {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
+        .company-tab:hover { background: var(--ui-hover); }
+        .company-tab.active { background: var(--ui-color); color: var(--bg-color); }
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -138,39 +110,24 @@
             border: 2px solid var(--ui-color);
             padding: 10px;
         }
-
         .stat-item {
             padding: 5px;
             border-bottom: 1px solid var(--ui-hover);
         }
-
-        .stat-item:last-child {
-            border-bottom: none;
-        }
-
+        .stat-item:last-child { border-bottom: none; }
         .event-container {
             border: 2px solid var(--ui-color);
             padding: 20px;
             margin-bottom: 20px;
         }
-
         .event-title {
             font-size: 18px;
             margin-bottom: 15px;
             padding-bottom: 10px;
             border-bottom: 1px solid var(--ui-color);
         }
-
-        .event-description {
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .choices {
-            display: grid;
-            gap: 10px;
-        }
-
+        .event-description { margin-bottom: 20px; line-height: 1.6; }
+        .choices { display: grid; gap: 10px; }
         .choice-button {
             background: var(--bg-color);
             color: var(--ui-color);
@@ -181,34 +138,16 @@
             font-size: 13px;
             text-align: left;
         }
-
-        .choice-button:hover:not(:disabled) {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
-        .choice-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
-        .choice-button.ignore {
-            border-color: var(--warning-color);
-            color: var(--warning-color);
-        }
-
-        .choice-button.ignore:hover:not(:disabled) {
-            background: var(--warning-color);
-            color: var(--bg-color);
-        }
-
+        .choice-button:hover:not(:disabled) { background: var(--ui-color); color: var(--bg-color); }
+        .choice-button:disabled { opacity: 0.3; cursor: not-allowed; }
+        .choice-button.ignore { border-color: var(--warning-color); color: var(--warning-color); }
+        .choice-button.ignore:hover:not(:disabled) { background: var(--warning-color); color: var(--bg-color); }
         .actions {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 8px;
             margin-bottom: 20px;
         }
-
         .action-button {
             background: var(--bg-color);
             color: var(--ui-color);
@@ -219,17 +158,8 @@
             font-size: 11px;
             text-align: center;
         }
-
-        .action-button:hover:not(:disabled) {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
-        .action-button:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
-
+        .action-button:hover:not(:disabled) { background: var(--ui-color); color: var(--bg-color); }
+        .action-button:disabled { opacity: 0.3; cursor: not-allowed; }
         button {
             background: var(--bg-color);
             color: var(--ui-color);
@@ -239,12 +169,7 @@
             font-family: 'Courier New', monospace;
             font-size: 14px;
         }
-
-        button:hover {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
+        button:hover { background: var(--ui-color); color: var(--bg-color); }
         .title {
             text-align: center;
             font-size: 32px;
@@ -253,34 +178,18 @@
             padding-bottom: 10px;
             letter-spacing: 3px;
         }
-
         .warning { color: var(--warning-color); }
         .success { color: var(--success-color); }
-
         .business-type, .difficulty-option {
             border: 2px solid var(--ui-color);
             padding: 15px;
             margin: 10px 0;
             cursor: pointer;
         }
-
-        .business-type:hover, .difficulty-option:hover {
-            background: var(--ui-hover);
-        }
-
-        .business-type.selected, .difficulty-option.selected {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
+        .business-type:hover, .difficulty-option:hover { background: var(--ui-hover); }
+        .business-type.selected, .difficulty-option.selected { background: var(--ui-color); color: var(--bg-color); }
         .hidden { display: none !important; }
-
-        .tab-buttons {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 15px;
-        }
-
+        .tab-buttons { display: flex; gap: 5px; margin-bottom: 15px; }
         .tab-button {
             flex: 1;
             padding: 10px;
@@ -289,12 +198,7 @@
             color: var(--ui-color);
             border: 2px solid var(--ui-color);
         }
-
-        .tab-button.active {
-            background: var(--ui-color);
-            color: var(--bg-color);
-        }
-
+        .tab-button.active { background: var(--ui-color); color: var(--bg-color); }
         .action-log {
             background: var(--bg-color);
             border: 1px solid var(--ui-color);
@@ -304,23 +208,13 @@
             overflow-y: auto;
             font-size: 11px;
         }
-
-        .loan-section {
-            border: 2px solid var(--ui-color);
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .loan-section h3 {
-            margin-bottom: 10px;
-        }
-
+        .loan-section { border: 2px solid var(--ui-color); padding: 15px; margin-bottom: 20px; }
+        .loan-section h3 { margin-bottom: 10px; }
         .loan-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 10px;
         }
-
         .debt-warning {
             background: var(--bg-color);
             border: 2px solid var(--warning-color);
@@ -328,19 +222,12 @@
             margin-bottom: 20px;
             color: var(--warning-color);
         }
-
-        .portfolio-summary {
-            border: 2px solid var(--ui-color);
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
+        .portfolio-summary { border: 2px solid var(--ui-color); padding: 15px; margin-bottom: 20px; }
         .portfolio-summary h3 {
             margin-bottom: 10px;
             border-bottom: 1px solid var(--ui-color);
             padding-bottom: 5px;
         }
-
         input, select, textarea {
             background: var(--bg-color);
             color: var(--ui-color);
@@ -351,17 +238,8 @@
             margin: 10px 0;
             font-size: 14px;
         }
-
-        textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--success-color);
-        }
-
+        textarea { min-height: 80px; resize: vertical; }
+        input:focus, select:focus, textarea:focus { outline: none; border-color: var(--success-color); }
         .modal {
             position: fixed;
             top: 0;
@@ -374,7 +252,6 @@
             justify-content: center;
             z-index: 2000;
         }
-
         .modal-content {
             background: var(--bg-color);
             padding: 30px;
@@ -384,70 +261,39 @@
             max-height: 80vh;
             overflow-y: auto;
         }
-
         .modal-title {
             font-size: 20px;
             margin-bottom: 15px;
             border-bottom: 1px solid var(--ui-color);
             padding-bottom: 10px;
         }
-
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .modal-buttons button {
-            flex: 1;
-        }
-
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; }
         @media (max-width: 768px) {
             .actions { grid-template-columns: 1fr; }
             .stats { grid-template-columns: 1fr 1fr; }
             .loan-grid { grid-template-columns: 1fr; }
         }
-
-        .report-box {
+        .report-box, .result-box {
             border: 2px solid var(--ui-color);
             padding: 20px;
             margin-bottom: 20px;
         }
-
-        .result-box {
-            border: 2px solid var(--ui-color);
-            padding: 20px;
-            margin-bottom: 20px;
-            min-height: 100px;
-        }
-
+        .result-box { min-height: 100px; }
         pre {
             font-family: 'Courier New', monospace;
             white-space: pre-wrap;
             line-height: 1.6;
         }
-
-        .form-group {
-            margin: 15px 0;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-
+        .form-group { margin: 15px 0; }
+        .form-group label { display: block; margin-bottom: 5px; }
         .loan-options-inline {
             border: 2px solid var(--success-color);
             padding: 15px;
             margin: 15px 0;
             background: var(--ui-hover);
         }
-
-        .loan-options-inline h4 {
-            color: var(--success-color);
-            margin-bottom: 10px;
-        }
-
+        .loan-options-inline h4 { color: var(--success-color); margin-bottom: 10px; }
         .color-option {
             display: flex;
             align-items: center;
@@ -456,26 +302,14 @@
             padding: 8px;
             border: 2px solid transparent;
         }
-
-        .color-option:hover {
-            border-color: var(--ui-color);
-        }
-
-        .color-option input[type="radio"] {
-            width: auto;
-            margin-right: 10px;
-        }
-
+        .color-option:hover { border-color: var(--ui-color); }
+        .color-option input[type="radio"] { width: auto; margin-right: 10px; }
         .settings-section {
             margin: 20px 0;
             padding-bottom: 15px;
             border-bottom: 1px solid var(--ui-hover);
         }
-
-        .settings-section:last-of-type {
-            border-bottom: none;
-        }
-
+        .settings-section:last-of-type { border-bottom: none; }
         .custom-color-display {
             display: inline-block;
             padding: 5px 10px;
@@ -504,84 +338,22 @@
 
         <div class="settings-section">
             <strong style="display: block; margin-bottom: 10px;">Color Presets:</strong>
-            
-            <div class="color-option" onclick="changeColors('#000', '#0f0')">
-                <input type="radio" name="colorScheme" value="green" checked>
-                <span>Classic (Green on Black)</span>
-                <span class="color-preview" style="background: #0f0;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#000', '#00ffff')">
-                <input type="radio" name="colorScheme" value="cyan">
-                <span>Cyan on Black</span>
-                <span class="color-preview" style="background: #00ffff;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#000', '#ff00ff')">
-                <input type="radio" name="colorScheme" value="magenta">
-                <span>Magenta on Black</span>
-                <span class="color-preview" style="background: #ff00ff;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#000', '#ffff00')">
-                <input type="radio" name="colorScheme" value="yellow">
-                <span>Yellow on Black</span>
-                <span class="color-preview" style="background: #ffff00;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#000', '#ff8800')">
-                <input type="radio" name="colorScheme" value="orange">
-                <span>Orange on Black</span>
-                <span class="color-preview" style="background: #ff8800;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#1a1a2e', '#0f0')">
-                <input type="radio" name="colorScheme" value="darkblue">
-                <span>Green on Dark Blue</span>
-                <span class="color-preview" style="background: #1a1a2e; border: 1px solid #0f0;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#ffffff', '#000000')">
-                <input type="radio" name="colorScheme" value="light">
-                <span>Black on White</span>
-                <span class="color-preview" style="background: #ffffff; border: 1px solid #000;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#2b2b2b', '#ffffff')">
-                <input type="radio" name="colorScheme" value="gray">
-                <span>White on Dark Gray</span>
-                <span class="color-preview" style="background: #2b2b2b; border: 1px solid #fff;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#1e1e1e', '#00d4ff')">
-                <input type="radio" name="colorScheme" value="blue">
-                <span>Blue on Dark</span>
-                <span class="color-preview" style="background: #00d4ff;"></span>
-            </div>
-
-            <div class="color-option" onclick="changeColors('#0d1117', '#58a6ff')">
-                <input type="radio" name="colorScheme" value="github">
-                <span>GitHub Dark</span>
-                <span class="color-preview" style="background: #58a6ff;"></span>
-            </div>
+            <div id="colorPresets"></div>
         </div>
 
         <div class="settings-section">
             <strong style="display: block; margin-bottom: 10px;">Custom Colors:</strong>
-            
             <div class="color-picker-group">
                 <label>
                     Background Color:
                     <input type="color" id="bgColorPicker" value="#000000" onchange="applyCustomColors()">
                     <span class="custom-color-display" id="bgColorValue">#000000</span>
                 </label>
-                
                 <label>
                     Text/UI Color:
                     <input type="color" id="uiColorPicker" value="#00ff00" onchange="applyCustomColors()">
                     <span class="custom-color-display" id="uiColorValue">#00ff00</span>
                 </label>
-
                 <button onclick="applyCustomColors()" style="width: 100%; margin-top: 10px;">Apply Custom Colors</button>
             </div>
         </div>
@@ -600,14 +372,8 @@
                 FROM: <span id="fromCompanyName"></span><br>
                 Available: $<span id="availableCash">0</span>
             </label>
-            <label>
-                TO:<br>
-                <select id="targetCompany"></select>
-            </label>
-            <label>
-                AMOUNT:<br>
-                <input type="number" id="transferAmount" placeholder="Enter amount" min="0">
-            </label>
+            <label>TO:<br><select id="targetCompany"></select></label>
+            <label>AMOUNT:<br><input type="number" id="transferAmount" placeholder="Enter amount" min="0"></label>
             <div class="modal-buttons">
                 <button onclick="confirmTransfer()">TRANSFER</button>
                 <button onclick="closeTransferModal()">CANCEL</button>
@@ -618,12 +384,10 @@
     <div id="productModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-title">NEW PRODUCT DEVELOPMENT</div>
-            
             <div class="form-group">
                 <label>Product Name:</label>
                 <input type="text" id="productName" placeholder="Enter product name">
             </div>
-
             <div class="form-group">
                 <label>Product Type:</label>
                 <select id="productType">
@@ -633,7 +397,6 @@
                     <option value="budget">Budget (Low price, volume sales)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>Marketing Strategy:</label>
                 <select id="marketingStrategy">
@@ -643,7 +406,6 @@
                     <option value="minimal">Minimal (+$500 cost, organic growth)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>Target Market:</label>
                 <select id="targetMarket">
@@ -654,7 +416,6 @@
                     <option value="all">Mass Market (All ages)</option>
                 </select>
             </div>
-
             <div class="form-group">
                 <label>Development Budget:</label>
                 <select id="devBudget">
@@ -664,25 +425,16 @@
                     <option value="high">High ($20,000)</option>
                 </select>
             </div>
-
             <div style="border: 1px solid var(--ui-color); padding: 10px; margin: 15px 0;">
                 <strong>TOTAL COST: $<span id="productTotalCost">0</span></strong><br>
                 <span id="productEstimate" style="font-size: 12px;"></span>
             </div>
-
             <div id="productLoanOptions" class="loan-options-inline hidden">
                 <h4>NEED FUNDS? TAKE A LOAN:</h4>
-                <button class="action-button" onclick="quickLoanFromModal(5000, 250, 36)" style="width: 100%; margin: 5px 0;">
-                    Micro: +$5K (-$250/mo x36)
-                </button>
-                <button class="action-button" onclick="quickLoanFromModal(10000, 500, 36)" style="width: 100%; margin: 5px 0;">
-                    Small: +$10K (-$500/mo x36)
-                </button>
-                <button class="action-button" onclick="quickLoanFromModal(30000, 1500, 36)" style="width: 100%; margin: 5px 0;">
-                    Business: +$30K (-$1500/mo x36)
-                </button>
+                <button class="action-button" onclick="quickLoanFromModal(5000, 250, 36)" style="width: 100%; margin: 5px 0;">Micro: +$5K (-$250/mo x36)</button>
+                <button class="action-button" onclick="quickLoanFromModal(10000, 500, 36)" style="width: 100%; margin: 5px 0;">Small: +$10K (-$500/mo x36)</button>
+                <button class="action-button" onclick="quickLoanFromModal(30000, 1500, 36)" style="width: 100%; margin: 5px 0;">Business: +$30K (-$1500/mo x36)</button>
             </div>
-
             <div class="modal-buttons">
                 <button onclick="confirmProduct()">LAUNCH PRODUCT</button>
                 <button onclick="closeProductModal()">CANCEL</button>
@@ -695,7 +447,6 @@
         
         <div id="difficultyScreen">
             <h2 style="margin-bottom: 20px;">SELECT DIFFICULTY</h2>
-            
             <div class="difficulty-option" onclick="selectDifficulty('easy')">
                 <strong>EASY MODE</strong><br>
                 Start with some revenue and customers<br>
@@ -703,7 +454,6 @@
                 Slower stat decay<br>
                 Good for learning the game
             </div>
-            
             <div class="difficulty-option" onclick="selectDifficulty('hard')">
                 <strong>HARD MODE (REALISTIC)</strong><br>
                 Start with $20,000 but ZERO revenue<br>
@@ -718,39 +468,8 @@
             <h2 style="margin-bottom: 20px;">CREATE YOUR BUSINESS</h2>
             <input type="text" id="playerName" placeholder="Your name" value="Alex Smith">
             <input type="text" id="companyName" placeholder="Company name" value="TechCorp">
-            
             <h3 style="margin: 30px 0 15px 0; border-bottom: 1px solid var(--ui-color); padding-bottom: 5px;">CHOOSE BUSINESS TYPE</h3>
-            
-            <div class="business-type" onclick="selectBusiness('tech')">
-                <strong>TECH STARTUP</strong><br>
-                High growth, volatile market<br>
-                <span id="tech-stats"></span>
-            </div>
-            
-            <div class="business-type" onclick="selectBusiness('retail')">
-                <strong>RETAIL STORE</strong><br>
-                Steady income, inventory focus<br>
-                <span id="retail-stats"></span>
-            </div>
-            
-            <div class="business-type" onclick="selectBusiness('restaurant')">
-                <strong>RESTAURANT</strong><br>
-                High volume, quality critical<br>
-                <span id="restaurant-stats"></span>
-            </div>
-            
-            <div class="business-type" onclick="selectBusiness('consulting')">
-                <strong>CONSULTING FIRM</strong><br>
-                Reputation dependent, high margins<br>
-                <span id="consulting-stats"></span>
-            </div>
-            
-            <div class="business-type" onclick="selectBusiness('ecommerce')">
-                <strong>E-COMMERCE</strong><br>
-                Online sales, scalable<br>
-                <span id="ecommerce-stats"></span>
-            </div>
-            
+            <div id="businessTypes"></div>
             <button onclick="startGame()" style="width: 100%; padding: 15px; margin-top: 20px;">START GAME</button>
         </div>
 
@@ -759,22 +478,9 @@
                 <h3>PORTFOLIO OVERVIEW</h3>
                 <pre id="portfolioContent"></pre>
             </div>
-
             <div id="debtWarning" class="debt-warning hidden"></div>
             <div id="companySelector" class="company-selector"></div>
-
-            <div class="stats">
-                <div class="stat-item">CASH: $<span id="cash">0</span></div>
-                <div class="stat-item">MONTH: <span id="month">1</span></div>
-                <div class="stat-item">EMPLOYEES: <span id="employees">0</span></div>
-                <div class="stat-item">REPUTATION: <span id="reputation">0</span>/100</div>
-                <div class="stat-item">CUSTOMERS: <span id="customers">0</span></div>
-                <div class="stat-item">QUALITY: <span id="quality">0</span>/100</div>
-                <div class="stat-item">REVENUE/MO: $<span id="revenue">0</span></div>
-                <div class="stat-item">EXPENSES/MO: $<span id="expenses">0</span></div>
-                <div class="stat-item">MORALE: <span id="morale">0</span>/100</div>
-                <div class="stat-item">DEBT: <span id="debtCapacity">0</span>%</div>
-            </div>
+            <div class="stats" id="statsContainer"></div>
 
             <div id="monthlyReportScreen" class="hidden">
                 <div class="report-box">
@@ -791,15 +497,9 @@
                     <div id="eventLoanOptions" class="loan-options-inline hidden">
                         <h4>NEED FUNDS FOR THESE OPTIONS? TAKE A LOAN:</h4>
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
-                            <button class="action-button" onclick="quickLoanFromEvent(5000, 250, 36)">
-                                Micro: +$5K<br>-$250/mo x36
-                            </button>
-                            <button class="action-button" onclick="quickLoanFromEvent(10000, 500, 36)">
-                                Small: +$10K<br>-$500/mo x36
-                            </button>
-                            <button class="action-button" onclick="quickLoanFromEvent(30000, 1500, 36)">
-                                Business: +$30K<br>-$1500/mo x36
-                            </button>
+                            <button class="action-button" onclick="quickLoanFromEvent(5000, 250, 36)">Micro: +$5K<br>-$250/mo x36</button>
+                            <button class="action-button" onclick="quickLoanFromEvent(10000, 500, 36)">Small: +$10K<br>-$500/mo x36</button>
+                            <button class="action-button" onclick="quickLoanFromEvent(30000, 1500, 36)">Business: +$30K<br>-$1500/mo x36</button>
                         </div>
                     </div>
                     <div class="choices" id="eventChoices"></div>
@@ -808,44 +508,25 @@
 
             <div id="freeActionScreen" class="hidden">
                 <div class="result-box" id="eventResult"></div>
-                
                 <div class="loan-section">
                     <h3>FINANCING (DEBT: <span id="currentDebt">0</span>%)</h3>
                     <div class="loan-grid">
-                        <button class="action-button" onclick="quickLoan(5000, 250, 36)">
-                            MICRO LOAN<br>+$5,000<br>-$250/mo x36<br>Max: 20% debt
-                        </button>
-                        <button class="action-button" onclick="quickLoan(10000, 500, 36)">
-                            SMALL LOAN<br>+$10,000<br>-$500/mo x36<br>Max: 30% debt
-                        </button>
-                        <button class="action-button" onclick="quickLoan(30000, 1500, 36)">
-                            BUSINESS LOAN<br>+$30,000<br>-$1,500/mo x36<br>Max: 50% | Rep: 50+
-                        </button>
-                        <button class="action-button" onclick="quickLoan(75000, 3500, 36)">
-                            CREDIT LINE<br>+$75,000<br>-$3,500/mo x36<br>Max: 65% | Rep: 70+
-                        </button>
+                        <button class="action-button" onclick="quickLoan(5000, 250, 36)">MICRO LOAN<br>+$5,000<br>-$250/mo x36<br>Max: 20% debt</button>
+                        <button class="action-button" onclick="quickLoan(10000, 500, 36)">SMALL LOAN<br>+$10,000<br>-$500/mo x36<br>Max: 30% debt</button>
+                        <button class="action-button" onclick="quickLoan(30000, 1500, 36)">BUSINESS LOAN<br>+$30,000<br>-$1,500/mo x36<br>Max: 50% | Rep: 50+</button>
+                        <button class="action-button" onclick="quickLoan(75000, 3500, 36)">CREDIT LINE<br>+$75,000<br>-$3,500/mo x36<br>Max: 65% | Rep: 70+</button>
                     </div>
                 </div>
-
                 <div class="action-log">
                     <strong>ACTION LOG:</strong>
                     <div id="logContent" style="margin-top: 5px;">No actions taken this month.</div>
                 </div>
-
-                <div class="tab-buttons">
-                    <button class="tab-button active" onclick="showTab('ops')">OPERATIONS</button>
-                    <button class="tab-button" onclick="showTab('growth')">GROWTH</button>
-                    <button class="tab-button" onclick="showTab('finance')">FINANCE</button>
-                    <button class="tab-button" onclick="showTab('marketing')">MARKETING</button>
-                    <button class="tab-button" onclick="showTab('empire')">EMPIRE</button>
-                </div>
-
+                <div class="tab-buttons" id="tabButtons"></div>
                 <div id="opsTab" class="actions"></div>
                 <div id="growthTab" class="actions hidden"></div>
                 <div id="financeTab" class="actions hidden"></div>
                 <div id="marketingTab" class="actions hidden"></div>
                 <div id="empireTab" class="actions hidden"></div>
-
                 <button onclick="nextMonth()" style="width: 100%; padding: 15px; margin-top: 15px;">ADVANCE TO NEXT MONTH</button>
             </div>
 
@@ -875,20 +556,33 @@
         let isHardMode = false;
         let currentEventChoices = [];
 
+        const colorPresets = [
+            { name: 'Classic (Green on Black)', bg: '#000', ui: '#0f0', key: 'green' },
+            { name: 'Cyan on Black', bg: '#000', ui: '#00ffff', key: 'cyan' },
+            { name: 'Magenta on Black', bg: '#000', ui: '#ff00ff', key: 'magenta' },
+            { name: 'Yellow on Black', bg: '#000', ui: '#ffff00', key: 'yellow' },
+            { name: 'Orange on Black', bg: '#000', ui: '#ff8800', key: 'orange' },
+            { name: 'Green on Dark Blue', bg: '#1a1a2e', ui: '#0f0', key: 'darkblue' },
+            { name: 'Black on White', bg: '#ffffff', ui: '#000000', key: 'light' },
+            { name: 'White on Dark Gray', bg: '#2b2b2b', ui: '#ffffff', key: 'gray' },
+            { name: 'Blue on Dark', bg: '#1e1e1e', ui: '#00d4ff', key: 'blue' },
+            { name: 'GitHub Dark', bg: '#0d1117', ui: '#58a6ff', key: 'github' }
+        ];
+
         const bizTypes = {
             easy: {
-                tech: { name: 'Tech Startup', cash: 8000, emp: 0, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 800 },
-                retail: { name: 'Retail Store', cash: 10000, emp: 0, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 1200 },
-                restaurant: { name: 'Restaurant', cash: 7000, emp: 0, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 1500 },
-                consulting: { name: 'Consulting', cash: 12000, emp: 0, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 800 },
-                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 0, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 900 }
+                tech: { name: 'Tech Startup', cash: 8000, emp: 0, qual: 40, cust: 30, rep: 35, rev: 2800, exp: 800, desc: 'High growth, volatile market' },
+                retail: { name: 'Retail Store', cash: 10000, emp: 0, qual: 50, cust: 80, rep: 45, rev: 4000, exp: 1200, desc: 'Steady income, inventory focus' },
+                restaurant: { name: 'Restaurant', cash: 7000, emp: 0, qual: 45, cust: 60, rep: 40, rev: 4500, exp: 1500, desc: 'High volume, quality critical' },
+                consulting: { name: 'Consulting', cash: 12000, emp: 0, qual: 60, cust: 20, rep: 55, rev: 5500, exp: 800, desc: 'Reputation dependent, high margins' },
+                ecommerce: { name: 'E-Commerce', cash: 9000, emp: 0, qual: 45, cust: 50, rep: 38, rev: 3200, exp: 900, desc: 'Online sales, scalable' }
             },
             hard: {
-                tech: { name: 'Tech Startup', cash: 20000, emp: 0, qual: 20, cust: 0, rep: 10, rev: 0, exp: 500 },
-                retail: { name: 'Retail Store', cash: 20000, emp: 0, qual: 30, cust: 0, rep: 15, rev: 0, exp: 600 },
-                restaurant: { name: 'Restaurant', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 10, rev: 0, exp: 700 },
-                consulting: { name: 'Consulting', cash: 20000, emp: 0, qual: 35, cust: 0, rep: 20, rev: 0, exp: 400 },
-                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 12, rev: 0, exp: 500 }
+                tech: { name: 'Tech Startup', cash: 20000, emp: 0, qual: 20, cust: 0, rep: 10, rev: 0, exp: 500, desc: 'High growth, volatile market' },
+                retail: { name: 'Retail Store', cash: 20000, emp: 0, qual: 30, cust: 0, rep: 15, rev: 0, exp: 600, desc: 'Steady income, inventory focus' },
+                restaurant: { name: 'Restaurant', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 10, rev: 0, exp: 700, desc: 'High volume, quality critical' },
+                consulting: { name: 'Consulting', cash: 20000, emp: 0, qual: 35, cust: 0, rep: 20, rev: 0, exp: 400, desc: 'Reputation dependent, high margins' },
+                ecommerce: { name: 'E-Commerce', cash: 20000, emp: 0, qual: 25, cust: 0, rep: 12, rev: 0, exp: 500, desc: 'Online sales, scalable' }
             }
         };
 
@@ -937,33 +631,6 @@
             ]
         };
 
-        const hardEvents = {
-            cash_flow: [
-                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", 
-                  ignoreEffect: { cash: -5000, rep: -20, morale: -30 },
-                  choices: [
-                    { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
-                    { text: "Delay vendor payments (Rep -15, possible lawsuits)", cost: 0, effects: { rep: -15 } }
-                ]},
-            ],
-            competition: [
-                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
-                  ignoreEffect: { cust: -50, rep: -10 },
-                  choices: [
-                    { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
-                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
-                ]}
-            ],
-            regulatory: [
-                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", 
-                  ignoreEffect: { exp: 500 },
-                  choices: [
-                    { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
-                    { text: "Minimal compliance (-$1500, risk fines)", cost: 1500, effects: {} }
-                ]}
-            ]
-        };
-
         const events = {
             quality: [
                 { title: "Quality Complaints", desc: "Multiple customers report quality issues. Social media sentiment turning negative.", 
@@ -977,7 +644,7 @@
                   choices: [
                     { text: "Emergency repair (-$5000, Quality +8)", cost: 5000, effects: { qual: 8 } },
                     { text: "Standard repair (-$2000, Quality -5)", cost: 2000, effects: { qual: -5, rev: -800 } },
-                    { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo maintenance)", cost: 12000, effects: { qual: 30, exp: 200 } }
+                    { text: "Upgrade equipment (-$12000, Quality +30, -$200/mo)", cost: 12000, effects: { qual: 30, exp: 200 } }
                 ]}
             ],
             employee: [
@@ -1022,81 +689,111 @@
                     { text: "Full entry (-$15000, Rev +$3500/mo, Cust +80)", cost: 15000, effects: { rev: 3500, cust: 80 } },
                     { text: "Test pilot (-$6000, Rev +$1500/mo, Cust +35)", cost: 6000, effects: { rev: 1500, cust: 35 } }
                 ]}
+            ],
+            cash_flow: [
+                { title: "Cash Flow Crisis", desc: "Major client payment delayed 60 days. You need to make payroll now.", 
+                  ignoreEffect: { cash: -5000, rep: -20, morale: -30 },
+                  choices: [
+                    { text: "Take emergency loan (-$3000 fees, +$10000)", cost: -7000, effects: { loans: { monthly: 500, months: 24 } } },
+                    { text: "Delay vendor payments (Rep -15)", cost: 0, effects: { rep: -15 } }
+                ]},
+            ],
+            competition: [
+                { title: "Market Disruption", desc: "Well-funded competitor launching aggressive campaign. Market share at risk.", 
+                  ignoreEffect: { cust: -50, rep: -10 },
+                  choices: [
+                    { text: "Counter with own campaign (-$8000)", cost: 8000, effects: { rep: 10, cust: 20 } },
+                    { text: "Focus on customer retention (-$3000)", cost: 3000, effects: { qual: 15, morale: 10 } }
+                ]}
+            ],
+            regulatory: [
+                { title: "License Renewal", desc: "Business license renewal with new compliance requirements.", 
+                  ignoreEffect: { exp: 500 },
+                  choices: [
+                    { text: "Full compliance (-$4000)", cost: 4000, effects: { rep: 5 } },
+                    { text: "Minimal compliance (-$1500)", cost: 1500, effects: {} }
+                ]}
             ]
         };
 
-        function changeColors(bgColor, uiColor) {
-            const root = document.documentElement;
-            root.style.setProperty('--bg-color', bgColor);
-            root.style.setProperty('--ui-color', uiColor);
-            
-            const hoverColor = calculateHoverColor(bgColor, uiColor);
-            root.style.setProperty('--ui-hover', hoverColor);
-            
-            // Update color pickers to match preset
-            document.getElementById('bgColorPicker').value = bgColor;
-            document.getElementById('uiColorPicker').value = uiColor;
-            document.getElementById('bgColorValue').textContent = bgColor;
-            document.getElementById('uiColorValue').textContent = uiColor;
-            
-            // Update radio button selection
-            if (event && event.currentTarget) {
-                event.currentTarget.querySelector('input[type="radio"]').checked = true;
-            }
-        }
-
-        function applyCustomColors() {
-            const bgColor = document.getElementById('bgColorPicker').value;
-            const uiColor = document.getElementById('uiColorPicker').value;
-            
-            const root = document.documentElement;
-            root.style.setProperty('--bg-color', bgColor);
-            root.style.setProperty('--ui-color', uiColor);
-            
-            const hoverColor = calculateHoverColor(bgColor, uiColor);
-            root.style.setProperty('--ui-hover', hoverColor);
-            
-            // Update display values
-            document.getElementById('bgColorValue').textContent = bgColor;
-            document.getElementById('uiColorValue').textContent = uiColor;
-            
-            // Uncheck all preset radio buttons
-            document.querySelectorAll('input[name="colorScheme"]').forEach(radio => {
-                radio.checked = false;
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            renderColorPresets();
+            renderBusinessTypes();
+            renderTabs();
+            ['productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.addEventListener('change', updateProductCost);
             });
-        }
-
-        // Update color value displays when color pickers change
-        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('bgColorPicker').addEventListener('input', function() {
                 document.getElementById('bgColorValue').textContent = this.value;
             });
-            
             document.getElementById('uiColorPicker').addEventListener('input', function() {
                 document.getElementById('uiColorValue').textContent = this.value;
             });
         });
 
+        function renderColorPresets() {
+            const container = document.getElementById('colorPresets');
+            container.innerHTML = colorPresets.map((p, i) => `
+                <div class="color-option" onclick="changeColors('${p.bg}', '${p.ui}')">
+                    <input type="radio" name="colorScheme" value="${p.key}" ${i === 0 ? 'checked' : ''}>
+                    <span>${p.name}</span>
+                    <span class="color-preview" style="background: ${p.ui};"></span>
+                </div>
+            `).join('');
+        }
+
+        function renderBusinessTypes() {
+            const container = document.getElementById('businessTypes');
+            const mode = isHardMode ? 'hard' : 'easy';
+            container.innerHTML = Object.keys(bizTypes[mode]).map(type => {
+                const stats = bizTypes[mode][type];
+                return `
+                    <div class="business-type" onclick="selectBusiness('${type}')">
+                        <strong>${stats.name.toUpperCase()}</strong><br>
+                        ${stats.desc}<br>
+                        <span id="${type}-stats">Start: $${(stats.cash/1000).toFixed(0)}K | 0 employees | Quality: ${stats.qual}${isHardMode ? ' | NO INITIAL REVENUE' : ''}</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTabs() {
+            document.getElementById('tabButtons').innerHTML = ['ops', 'growth', 'finance', 'marketing', 'empire']
+                .map(tab => `<button class="tab-button ${tab === 'ops' ? 'active' : ''}" onclick="showTab('${tab}')">${tab.toUpperCase()}</button>`)
+                .join('');
+        }
+
+        function changeColors(bgColor, uiColor) {
+            const root = document.documentElement;
+            root.style.setProperty('--bg-color', bgColor);
+            root.style.setProperty('--ui-color', uiColor);
+            root.style.setProperty('--ui-hover', calculateHoverColor(bgColor, uiColor));
+            document.getElementById('bgColorPicker').value = bgColor;
+            document.getElementById('uiColorPicker').value = uiColor;
+            document.getElementById('bgColorValue').textContent = bgColor;
+            document.getElementById('uiColorValue').textContent = uiColor;
+        }
+
+        function applyCustomColors() {
+            const bgColor = document.getElementById('bgColorPicker').value;
+            const uiColor = document.getElementById('uiColorPicker').value;
+            changeColors(bgColor, uiColor);
+            document.querySelectorAll('input[name="colorScheme"]').forEach(r => r.checked = false);
+        }
+
         function calculateHoverColor(bgColor, uiColor) {
             if (bgColor === '#000' || bgColor === '#000000') {
-                return uiColor.replace(/[0-9a-f]{2}/gi, match => {
-                    const val = parseInt(match, 16);
-                    return ('0' + Math.floor(val * 0.2).toString(16)).slice(-2);
-                });
+                return uiColor.replace(/[0-9a-f]{2}/gi, m => ('0' + Math.floor(parseInt(m, 16) * 0.2).toString(16)).slice(-2));
             } else if (bgColor === '#ffffff' || bgColor === '#fff') {
                 return '#f0f0f0';
             } else {
-                return bgColor.replace(/[0-9a-f]{2}/gi, match => {
-                    const val = parseInt(match, 16);
-                    return ('0' + Math.min(255, Math.floor(val * 1.3)).toString(16)).slice(-2);
-                });
+                return bgColor.replace(/[0-9a-f]{2}/gi, m => ('0' + Math.min(255, Math.floor(parseInt(m, 16) * 1.3)).toString(16)).slice(-2));
             }
         }
 
-        function toggleSettings() {
-            document.getElementById('settingsPanel').classList.toggle('hidden');
-        }
-
+        function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('hidden'); }
         function restartGame() {
             if (confirm('Are you sure you want to restart? All progress will be lost.')) {
                 resetGame();
@@ -1109,22 +806,9 @@
             event.target.closest('.difficulty-option').classList.add('selected');
             selectedDifficulty = diff;
             isHardMode = (diff === 'hard');
-            
-            updateBusinessStats();
-            
+            renderBusinessTypes();
             document.getElementById('difficultyScreen').classList.add('hidden');
             document.getElementById('setupScreen').classList.remove('hidden');
-        }
-
-        function updateBusinessStats() {
-            const mode = isHardMode ? 'hard' : 'easy';
-            Object.keys(bizTypes[mode]).forEach(type => {
-                const stats = bizTypes[mode][type];
-                const el = document.getElementById(`${type}-stats`);
-                if (el) {
-                    el.textContent = `Start: $${(stats.cash/1000).toFixed(0)}K | 0 employees | Quality: ${stats.qual}${isHardMode ? ' | NO INITIAL REVENUE' : ''}`;
-                }
-            });
         }
 
         function selectBusiness(type) {
@@ -1139,18 +823,15 @@
             return {
                 id: nextId++, name, type, cash: first ? t.cash : 0, month: 1, emp: t.emp, rep: t.rep,
                 cust: t.cust, qual: t.qual, morale: 60, rev: t.rev, exp: t.exp, revBoost: 0,
-                loans: [], total: { rev: 0, exp: 0 }, used: [], victory: false, prevRev: 0, prevExp: 0
+                loans: [], total: { rev: 0, exp: 0 }, victory: false
             };
         }
 
-        function getSpeed() {
-            return gameSpeed[document.getElementById('speedSelect').value];
-        }
+        function getSpeed() { return gameSpeed[document.getElementById('speedSelect').value]; }
 
         function startGame() {
             const name = document.getElementById('companyName').value || 'TechCorp';
-            if (!selectedBiz) return alert('Select business type');
-            if (!selectedDifficulty) return alert('Select difficulty first');
+            if (!selectedBiz || !selectedDifficulty) return alert('Select difficulty and business type');
             companies = [createCo(selectedBiz, name, true)];
             activeIdx = 0;
             document.getElementById('setupScreen').classList.add('hidden');
@@ -1164,38 +845,20 @@
         function renderActionButtons() {
             Object.keys(actionDefs).forEach(tab => {
                 const container = document.getElementById(tab + 'Tab');
-                container.innerHTML = '';
-                actionDefs[tab].forEach(action => {
-                    const btn = document.createElement('button');
-                    btn.className = 'action-button';
-                    let costText = action.cost === 'custom' ? 'CUSTOM' : 
-                                   typeof action.cost === 'number' 
-                        ? (action.gain ? `+$${action.cost.toLocaleString()}` : `-$${action.cost.toLocaleString()}`)
-                        : action.cost;
-                    btn.innerHTML = `${action.label}<br>${costText}`;
-                    btn.onclick = () => act(action.id);
-                    container.appendChild(btn);
-                });
+                container.innerHTML = actionDefs[tab].map(a => {
+                    let costText = a.cost === 'custom' ? 'CUSTOM' : 
+                                   typeof a.cost === 'number' ? (a.gain ? `+$${a.cost.toLocaleString()}` : `-$${a.cost.toLocaleString()}`) : a.cost;
+                    return `<button class="action-button" onclick="act('${a.id}')">${a.label}<br>${costText}</button>`;
+                }).join('');
             });
         }
 
         function updateSelector() {
             const sel = document.getElementById('companySelector');
-            sel.innerHTML = '';
-            companies.forEach((co, i) => {
+            sel.innerHTML = companies.map((co, i) => {
                 const net = calcRev(co) - calcExp(co);
-                const tab = document.createElement('div');
-                tab.className = 'company-tab' + (i === activeIdx ? ' active' : '');
-                tab.innerHTML = `${co.name}<br>$${co.cash.toLocaleString()}<br>${net >= 0 ? '+' : ''}$${net.toLocaleString()}/mo`;
-                tab.onclick = () => switchCo(i);
-                sel.appendChild(tab);
-            });
-            const newTab = document.createElement('div');
-            newTab.className = 'company-tab';
-            newTab.style.borderStyle = 'dashed';
-            newTab.innerHTML = '+ NEW<br>COMPANY';
-            newTab.onclick = () => act('newco');
-            sel.appendChild(newTab);
+                return `<div class="company-tab ${i === activeIdx ? 'active' : ''}" onclick="switchCo(${i})">${co.name}<br>$${co.cash.toLocaleString()}<br>${net >= 0 ? '+' : ''}$${net.toLocaleString()}/mo</div>`;
+            }).join('') + `<div class="company-tab" style="border-style: dashed;" onclick="act('newco')">+ NEW<br>COMPANY</div>`;
             updatePortfolio();
         }
 
@@ -1205,10 +868,7 @@
                 const rev = companies.reduce((s, c) => s + calcRev(c), 0);
                 const emp = companies.reduce((s, c) => s + c.emp, 0);
                 document.getElementById('portfolioContent').textContent = 
-                    `Companies: ${companies.length}\n` +
-                    `Total Cash: $${cash.toLocaleString()}\n` +
-                    `Combined Revenue: $${rev.toLocaleString()}/mo\n` +
-                    `Total Employees: ${emp}`;
+                    `Companies: ${companies.length}\nTotal Cash: $${cash.toLocaleString()}\nCombined Revenue: $${rev.toLocaleString()}/mo\nTotal Employees: ${emp}`;
                 document.getElementById('portfolioSummary').classList.remove('hidden');
             } else {
                 document.getElementById('portfolioSummary').classList.add('hidden');
@@ -1218,12 +878,39 @@
         function switchCo(i) { activeIdx = i; updateSelector(); updateDisplay(); }
         function getCo() { return companies[activeIdx]; }
 
+        // IMPROVED REVENUE CALCULATION - More customers = more revenue (always positive)
         function calcRev(co) {
             const speed = getSpeed();
             const hardModePenalty = isHardMode ? 0.8 : 1;
-            let r = co.rev + co.emp * 400 / (1 + co.emp * 0.015) + co.cust * 12 / (1 + co.cust * 0.0008) + co.revBoost;
-            r *= (co.qual / 100 + 0.6) * (co.rep / 100 + 0.6) * (co.morale / 100 * 0.25 + 0.85);
-            return Math.max(0, Math.floor(r * (0.9 + Math.random() * 0.2) * speed * hardModePenalty));
+            
+            // Base revenue from business operations
+            let baseRev = co.rev;
+            
+            // Revenue per customer (increases with quality and reputation)
+            // Each customer generates between $8-$25 per month depending on quality/rep
+            const revenuePerCustomer = (8 + (co.qual / 100) * 10 + (co.rep / 100) * 7);
+            const customerRevenue = co.cust * revenuePerCustomer;
+            
+            // Employee productivity (diminishing returns after 10 employees)
+            const employeeMultiplier = co.emp > 0 ? Math.min(2.0, 1 + (co.emp * 0.1)) : 1;
+            
+            // Quality multiplier (50-150% of base)
+            const qualityMultiplier = 0.5 + (co.qual / 100);
+            
+            // Reputation multiplier (50-150% of base)
+            const reputationMultiplier = 0.5 + (co.rep / 100);
+            
+            // Morale multiplier (75-110% of base)
+            const moraleMultiplier = 0.75 + (co.morale / 100) * 0.35;
+            
+            // Calculate total revenue
+            let totalRev = (baseRev + customerRevenue) * employeeMultiplier * qualityMultiplier * reputationMultiplier * moraleMultiplier;
+            
+            // Add temporary boost
+            totalRev += co.revBoost;
+            
+            // Apply speed and difficulty modifiers with small variance
+            return Math.max(0, Math.floor(totalRev * (0.95 + Math.random() * 0.1) * speed * hardModePenalty));
         }
 
         function calcExp(co) {
@@ -1241,18 +928,21 @@
 
         function updateDisplay() {
             const co = getCo();
-            document.getElementById('cash').textContent = co.cash.toLocaleString();
-            document.getElementById('month').textContent = co.month;
-            document.getElementById('employees').textContent = co.emp;
-            document.getElementById('reputation').textContent = Math.max(0, Math.min(100, co.rep));
-            document.getElementById('customers').textContent = co.cust;
-            document.getElementById('quality').textContent = Math.max(0, Math.min(100, co.qual));
-            document.getElementById('morale').textContent = Math.max(0, Math.min(100, co.morale));
-            document.getElementById('revenue').textContent = calcRev(co).toLocaleString();
-            document.getElementById('expenses').textContent = calcExp(co).toLocaleString();
+            const stats = [
+                ['CASH', `$${co.cash.toLocaleString()}`],
+                ['MONTH', co.month],
+                ['EMPLOYEES', co.emp],
+                ['REPUTATION', `${Math.max(0, Math.min(100, co.rep))}/100`],
+                ['CUSTOMERS', co.cust],
+                ['QUALITY', `${Math.max(0, Math.min(100, co.qual))}/100`],
+                ['REVENUE/MO', `$${calcRev(co).toLocaleString()}`],
+                ['EXPENSES/MO', `$${calcExp(co).toLocaleString()}`],
+                ['MORALE', `${Math.max(0, Math.min(100, co.morale))}/100`],
+                ['DEBT', `${calcDebt(co)}%`]
+            ];
+            document.getElementById('statsContainer').innerHTML = stats.map(([k, v]) => `<div class="stat-item">${k}: <span id="${k.toLowerCase().replace(/\//g, '')}">${v}</span></div>`).join('');
+            
             const debt = calcDebt(co);
-            document.getElementById('debtCapacity').textContent = debt;
-            document.getElementById('currentDebt').textContent = debt;
             if (debt > 60) {
                 document.getElementById('debtWarning').textContent = `WARNING: HIGH DEBT ${debt}%`;
                 document.getElementById('debtWarning').classList.remove('hidden');
@@ -1272,8 +962,6 @@
             const co = getCo();
             const rev = calcRev(co), exp = calcExp(co), net = rev - exp;
             
-            co.prevRev = rev;
-            co.prevExp = exp;
             co.cash += net;
             co.total.rev += rev;
             co.total.exp += exp;
@@ -1292,15 +980,9 @@
             
             document.getElementById('reportMonth').textContent = co.month;
             document.getElementById('reportContent').textContent = 
-                `${co.name}\n\n` +
-                `Revenue: +$${rev.toLocaleString()}\n` +
-                `Expenses: -$${exp.toLocaleString()}\n` +
-                `Net Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\n` +
-                `Cash Balance: $${co.cash.toLocaleString()}\n` +
+                `${co.name}\n\nRevenue: +$${rev.toLocaleString()}\nExpenses: -$${exp.toLocaleString()}\nNet Income: ${net >= 0 ? '+' : ''}$${net.toLocaleString()}\n\nCash Balance: $${co.cash.toLocaleString()}\n` +
                 (co.loans.length > 0 ? `Active Loans: ${co.loans.length} (${calcDebt(co)}% debt)\n` : '') +
-                `\nQuality -${(2 * speed * decayMultiplier).toFixed(1)}\n` +
-                `Morale -${(1.5 * speed * decayMultiplier).toFixed(1)}\n` +
-                `Customer retention: ${(retentionRate * 100).toFixed(0)}%`;
+                `\nQuality -${(2 * speed * decayMultiplier).toFixed(1)}\nMorale -${(1.5 * speed * decayMultiplier).toFixed(1)}\nCustomer retention: ${(retentionRate * 100).toFixed(0)}%`;
             
             document.getElementById('monthlyReportScreen').classList.remove('hidden');
             updateDisplay();
@@ -1314,48 +996,25 @@
 
         function showEvent() {
             hideAll();
-            
             let allEvents = {...events};
             if (isHardMode && Math.random() < 0.4) {
-                allEvents = {...allEvents, ...hardEvents};
+                allEvents = {...events, ...{cash_flow: events.cash_flow, competition: events.competition, regulatory: events.regulatory}};
             }
-            
             const cats = Object.keys(allEvents);
-            const cat = cats[Math.floor(Math.random() * cats.length)];
-            const evts = allEvents[cat];
-            const evt = evts[Math.floor(Math.random() * evts.length)];
+            const evt = allEvents[cats[Math.floor(Math.random() * cats.length)]][Math.floor(Math.random() * allEvents[cats[Math.floor(Math.random() * cats.length)]].length)];
             
             currentEventChoices = evt.choices;
-            
             document.getElementById('eventTitle').textContent = evt.title;
             document.getElementById('eventDescription').textContent = evt.desc;
             
             const co = getCo();
-            const hasUnaffordableOptions = evt.choices.some(choice => choice.cost > co.cash);
-            
-            if (hasUnaffordableOptions) {
-                document.getElementById('eventLoanOptions').classList.remove('hidden');
-            } else {
-                document.getElementById('eventLoanOptions').classList.add('hidden');
-            }
+            document.getElementById('eventLoanOptions').classList.toggle('hidden', !evt.choices.some(c => c.cost > co.cash));
             
             const container = document.getElementById('eventChoices');
-            container.innerHTML = '';
-            evt.choices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-button';
-                btn.onclick = () => handleChoice(choice);
-                btn.disabled = getCo().cash < choice.cost;
-                btn.textContent = choice.text + (getCo().cash < choice.cost && choice.cost > 0 ? 
-                    ` [Need $${choice.cost.toLocaleString()}]` : '');
-                container.appendChild(btn);
-            });
-            
-            const ignoreBtn = document.createElement('button');
-            ignoreBtn.className = 'choice-button ignore';
-            ignoreBtn.onclick = () => handleIgnore(evt.ignoreEffect);
-            ignoreBtn.textContent = 'IGNORE SITUATION (Suffer consequences)';
-            container.appendChild(ignoreBtn);
+            container.innerHTML = evt.choices.map(c => {
+                const disabled = getCo().cash < c.cost;
+                return `<button class="choice-button" ${disabled ? 'disabled' : ''} onclick='handleChoice(${JSON.stringify(c).replace(/'/g, "\\'")})'>${c.text}${disabled && c.cost > 0 ? ` [Need $${c.cost.toLocaleString()}]` : ''}</button>`;
+            }).join('') + `<button class="choice-button ignore" onclick='handleIgnore(${JSON.stringify(evt.ignoreEffect).replace(/'/g, "\\'")})'>IGNORE SITUATION (Suffer consequences)</button>`;
             
             document.getElementById('eventScreen').classList.remove('hidden');
         }
@@ -1363,47 +1022,30 @@
         function quickLoanFromEvent(amt, mo, mos) {
             quickLoan(amt, mo, mos);
             const container = document.getElementById('eventChoices');
-            const lastChild = container.lastChild;
-            container.innerHTML = '';
-            currentEventChoices.forEach(choice => {
-                const btn = document.createElement('button');
-                btn.className = 'choice-button';
-                btn.onclick = () => handleChoice(choice);
-                btn.disabled = getCo().cash < choice.cost;
-                btn.textContent = choice.text + (getCo().cash < choice.cost && choice.cost > 0 ? 
-                    ` [Need $${choice.cost.toLocaleString()}]` : '');
-                container.appendChild(btn);
-            });
-            container.appendChild(lastChild);
+            const btns = Array.from(container.children);
+            const ignoreBtn = btns[btns.length - 1];
+            container.innerHTML = currentEventChoices.map(c => {
+                const disabled = getCo().cash < c.cost;
+                return `<button class="choice-button" ${disabled ? 'disabled' : ''} onclick='handleChoice(${JSON.stringify(c).replace(/'/g, "\\'")})'>${c.text}${disabled && c.cost > 0 ? ` [Need $${c.cost.toLocaleString()}]` : ''}</button>`;
+            }).join('');
+            container.appendChild(ignoreBtn);
         }
 
         function handleIgnore(effects) {
             hideAll();
             const co = getCo();
-            
             let txt = `DECISION: Ignored the situation\n\nCONSEQUENCES:\n`;
-            
-            if (effects.cash) { co.cash += effects.cash; txt += `Cash: ${effects.cash > 0 ? '+' : ''}$${effects.cash.toLocaleString()}\n`; }
-            if (effects.rep) { co.rep += effects.rep; txt += `Reputation: ${effects.rep > 0 ? '+' : ''}${effects.rep}\n`; }
-            if (effects.cust) { co.cust += effects.cust; txt += `Customers: ${effects.cust > 0 ? '+' : ''}${effects.cust}\n`; }
-            if (effects.qual) { co.qual += effects.qual; txt += `Quality: ${effects.qual > 0 ? '+' : ''}${effects.qual}\n`; }
-            if (effects.morale) { co.morale += effects.morale; txt += `Morale: ${effects.morale > 0 ? '+' : ''}${effects.morale}\n`; }
-            if (effects.emp) { co.emp += effects.emp; txt += `Employees: ${effects.emp > 0 ? '+' : ''}${effects.emp}\n`; }
-            if (effects.rev) { co.rev += effects.rev; txt += `Base Revenue: ${effects.rev > 0 ? '+' : ''}$${Math.abs(effects.rev)}/mo\n`; }
-            if (effects.exp) { co.exp += effects.exp; txt += `Base Expenses: ${effects.exp > 0 ? '+' : ''}$${Math.abs(effects.exp)}/mo\n`; }
-            
-            if (!effects.cash && !effects.rep && !effects.cust && !effects.qual && !effects.morale && !effects.emp && !effects.rev && !effects.exp) {
-                txt += 'No immediate consequences.\n';
-            }
-            
+            Object.keys(effects).forEach(k => {
+                if (effects[k]) {
+                    co[k] = (co[k] || 0) + effects[k];
+                    txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${effects[k] > 0 ? '+' : ''}${k === 'cash' || k === 'rev' || k === 'exp' ? '$' : ''}${Math.abs(effects[k]).toLocaleString()}${k === 'rev' || k === 'exp' ? '/mo' : ''}\n`;
+                }
+            });
+            if (Object.keys(effects).length === 0) txt += 'No immediate consequences.\n';
             txt += '\nTake additional actions before next month.';
-            
-            co.rep = Math.max(0, Math.min(100, co.rep));
-            co.qual = Math.max(0, Math.min(100, co.qual));
-            co.morale = Math.max(0, Math.min(100, co.morale));
+            ['rep', 'qual', 'morale'].forEach(k => co[k] = Math.max(0, Math.min(100, co[k])));
             co.cust = Math.max(0, co.cust);
             co.emp = Math.max(0, co.emp);
-            
             document.getElementById('eventResult').innerHTML = '<pre>' + txt + '</pre>';
             actions = [];
             document.getElementById('logContent').textContent = 'No actions taken this month.';
@@ -1416,32 +1058,23 @@
             hideAll();
             const co = getCo();
             co.cash -= choice.cost;
-            
             let txt = `DECISION: ${choice.text}\n\nEFFECTS:\n`;
             if (choice.cost !== 0) txt += `Cash: ${choice.cost > 0 ? '-' : '+'}$${Math.abs(choice.cost).toLocaleString()}\n`;
-            
             const e = choice.effects;
-            if (e.rep) { co.rep += e.rep; txt += `Reputation: ${e.rep > 0 ? '+' : ''}${e.rep}\n`; }
-            if (e.cust) { co.cust += e.cust; txt += `Customers: ${e.cust > 0 ? '+' : ''}${e.cust}\n`; }
-            if (e.qual) { co.qual += e.qual; txt += `Quality: ${e.qual > 0 ? '+' : ''}${e.qual}\n`; }
-            if (e.morale) { co.morale += e.morale; txt += `Morale: ${e.morale > 0 ? '+' : ''}${e.morale}\n`; }
-            if (e.emp) { co.emp += e.emp; txt += `Employees: ${e.emp > 0 ? '+' : ''}${e.emp}\n`; }
-            if (e.rev) { co.rev += e.rev; txt += `Base Revenue: ${e.rev > 0 ? '+' : ''}$${Math.abs(e.rev)}/mo\n`; }
-            if (e.exp) { co.exp += e.exp; txt += `Base Expenses: ${e.exp > 0 ? '+' : ''}$${Math.abs(e.exp)}/mo\n`; }
-            if (e.loans) {
-                co.loans.push(e.loans);
-                co.exp += e.loans.monthly;
-                txt += `New Loan: -$${e.loans.monthly}/mo for ${e.loans.months} months\n`;
-            }
-            
+            Object.keys(e).forEach(k => {
+                if (k === 'loans') {
+                    co.loans.push(e.loans);
+                    co.exp += e.loans.monthly;
+                    txt += `New Loan: -$${e.loans.monthly}/mo for ${e.loans.months} months\n`;
+                } else if (e[k]) {
+                    co[k] = (co[k] || 0) + e[k];
+                    txt += `${k.charAt(0).toUpperCase() + k.slice(1)}: ${e[k] > 0 ? '+' : ''}${k === 'rev' || k === 'exp' ? '$' : ''}${Math.abs(e[k])}${k === 'rev' || k === 'exp' ? '/mo' : ''}\n`;
+                }
+            });
             txt += '\nTake additional actions before next month.';
-            
-            co.rep = Math.max(0, Math.min(100, co.rep));
-            co.qual = Math.max(0, Math.min(100, co.qual));
-            co.morale = Math.max(0, Math.min(100, co.morale));
+            ['rep', 'qual', 'morale'].forEach(k => co[k] = Math.max(0, Math.min(100, co[k])));
             co.cust = Math.max(0, co.cust);
             co.emp = Math.max(0, co.emp);
-            
             document.getElementById('eventResult').innerHTML = '<pre>' + txt + '</pre>';
             actions = [];
             document.getElementById('logContent').textContent = 'No actions taken this month.';
@@ -1460,20 +1093,15 @@
             document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
             event.target.classList.add('active');
             ['opsTab', 'growthTab', 'financeTab', 'marketingTab', 'empireTab'].forEach(id =>
-                document.getElementById(id).classList.add('hidden')
+                document.getElementById(id).classList.toggle('hidden', id !== tab + 'Tab')
             );
-            document.getElementById(tab + 'Tab').classList.remove('hidden');
         }
 
         function quickLoan(amt, mo, mos) {
             const co = getCo(), debt = calcDebt(co);
-            let max = 20;
-            if (amt >= 10000) max = 30;
-            if (amt >= 30000) max = 50;
-            if (amt >= 75000) max = 65;
+            let max = amt >= 75000 ? 65 : amt >= 30000 ? 50 : amt >= 10000 ? 30 : 20;
             if (debt >= max) return log(`X Debt too high (${debt}%)`);
-            if (amt >= 30000 && co.rep < 50) return log('X Reputation too low (need 50+)');
-            if (amt >= 75000 && co.rep < 70) return log('X Reputation too low (need 70+)');
+            if ((amt >= 30000 && co.rep < 50) || (amt >= 75000 && co.rep < 70)) return log(`X Reputation too low (need ${amt >= 75000 ? 70 : 50}+)`);
             co.cash += amt;
             co.loans.push({ monthly: mo, months: mos });
             co.exp += mo;
@@ -1487,28 +1115,20 @@
             const co = getCo();
             document.getElementById('fromCompanyName').textContent = co.name;
             document.getElementById('availableCash').textContent = co.cash.toLocaleString();
-            
-            const select = document.getElementById('targetCompany');
-            select.innerHTML = companies
+            document.getElementById('targetCompany').innerHTML = companies
                 .map((c, i) => i !== activeIdx ? `<option value="${i}">${c.name} ($${c.cash.toLocaleString()})</option>` : '')
-                .filter(Boolean)
-                .join('');
-            
+                .filter(Boolean).join('');
             document.getElementById('transferModal').classList.remove('hidden');
         }
 
-        function closeTransferModal() {
-            document.getElementById('transferModal').classList.add('hidden');
-        }
+        function closeTransferModal() { document.getElementById('transferModal').classList.add('hidden'); }
 
         function confirmTransfer() {
             const co = getCo();
             const amt = parseInt(document.getElementById('transferAmount').value);
             const targetIdx = parseInt(document.getElementById('targetCompany').value);
-            
             if (!amt || amt <= 0) return alert('Enter valid amount');
             if (co.cash < amt) return alert('Insufficient funds');
-            
             co.cash -= amt;
             companies[targetIdx].cash += amt;
             log(`+ Transfer: $${amt.toLocaleString()} to ${companies[targetIdx].name}`);
@@ -1518,48 +1138,34 @@
         }
 
         function openProductModal() {
-            document.getElementById('productName').value = '';
-            document.getElementById('productType').value = '';
-            document.getElementById('marketingStrategy').value = '';
-            document.getElementById('targetMarket').value = '';
-            document.getElementById('devBudget').value = '';
+            ['productName', 'productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el.tagName === 'INPUT') el.value = '';
+                else el.selectedIndex = 0;
+            });
             updateProductCost();
             document.getElementById('productModal').classList.remove('hidden');
         }
 
-        function closeProductModal() {
-            document.getElementById('productModal').classList.add('hidden');
-        }
+        function closeProductModal() { document.getElementById('productModal').classList.add('hidden'); }
 
         function updateProductCost() {
             let cost = 0;
-            const devBudget = document.getElementById('devBudget').value;
+            const budget = document.getElementById('devBudget').value;
             const marketing = document.getElementById('marketingStrategy').value;
-            
-            if (devBudget === 'low') cost += 5000;
-            if (devBudget === 'medium') cost += 10000;
-            if (devBudget === 'high') cost += 20000;
-            
+            if (budget === 'low') cost += 5000;
+            if (budget === 'medium') cost += 10000;
+            if (budget === 'high') cost += 20000;
             if (marketing === 'aggressive') cost += 5000;
             if (marketing === 'moderate') cost += 2500;
             if (marketing === 'minimal') cost += 500;
-            
             document.getElementById('productTotalCost').textContent = cost.toLocaleString();
-            
             const co = getCo();
-            if (cost > 0 && cost > co.cash) {
-                document.getElementById('productLoanOptions').classList.remove('hidden');
-            } else {
-                document.getElementById('productLoanOptions').classList.add('hidden');
-            }
-            
+            document.getElementById('productLoanOptions').classList.toggle('hidden', !(cost > 0 && cost > co.cash));
             if (cost > 0) {
                 const type = document.getElementById('productType').value;
-                let estimate = '';
-                if (type === 'premium') estimate = 'Est: High margins, fewer customers';
-                if (type === 'standard') estimate = 'Est: Balanced approach';
-                if (type === 'budget') estimate = 'Est: Low margins, high volume';
-                document.getElementById('productEstimate').textContent = estimate;
+                const estimates = {premium: 'Est: High margins, fewer customers', standard: 'Est: Balanced approach', budget: 'Est: Low margins, high volume'};
+                document.getElementById('productEstimate').textContent = estimates[type] || '';
             }
         }
 
@@ -1568,11 +1174,6 @@
             updateProductCost();
         }
 
-        ['productType', 'marketingStrategy', 'targetMarket', 'devBudget'].forEach(id => {
-            const el = document.getElementById(id);
-            if (el) el.addEventListener('change', updateProductCost);
-        });
-
         function confirmProduct() {
             const co = getCo();
             const name = document.getElementById('productName').value;
@@ -1580,256 +1181,264 @@
             const marketing = document.getElementById('marketingStrategy').value;
             const target = document.getElementById('targetMarket').value;
             const budget = document.getElementById('devBudget').value;
-            
-            if (!name || !type || !marketing || !target || !budget) {
-                return alert('Please fill all fields');
-            }
-            
+            if (!name || !type || !marketing || !target || !budget) return alert('Please fill all fields');
             let cost = 0;
-            if (budget === 'low') cost += 5000;
-            if (budget === 'medium') cost += 10000;
-            if (budget === 'high') cost += 20000;
-            if (marketing === 'aggressive') cost += 5000;
-            if (marketing === 'moderate') cost += 2500;
-            if (marketing === 'minimal') cost += 500;
-            
-            if (co.cash < cost) {
-                return alert(`Need $${cost.toLocaleString()}`);
-            }
-            
+            const costs = {low: 5000, medium: 10000, high: 20000};
+            const marketingCosts = {aggressive: 5000, moderate: 2500, minimal: 500};
+            cost = (costs[budget] || 0) + (marketingCosts[marketing] || 0);
+            if (co.cash < cost) return alert(`Need $${cost.toLocaleString()}`);
             co.cash -= cost;
-            
             let revGain = 0, custGain = 0, qualGain = 0;
-            
-            if (budget === 'high') { qualGain += 15; revGain += 800; }
-            if (budget === 'medium') { qualGain += 10; revGain += 500; }
-            if (budget === 'low') { qualGain += 5; revGain += 300; }
-            
-            if (type === 'premium') { revGain += 600; custGain += 20; }
-            if (type === 'standard') { revGain += 400; custGain += 40; }
-            if (type === 'budget') { revGain += 200; custGain += 70; }
-            
-            if (marketing === 'aggressive') { custGain += 50; }
-            if (marketing === 'moderate') { custGain += 30; }
-            if (marketing === 'minimal') { custGain += 15; }
-            
+            const budgetBonus = {high: {qual: 15, rev: 800}, medium: {qual: 10, rev: 500}, low: {qual: 5, rev: 300}};
+            const typeBonus = {premium: {rev: 600, cust: 20}, standard: {rev: 400, cust: 40}, budget: {rev: 200, cust: 70}};
+            const marketingBonus = {aggressive: 50, moderate: 30, minimal: 15};
+            qualGain = budgetBonus[budget].qual;
+            revGain = budgetBonus[budget].rev + typeBonus[type].rev;
+            custGain = typeBonus[type].cust + marketingBonus[marketing];
             co.rev += revGain;
             co.cust += custGain;
             co.qual += qualGain;
-            
             log(`+ Launched "${name}" (${type}) - +$${revGain}/mo, +${custGain} cust, +${qualGain} qual`);
             closeProductModal();
             updateDisplay();
             updateSelector();
         }
 
-        function act(type) {
-            const co = getCo();
-            
-            if (type === 'product') {
-                openProductModal();
-                return;
-            }
-            
-            const ops = {
-                hire: () => {
-                    if (co.cash < 2500) return log('X Need $2,500');
-                    co.cash -= 2500; co.emp++; co.qual += 3; co.exp += 600;
-                    log('+ Hired employee (+1, Qual +3, +$600/mo)');
-                },
-                fire: () => {
-                    if (co.emp <= 0) return log('X No employees to fire');
-                    co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5; co.exp -= 600;
-                    log('+ Fired employee (+$800, -$600/mo, Rep -8)');
-                },
-                train: () => {
-                    if (co.emp === 0) return log('X No employees to train');
-                    if (co.cash < 1500) return log('X Need $1,500');
-                    co.cash -= 1500; co.qual += 10; co.morale += 12;
-                    log('+ Training (Qual +10, Morale +12)');
-                },
-                wages: () => {
-                    if (co.emp === 0) return log('X No employees');
-                    const cost = co.emp * 300;
-                    if (co.cash < cost) return log(`X Need $${cost.toLocaleString()}`);
-                    co.cash -= cost; co.exp += co.emp * 30; co.morale += 20; co.rep += 5;
-                    log(`+ Wages raised (Morale +20, +$${co.emp * 30}/mo exp)`);
-                },
-                workplace: () => {
-                    if (co.cash < 3000) return log('X Need $3,000');
-                    co.cash -= 3000; co.morale += 18; co.rep += 8;
-                    log('+ Workplace improved (Morale +18)');
-                },
-                automate: () => {
-                    if (co.cash < 5000) return log('X Need $5,000');
-                    co.cash -= 5000; co.qual += 12; co.exp += 200;
-                    log('+ Automated (Qual +12, +$200/mo maintenance)');
-                },
-                quality: () => {
-                    if (co.cash < 2000) return log('X Need $2,000');
-                    co.cash -= 2000; co.qual += 15; co.revBoost += 400;
-                    log('+ QC (Qual +15, +$400/mo temp)');
-                },
-                cs: () => {
-                    if (co.cash < 1800) return log('X Need $1,800');
-                    co.cash -= 1800;
-                    const gain = Math.floor(25 / (1 + co.cust * 0.004));
-                    co.cust += gain; co.rep += 10;
-                    log(`+ CS (+${gain} cust, Rep +10)`);
-                },
-                maintain: () => {
-                    if (co.cash < 1000) return log('X Need $1,000');
-                    co.cash -= 1000; co.qual += 6;
-                    log('+ Maintenance (Qual +6)');
-                },
-                expand: () => {
-                    if (co.cash < 15000) return log('X Need $15,000');
-                    co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2; co.exp += 1200;
-                    log('+ New location (+80 cust, +$1200/mo, +2 emp, +$1200/mo exp)');
-                },
-                partner: () => {
-                    if (co.cash < 4000) return log('X Need $4,000');
-                    co.cash -= 4000; co.cust += 50; co.rep += 12; co.revBoost += 800;
-                    log('+ Partnership (+50 cust, +$800/mo temp)');
-                },
-                franchise: () => {
-                    if (co.cash < 12000) return log('X Need $12,000');
-                    co.cash -= 12000; co.rev += 1500; co.cust += 60; co.rep += 15;
-                    log('+ Franchise (+60 cust, +$1500/mo)');
-                },
-                acquire: () => {
-                    if (co.cash < 25000) return log('X Need $25,000');
-                    co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800; co.exp += 1800;
-                    log('+ Acquisition (+75 cust, +$1800/mo, +3 emp, +$1800/mo exp)');
-                },
-                intl: () => {
-                    if (co.cash < 35000) return log('X Need $35,000');
-                    co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20; co.exp += 3000;
-                    log('+ International (+120 cust, +$3000/mo, +5 emp, +$3000/mo exp)');
-                },
-                investor: () => {
-                    if (co.rep < 40) return log('X Reputation too low');
-                    co.cash += 20000; co.exp += Math.floor(co.rev * 0.08);
-                    log('+ Investor (+$20K, 8% rev share as ongoing expense)');
-                },
-                cut: () => {
-                    if (co.emp <= 1) return log('X Not enough employees');
-                    co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10; co.exp -= 1200;
-                    log('+ Emergency cuts (-2 emp, +$1500, -$1200/mo exp)');
-                },
-                stocks: () => {
-                    if (co.cash < 5000) return log('X Need $5,000');
-                    co.cash -= 5000;
-                    const gain = Math.random() > 0.5 ? Math.floor(Math.random() * 3000 + 1000) : -Math.floor(Math.random() * 2000);
-                    co.cash += gain;
-                    log(`+ Stocks ${gain > 0 ? 'gained' : 'lost'} $${Math.abs(gain).toLocaleString()}`);
-                },
-                realestate: () => {
-                    if (co.cash < 18000) return log('X Need $18,000');
-                    co.cash -= 18000; co.rev += 1000;
-                    log('+ Real estate (+$1000/mo passive income)');
-                },
-                refinance: () => {
-                    if (co.loans.length === 0) return log('X No loans');
-                    if (co.cash < 3000) return log('X Need $3,000');
-                    co.cash -= 3000;
-                    co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.exp -= r; l.monthly -= r; });
-                    log('+ Refinanced (25% payment reduction)');
-                },
-                payoff: () => {
-                    if (co.loans.length === 0) return log('X No loans');
-                    const loan = co.loans[0];
-                    const owed = loan.monthly * loan.months;
-                    if (co.cash < owed) return log(`X Need $${owed.toLocaleString()}`);
-                    co.cash -= owed; co.exp -= loan.monthly; co.loans.shift();
-                    log(`+ Paid off (-$${owed.toLocaleString()}, -$${loan.monthly}/mo)`);
-                },
-                marketing: () => {
-                    if (co.cash < 3500) return log('X Need $3,500');
-                    co.cash -= 3500;
-                    const gain = Math.floor(40 / (1 + co.cust * 0.002));
-                    co.revBoost += 2000; co.cust += gain; co.rep += 10;
-                    log(`+ Campaign (+${gain} cust, +$2000/mo temp)`);
-                },
-                social: () => {
-                    if (co.cash < 1200) return log('X Need $1,200');
-                    co.cash -= 1200; co.cust += 20;
-                    log('+ Social media (+20 cust)');
-                },
-                pr: () => {
-                    if (co.cash < 2500) return log('X Need $2,500');
-                    co.cash -= 2500; co.rep += 18; co.cust += 25;
-                    log('+ PR (Rep +18, +25 cust)');
-                },
-                rebrand: () => {
-                    if (co.cash < 5000) return log('X Need $5,000');
-                    co.cash -= 5000; co.rep += 15; co.cust += 40;
-                    log('+ Rebrand (Rep +15, +40 cust)');
-                },
-                influencer: () => {
-                    if (co.cash < 4000) return log('X Need $4,000');
-                    co.cash -= 4000; co.cust += 55; co.rep += 15;
-                    log('+ Influencer (+55 cust, Rep +15)');
-                },
-                seo: () => {
-                    if (co.cash < 3000) return log('X Need $3,000');
-                    co.cash -= 3000; co.cust += 35; co.rev += 600;
-                    log('+ SEO (+35 cust, +$600/mo)');
-                },
-                newco: () => {
-                    const total = companies.reduce((s, c) => s + c.cash, 0);
-                    if (total < 20000) return log('X Need $20K total');
-                    const name = prompt('Company name:');
-                    if (!name) return;
-                    const types = Object.keys(bizTypes[isHardMode ? 'hard' : 'easy']);
-                    const choice = prompt('Type:\n' + types.map((t, i) => `${i + 1}. ${bizTypes[isHardMode ? 'hard' : 'easy'][t].name}`).join('\n'));
-                    const type = types[parseInt(choice) - 1];
-                    if (!type) return alert('Invalid');
-                    getCo().cash -= 20000;
-                    companies.push(createCo(type, name, false));
-                    activeIdx = companies.length - 1;
+        const actionsMap = {
+            hire: () => {
+                const co = getCo();
+                if (co.cash < 2500) return log('X Need $2,500');
+                co.cash -= 2500; co.emp++; co.qual += 3; co.exp += 600;
+                log('+ Hired employee (+1, Qual +3, +$600/mo)');
+            },
+            fire: () => {
+                const co = getCo();
+                if (co.emp <= 0) return log('X No employees to fire');
+                co.emp--; co.cash += 800; co.rep -= 8; co.morale -= 15; co.qual -= 5; co.exp -= 600;
+                log('+ Fired employee (+$800, -$600/mo, Rep -8)');
+            },
+            train: () => {
+                const co = getCo();
+                if (co.emp === 0) return log('X No employees to train');
+                if (co.cash < 1500) return log('X Need $1,500');
+                co.cash -= 1500; co.qual += 10; co.morale += 12;
+                log('+ Training (Qual +10, Morale +12)');
+            },
+            wages: () => {
+                const co = getCo();
+                if (co.emp === 0) return log('X No employees');
+                const cost = co.emp * 300;
+                if (co.cash < cost) return log(`X Need $${cost.toLocaleString()}`);
+                co.cash -= cost; co.exp += co.emp * 30; co.morale += 20; co.rep += 5;
+                log(`+ Wages raised (Morale +20, +$${co.emp * 30}/mo exp)`);
+            },
+            workplace: () => {
+                const co = getCo();
+                if (co.cash < 3000) return log('X Need $3,000');
+                co.cash -= 3000; co.morale += 18; co.rep += 8;
+                log('+ Workplace improved (Morale +18)');
+            },
+            automate: () => {
+                const co = getCo();
+                if (co.cash < 5000) return log('X Need $5,000');
+                co.cash -= 5000; co.qual += 12; co.exp += 200;
+                log('+ Automated (Qual +12, +$200/mo maintenance)');
+            },
+            quality: () => {
+                const co = getCo();
+                if (co.cash < 2000) return log('X Need $2,000');
+                co.cash -= 2000; co.qual += 15; co.revBoost += 400;
+                log('+ QC (Qual +15, +$400/mo temp)');
+            },
+            cs: () => {
+                const co = getCo();
+                if (co.cash < 1800) return log('X Need $1,800');
+                co.cash -= 1800;
+                const gain = Math.floor(25 / (1 + co.cust * 0.004));
+                co.cust += gain; co.rep += 10;
+                log(`+ CS (+${gain} cust, Rep +10)`);
+            },
+            maintain: () => {
+                const co = getCo();
+                if (co.cash < 1000) return log('X Need $1,000');
+                co.cash -= 1000; co.qual += 6;
+                log('+ Maintenance (Qual +6)');
+            },
+            expand: () => {
+                const co = getCo();
+                if (co.cash < 15000) return log('X Need $15,000');
+                co.cash -= 15000; co.rev += 1200; co.cust += 80; co.emp += 2; co.exp += 1200;
+                log('+ New location (+80 cust, +$1200/mo, +2 emp, +$1200/mo exp)');
+            },
+            product: () => openProductModal(),
+            partner: () => {
+                const co = getCo();
+                if (co.cash < 4000) return log('X Need $4,000');
+                co.cash -= 4000; co.cust += 50; co.rep += 12; co.revBoost += 800;
+                log('+ Partnership (+50 cust, +$800/mo temp)');
+            },
+            franchise: () => {
+                const co = getCo();
+                if (co.cash < 12000) return log('X Need $12,000');
+                co.cash -= 12000; co.rev += 1500; co.cust += 60; co.rep += 15;
+                log('+ Franchise (+60 cust, +$1500/mo)');
+            },
+            acquire: () => {
+                const co = getCo();
+                if (co.cash < 25000) return log('X Need $25,000');
+                co.cash -= 25000; co.cust += 75; co.emp += 3; co.rev += 1800; co.exp += 1800;
+                log('+ Acquisition (+75 cust, +$1800/mo, +3 emp, +$1800/mo exp)');
+            },
+            intl: () => {
+                const co = getCo();
+                if (co.cash < 35000) return log('X Need $35,000');
+                co.cash -= 35000; co.cust += 120; co.rev += 3000; co.emp += 5; co.rep += 20; co.exp += 3000;
+                log('+ International (+120 cust, +$3000/mo, +5 emp, +$3000/mo exp)');
+            },
+            investor: () => {
+                const co = getCo();
+                if (co.rep < 40) return log('X Reputation too low');
+                co.cash += 20000; co.exp += Math.floor(co.rev * 0.08);
+                log('+ Investor (+$20K, 8% rev share as ongoing expense)');
+            },
+            cut: () => {
+                const co = getCo();
+                if (co.emp <= 1) return log('X Not enough employees');
+                co.emp -= 2; co.cash += 1500; co.rep -= 15; co.morale -= 25; co.qual -= 10; co.exp -= 1200;
+                log('+ Emergency cuts (-2 emp, +$1500, -$1200/mo exp)');
+            },
+            stocks: () => {
+                const co = getCo();
+                if (co.cash < 5000) return log('X Need $5,000');
+                co.cash -= 5000;
+                const gain = Math.random() > 0.5 ? Math.floor(Math.random() * 3000 + 1000) : -Math.floor(Math.random() * 2000);
+                co.cash += gain;
+                log(`+ Stocks ${gain > 0 ? 'gained' : 'lost'} $${Math.abs(gain).toLocaleString()}`);
+            },
+            realestate: () => {
+                const co = getCo();
+                if (co.cash < 18000) return log('X Need $18,000');
+                co.cash -= 18000; co.rev += 1000;
+                log('+ Real estate (+$1000/mo passive income)');
+            },
+            refinance: () => {
+                const co = getCo();
+                if (co.loans.length === 0) return log('X No loans');
+                if (co.cash < 3000) return log('X Need $3,000');
+                co.cash -= 3000;
+                co.loans.forEach(l => { const r = Math.floor(l.monthly * 0.25); co.exp -= r; l.monthly -= r; });
+                log('+ Refinanced (25% payment reduction)');
+            },
+            payoff: () => {
+                const co = getCo();
+                if (co.loans.length === 0) return log('X No loans');
+                const loan = co.loans[0];
+                const owed = loan.monthly * loan.months;
+                if (co.cash < owed) return log(`X Need $${owed.toLocaleString()}`);
+                co.cash -= owed; co.exp -= loan.monthly; co.loans.shift();
+                log(`+ Paid off (-$${owed.toLocaleString()}, -$${loan.monthly}/mo)`);
+            },
+            marketing: () => {
+                const co = getCo();
+                if (co.cash < 3500) return log('X Need $3,500');
+                co.cash -= 3500;
+                const gain = Math.floor(40 / (1 + co.cust * 0.002));
+                co.revBoost += 2000; co.cust += gain; co.rep += 10;
+                log(`+ Campaign (+${gain} cust, +$2000/mo temp)`);
+            },
+            social: () => {
+                const co = getCo();
+                if (co.cash < 1200) return log('X Need $1,200');
+                co.cash -= 1200; co.cust += 20;
+                log('+ Social media (+20 cust)');
+            },
+            pr: () => {
+                const co = getCo();
+                if (co.cash < 2500) return log('X Need $2,500');
+                co.cash -= 2500; co.rep += 18; co.cust += 25;
+                log('+ PR (Rep +18, +25 cust)');
+            },
+            rebrand: () => {
+                const co = getCo();
+                if (co.cash < 5000) return log('X Need $5,000');
+                co.cash -= 5000; co.rep += 15; co.cust += 40;
+                log('+ Rebrand (Rep +15, +40 cust)');
+            },
+            influencer: () => {
+                const co = getCo();
+                if (co.cash < 4000) return log('X Need $4,000');
+                co.cash -= 4000; co.cust += 55; co.rep += 15;
+                log('+ Influencer (+55 cust, Rep +15)');
+            },
+            seo: () => {
+                const co = getCo();
+                if (co.cash < 3000) return log('X Need $3,000');
+                co.cash -= 3000; co.cust += 35; co.rev += 600;
+                log('+ SEO (+35 cust, +$600/mo)');
+            },
+            newco: () => {
+                const total = companies.reduce((s, c) => s + c.cash, 0);
+                if (total < 20000) return log('X Need $20K total');
+                const name = prompt('Company name:');
+                if (!name) return;
+                const types = Object.keys(bizTypes[isHardMode ? 'hard' : 'easy']);
+                const choice = prompt('Type:\n' + types.map((t, i) => `${i + 1}. ${bizTypes[isHardMode ? 'hard' : 'easy'][t].name}`).join('\n'));
+                const type = types[parseInt(choice) - 1];
+                if (!type) return alert('Invalid');
+                getCo().cash -= 20000;
+                companies.push(createCo(type, name, false));
+                activeIdx = companies.length - 1;
+                updateSelector();
+                updateDisplay();
+                log(`+ Started ${name}`);
+            },
+            transfer: () => openTransferModal(),
+            cross: () => {
+                const co = getCo();
+                if (companies.length < 2) return log('X Need 2+ companies');
+                if (co.cash < 2000) return log('X Need $2,000');
+                co.cash -= 2000;
+                companies.forEach(c => { c.cust += 12; c.rep += 4; });
+                log('+ Cross-promo (+12 cust all)');
+                updateSelector();
+            },
+            merge: () => {
+                if (companies.length < 2) return log('X Need 2+ companies');
+                const idx = parseInt(prompt('Merge with:\n' + companies.map((c, i) => 
+                    i !== activeIdx ? `${i + 1}. ${c.name}` : ''
+                ).filter(Boolean).join('\n'))) - 1;
+                if (idx < 0 || idx >= companies.length || idx === activeIdx) return;
+                const co = getCo();
+                const target = companies[idx];
+                co.cash += target.cash; co.emp += target.emp; co.cust += target.cust;
+                co.rev += target.rev; co.exp += target.exp;
+                co.qual = Math.floor((co.qual + target.qual) / 2);
+                companies.splice(idx, 1);
+                if (idx < activeIdx) activeIdx--;
+                log(`+ Merged ${target.name}`);
+                updateSelector();
+            },
+            sell: () => {
+                if (companies.length <= 1) return log('X Cannot sell only company');
+                const co = getCo();
+                const val = co.cash + (calcRev(co) - calcExp(co)) * 15;
+                if (confirm(`Sell ${co.name} for $${val.toLocaleString()}?`)) {
+                    companies.splice(activeIdx, 1);
+                    activeIdx = Math.max(0, activeIdx - 1);
+                    companies[activeIdx].cash += val;
                     updateSelector();
                     updateDisplay();
-                    log(`+ Started ${name}`);
-                },
-                transfer: () => { openTransferModal(); },
-                cross: () => {
-                    if (companies.length < 2) return log('X Need 2+ companies');
-                    if (co.cash < 2000) return log('X Need $2,000');
-                    co.cash -= 2000;
-                    companies.forEach(c => { c.cust += 12; c.rep += 4; });
-                    log('+ Cross-promo (+12 cust all)');
-                    updateSelector();
-                },
-                merge: () => {
-                    if (companies.length < 2) return log('X Need 2+ companies');
-                    const idx = parseInt(prompt('Merge with:\n' + companies.map((c, i) => 
-                        i !== activeIdx ? `${i + 1}. ${c.name}` : ''
-                    ).filter(Boolean).join('\n'))) - 1;
-                    if (idx < 0 || idx >= companies.length || idx === activeIdx) return;
-                    const target = companies[idx];
-                    co.cash += target.cash; co.emp += target.emp; co.cust += target.cust;
-                    co.rev += target.rev; co.exp += target.exp;
-                    co.qual = Math.floor((co.qual + target.qual) / 2);
-                    companies.splice(idx, 1);
-                    if (idx < activeIdx) activeIdx--;
-                    log(`+ Merged ${target.name}`);
-                    updateSelector();
-                },
-                sell: () => {
-                    if (companies.length <= 1) return log('X Cannot sell only company');
-                    const val = co.cash + (calcRev(co) - calcExp(co)) * 15;
-                    if (confirm(`Sell ${co.name} for $${val.toLocaleString()}?`)) {
-                        companies.splice(activeIdx, 1);
-                        activeIdx = Math.max(0, activeIdx - 1);
-                        companies[activeIdx].cash += val;
-                        updateSelector();
-                        updateDisplay();
-                        log(`+ Sold for $${val.toLocaleString()}`);
-                    }
+                    log(`+ Sold for $${val.toLocaleString()}`);
                 }
-            };
-            if (ops[type]) { ops[type](); updateDisplay(); updateSelector(); }
+            }
+        };
+
+        function act(type) {
+            if (actionsMap[type]) {
+                actionsMap[type]();
+                updateDisplay();
+                updateSelector();
+            }
         }
 
         function nextMonth() {
@@ -1842,14 +1451,7 @@
             hideAll();
             const co = getCo();
             document.getElementById('victoryContent').textContent = 
-                `${co.name} reached $150,000+ with 75+ reputation!\n\n` +
-                `Difficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\n` +
-                `Time: ${co.month} months\n` +
-                `Cash: $${co.cash.toLocaleString()}\n` +
-                `Employees: ${co.emp}\n` +
-                `Customers: ${co.cust}\n` +
-                `Reputation: ${co.rep}/100\n\n` +
-                `Continue building your empire!`;
+                `${co.name} reached $150,000+ with 75+ reputation!\n\nDifficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\nTime: ${co.month} months\nCash: $${co.cash.toLocaleString()}\nEmployees: ${co.emp}\nCustomers: ${co.cust}\nReputation: ${co.rep}/100\n\nContinue building your empire!`;
             document.getElementById('victoryScreen').classList.remove('hidden');
         }
 
@@ -1859,10 +1461,7 @@
             hideAll();
             const co = getCo();
             document.getElementById('gameOverContent').textContent = 
-                `${co.name} declared bankruptcy.\n\n` +
-                `Difficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\n` +
-                `Survived: ${co.month} months\n` +
-                `Cash: $${co.cash.toLocaleString()}\n` +
+                `${co.name} declared bankruptcy.\n\nDifficulty: ${isHardMode ? 'HARD MODE' : 'Easy Mode'}\nSurvived: ${co.month} months\nCash: $${co.cash.toLocaleString()}\n` +
                 (companies.length > 1 ? `\nYou have ${companies.length - 1} other company/companies.` : '');
             document.getElementById('gameOverScreen').classList.remove('hidden');
         }
@@ -1889,15 +1488,7 @@
             selectedBiz = null;
             selectedDifficulty = null;
             isHardMode = false;
-            document.querySelectorAll('.business-type').forEach(el => el.classList.remove('selected'));
-            document.querySelectorAll('.difficulty-option').forEach(el => el.classList.remove('selected'));
         }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('gameScreen').classList.add('hidden');
-            document.getElementById('setupScreen').classList.add('hidden');
-            document.getElementById('difficultyScreen').classList.remove('hidden');
-        });
     </script>
 </body>
 </html>
